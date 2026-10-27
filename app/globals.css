@@ -1,0 +1,58 @@
+@import "tailwindcss";
+
+:root {
+  --cream: #faf6ef;
+  --cream-dark: #f0e8d8;
+  --ivory: #fffdf8;
+  --gold: #c5a059;
+  --gold-dark: #a8843f;
+  --gold-soft: #e8d5a8;
+  --charcoal: #1a1a1a;
+  --ink: #2c2c2c;
+  --muted: #6b6560;
+  --forest: #1a3c34;
+  --whatsapp: #25d366;
+  --whatsapp-dark: #1da851;
+  --border: #e5ddd0;
+  --white: #ffffff;
+}
+
+@theme inline {
+  --color-cream: var(--cream);
+  --color-cream-dark: var(--cream-dark);
+  --color-ivory: var(--ivory);
+  --color-gold: var(--gold);
+  --color-gold-dark: var(--gold-dark);
+  --color-gold-soft: var(--gold-soft);
+  --color-charcoal: var(--charcoal);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-forest: var(--forest);
+  --color-whatsapp: var(--whatsapp);
+  --color-whatsapp-dark: var(--whatsapp-dark);
+  --color-border: var(--border);
+  --font-display: var(--font-ubuntu);
+  --font-sans: var(--font-ubuntu);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--cream);
+  color: var(--ink);
+  font-family: var(--font-ubuntu), system-ui, sans-serif;
+}
+
+h1,
+h2,
+h3,
+.font-display {
+  font-family: var(--font-ubuntu), system-ui, sans-serif;
+}
+
+::selection {
+  background: var(--gold-soft);
+  color: var(--charcoal);
+}
