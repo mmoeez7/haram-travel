@@ -7,6 +7,8 @@
   --gold: #d4af37;
   --gold-dark: #b8962e;
   --gold-soft: #e8d5a8;
+  --nav-gold: #b09b5b;
+  --nav-gold-dark: #9a8649;
   --charcoal: #1a1a1a;
   --ink: #2c2c2c;
   --muted: #6b6560;
@@ -27,6 +29,8 @@
   --color-gold: var(--gold);
   --color-gold-dark: var(--gold-dark);
   --color-gold-soft: var(--gold-soft);
+  --color-nav-gold: var(--nav-gold);
+  --color-nav-gold-dark: var(--nav-gold-dark);
   --color-charcoal: var(--charcoal);
   --color-ink: var(--ink);
   --color-muted: var(--muted);
@@ -61,4 +65,135 @@ h3,
 ::selection {
   background: var(--gold-soft);
   color: var(--charcoal);
+}
+
+/* ——— Motion ——— */
+.reveal {
+  opacity: 0;
+  transition:
+    opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+  will-change: opacity, transform;
+}
+
+.reveal-up {
+  transform: translateY(32px);
+}
+
+.reveal-fade {
+  transform: none;
+}
+
+.reveal-scale {
+  transform: scale(0.96);
+}
+
+.reveal-left {
+  transform: translateX(-28px);
+}
+
+.reveal-right {
+  transform: translateX(28px);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+.hero-enter {
+  animation: hero-rise 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.hero-enter-delay-1 {
+  animation-delay: 0.12s;
+}
+
+.hero-enter-delay-2 {
+  animation-delay: 0.24s;
+}
+
+.hero-enter-delay-3 {
+  animation-delay: 0.36s;
+}
+
+.hero-enter-delay-4 {
+  animation-delay: 0.48s;
+}
+
+.hero-enter-delay-5 {
+  animation-delay: 0.6s;
+}
+
+@keyframes hero-rise {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes hero-zoom {
+  from {
+    transform: scale(1.08);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+.hero-bg {
+  animation: hero-zoom 8s ease-out both;
+}
+
+.float-in {
+  animation: float-in 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.8s both;
+}
+
+@keyframes float-in {
+  from {
+    opacity: 0;
+    transform: translateX(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.card-lift {
+  transition:
+    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.35s ease;
+}
+
+.card-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .reveal.is-visible {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .hero-enter,
+  .hero-bg,
+  .float-in {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+
+  .card-lift:hover {
+    transform: none;
+  }
 }

@@ -15,7 +15,7 @@ export function Accordion({ items }: { items: Item[] }) {
         return (
           <div
             key={item.question}
-            className="overflow-hidden rounded-xl border border-border bg-white"
+            className="overflow-hidden rounded-xl border border-border bg-white transition-shadow duration-300 hover:shadow-md"
           >
             <button
               type="button"
@@ -25,14 +25,22 @@ export function Accordion({ items }: { items: Item[] }) {
             >
               <span className="font-medium text-charcoal">{item.question}</span>
               <ChevronDown
-                className={`h-5 w-5 shrink-0 text-gold transition ${isOpen ? "rotate-180" : ""}`}
+                className={`h-5 w-5 shrink-0 text-gold transition-transform duration-300 ${
+                  isOpen ? "rotate-180" : ""
+                }`}
               />
             </button>
-            {isOpen ? (
-              <div className="border-t border-border px-5 py-4 text-sm leading-relaxed text-muted">
-                {item.answer}
+            <div
+              className={`grid transition-[grid-template-rows] duration-300 ease-out ${
+                isOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+              }`}
+            >
+              <div className="overflow-hidden">
+                <div className="border-t border-border px-5 py-4 text-sm leading-relaxed text-muted">
+                  {item.answer}
+                </div>
               </div>
-            ) : null}
+            </div>
           </div>
         );
       })}

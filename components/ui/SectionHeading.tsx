@@ -1,3 +1,7 @@
+"use client";
+
+import { Reveal } from "@/components/ui/Reveal";
+
 type SectionHeadingProps = {
   eyebrow?: string;
   title: string;
@@ -14,10 +18,12 @@ export function SectionHeading({
   light = false,
 }: SectionHeadingProps) {
   return (
-    <div className={`mb-10 max-w-3xl ${align === "center" ? "mx-auto text-center" : ""}`}>
+    <Reveal
+      className={`mb-7 max-w-3xl md:mb-10 ${align === "center" ? "mx-auto text-center" : ""}`}
+    >
       {eyebrow ? (
         <span
-          className={`mb-3 inline-block rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] ${
+          className={`mb-2.5 inline-block rounded-full px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] md:mb-3 md:text-xs ${
             light ? "bg-white/15 text-gold-soft" : "bg-gold-soft/60 text-gold-dark"
           }`}
         >
@@ -25,17 +31,21 @@ export function SectionHeading({
         </span>
       ) : null}
       <h2
-        className={`font-display text-3xl font-semibold uppercase tracking-wide md:text-4xl ${
+        className={`font-display text-2xl font-semibold uppercase tracking-wide md:text-4xl ${
           light ? "text-white" : "text-charcoal"
         }`}
       >
         {title}
       </h2>
       {description ? (
-        <p className={`mt-4 text-base leading-relaxed ${light ? "text-white/80" : "text-muted"}`}>
+        <p
+          className={`mt-3 text-sm leading-relaxed md:mt-4 md:text-base ${
+            light ? "text-white/80" : "text-muted"
+          }`}
+        >
           {description}
         </p>
       ) : null}
-    </div>
+    </Reveal>
   );
 }

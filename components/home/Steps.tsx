@@ -9,6 +9,7 @@ import {
   Headset,
 } from "lucide-react";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import { CardRail } from "@/components/ui/CardRail";
 
 const steps = [
   {
@@ -59,7 +60,7 @@ const steps = [
 
 export function Steps() {
   return (
-    <section id="hotel-guide" className="bg-cream py-16 md:py-20">
+    <section id="hotel-guide" className="bg-cream py-12 md:py-20">
       <div className="mx-auto max-w-7xl px-4 lg:px-6">
         <SectionHeading
           eyebrow="The Sacred Road to Makkah"
@@ -73,7 +74,7 @@ export function Steps() {
             aria-hidden
           />
 
-          <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+          <CardRail cols="md:grid-cols-2 xl:grid-cols-4">
             {steps.map(
               ({
                 num,
@@ -88,38 +89,38 @@ export function Steps() {
               }) => (
                 <article
                   key={num}
-                  className={`relative flex h-full flex-col rounded-2xl bg-white p-5 shadow-sm md:p-6 ${
-                    highlighted
-                      ? "border-2 border-gold"
-                      : "border border-border"
+                  className={`card-lift relative flex h-full flex-col rounded-xl bg-white p-4 shadow-sm md:rounded-2xl md:p-6 ${
+                    highlighted ? "border-2 border-gold" : "border border-border"
                   }`}
                 >
-                  <div className="mb-5 flex items-start justify-between gap-3">
-                    <span className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-l from-gold to-gold-dark text-sm font-bold text-charcoal shadow-sm">
+                  <div className="mb-4 flex items-start justify-between gap-3 md:mb-5">
+                    <span className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-l from-gold to-gold-dark text-xs font-bold text-charcoal shadow-sm md:h-9 md:w-9 md:text-sm">
                       {num}
                     </span>
                     <span
-                      className={`flex h-10 w-10 items-center justify-center rounded-xl bg-cream ${iconTone}`}
+                      className={`flex h-9 w-9 items-center justify-center rounded-xl bg-cream md:h-10 md:w-10 ${iconTone}`}
                     >
-                      <Icon className="h-5 w-5" />
+                      <Icon className="h-4 w-4 md:h-5 md:w-5" />
                     </span>
                   </div>
 
-                  <h3 className="font-display text-base font-semibold uppercase tracking-wide text-charcoal md:text-lg">
+                  <h3 className="font-display text-sm font-semibold uppercase tracking-wide text-charcoal md:text-lg">
                     {title}
                   </h3>
-                  <p className="mt-3 flex-1 text-sm leading-relaxed text-muted">{text}</p>
+                  <p className="mt-2.5 flex-1 text-xs leading-relaxed text-muted md:mt-3 md:text-sm">
+                    {text}
+                  </p>
 
                   <span
-                    className={`mt-5 inline-flex w-fit items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold ${badgeTone}`}
+                    className={`mt-4 inline-flex w-fit items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-semibold md:mt-5 md:px-3 md:py-1.5 md:text-xs ${badgeTone}`}
                   >
-                    <BadgeIcon className="h-3.5 w-3.5" />
+                    <BadgeIcon className="h-3 w-3 md:h-3.5 md:w-3.5" />
                     {badge}
                   </span>
                 </article>
               )
             )}
-          </div>
+          </CardRail>
         </div>
       </div>
     </section>

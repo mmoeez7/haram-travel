@@ -1,5 +1,6 @@
 import { Building2, Shield, CreditCard, Headset } from "lucide-react";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import { CardRail } from "@/components/ui/CardRail";
 
 const points = [
   {
@@ -30,31 +31,31 @@ const points = [
 
 export function WhyUs() {
   return (
-    <section id="why-us" className="bg-ivory py-16 md:py-20">
+    <section id="why-us" className="bg-ivory py-12 md:py-20">
       <div className="mx-auto max-w-7xl px-4 lg:px-6">
         <SectionHeading
           eyebrow="The Haram Travel Difference"
           title="Why UK Pilgrims Choose Us"
           description="We don't just sell packages — we guide your divine journey with honesty, transparency, and care from doorstep to Haram."
         />
-        <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+        <CardRail cols="md:grid-cols-2 xl:grid-cols-4">
           {points.map(({ icon: Icon, title, text, iconTone }) => (
             <article
               key={title}
-              className="rounded-2xl border border-border bg-white p-6 transition hover:border-gold/50"
+              className="card-lift rounded-xl border border-border bg-white p-4 hover:border-gold/50 md:rounded-2xl md:p-6"
             >
               <div
-                className={`mb-4 flex h-12 w-12 items-center justify-center rounded-xl ${iconTone}`}
+                className={`mb-3 flex h-10 w-10 items-center justify-center rounded-xl md:mb-4 md:h-12 md:w-12 ${iconTone}`}
               >
-                <Icon className="h-6 w-6" />
+                <Icon className="h-5 w-5 md:h-6 md:w-6" />
               </div>
-              <h3 className="font-display text-lg font-semibold uppercase tracking-wide text-charcoal">
+              <h3 className="font-display text-base font-semibold uppercase tracking-wide text-charcoal md:text-lg">
                 {title}
               </h3>
-              <p className="mt-3 text-sm leading-relaxed text-muted">{text}</p>
+              <p className="mt-2 text-xs leading-relaxed text-muted md:mt-3 md:text-sm">{text}</p>
             </article>
           ))}
-        </div>
+        </CardRail>
       </div>
     </section>
   );

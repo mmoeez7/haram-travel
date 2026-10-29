@@ -2,6 +2,7 @@ import { Shield, Landmark, Plane, Star, MessageCircle } from "lucide-react";
 import { SITE, telUrl, whatsappUrl } from "@/lib/constants";
 import { Button } from "@/components/ui/Button";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import { CardRail } from "@/components/ui/CardRail";
 
 const cards = [
   {
@@ -28,17 +29,17 @@ const cards = [
 
 export function Credentials() {
   return (
-    <section className="bg-charcoal py-16 text-white">
+    <section className="bg-charcoal py-12 text-white md:py-16">
       <div className="mx-auto max-w-7xl px-4 lg:px-6">
         <div className="mx-auto max-w-3xl text-center">
-          <h2 className="font-display text-3xl font-semibold uppercase tracking-wide md:text-4xl">
+          <h2 className="font-display text-2xl font-semibold uppercase tracking-wide md:text-4xl">
             Perform Umrah with Total Peace of Mind
           </h2>
-          <p className="mt-4 text-white/75">
+          <p className="mt-3 text-sm text-white/75 md:mt-4 md:text-base">
             Speak with UK Umrah advisors to craft tailored dates and itineraries that are ATOL
             protected from day one.
           </p>
-          <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
+          <div className="mt-5 flex flex-col items-stretch justify-center gap-2.5 sm:flex-row sm:flex-wrap sm:items-center md:mt-7 md:gap-3">
             <Button href="/booking-form" variant="gold">
               Find My Package
             </Button>
@@ -54,26 +55,26 @@ export function Credentials() {
           </div>
         </div>
 
-        <div className="mt-14">
+        <div className="mt-10 md:mt-14">
           <SectionHeading
             eyebrow="Legal Transparency"
             title="Licensed, Bonded & Directly Contracted"
             light
           />
-          <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+          <CardRail cols="md:grid-cols-2 xl:grid-cols-4">
             {cards.map(({ icon: Icon, title, text }) => (
               <article
                 key={title}
-                className="rounded-2xl border border-white/10 bg-white/5 p-5"
+                className="h-full rounded-xl border border-white/10 bg-white/5 p-4 md:rounded-2xl md:p-5"
               >
-                <Icon className="mb-4 h-7 w-7 text-gold-soft" />
-                <h3 className="font-display text-lg font-semibold uppercase tracking-wide">
+                <Icon className="mb-3 h-6 w-6 text-gold-soft md:mb-4 md:h-7 md:w-7" />
+                <h3 className="font-display text-base font-semibold uppercase tracking-wide md:text-lg">
                   {title}
                 </h3>
-                <p className="mt-3 text-sm leading-relaxed text-white/70">{text}</p>
+                <p className="mt-2 text-xs leading-relaxed text-white/70 md:mt-3 md:text-sm">{text}</p>
               </article>
             ))}
-          </div>
+          </CardRail>
         </div>
 
         <p className="mt-10 text-center text-sm text-white/60">

@@ -22,7 +22,7 @@ export function PackageFinder() {
   return (
     <form
       onSubmit={onSubmit}
-      className="mx-auto max-w-5xl rounded-2xl border border-gold-soft/40 bg-[#f4e8cc] p-4 shadow-xl md:p-5"
+      className="mx-auto max-w-5xl rounded-xl border border-gold-soft/40 bg-[#f4e8cc] p-3 shadow-xl sm:rounded-2xl sm:p-4 md:p-5"
     >
       <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-5">
         <label className="block text-left">

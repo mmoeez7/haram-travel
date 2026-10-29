@@ -1,5 +1,6 @@
 import type { PackageItem } from "@/lib/packages";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import { CardRail } from "@/components/ui/CardRail";
 import { PackageCard } from "./PackageCard";
 
 type PackageSectionProps = {
@@ -21,11 +22,11 @@ export function PackageSection({
     <section className="py-12 md:py-16">
       <div className="mx-auto max-w-7xl px-4 lg:px-6">
         <SectionHeading eyebrow={eyebrow} title={title} description={description} />
-        <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+        <CardRail>
           {packages.map((pkg) => (
             <PackageCard key={pkg.id} pkg={pkg} />
           ))}
-        </div>
+        </CardRail>
       </div>
     </section>
   );

@@ -1,5 +1,8 @@
+"use client";
+
 import { Accordion } from "@/components/ui/Accordion";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import { Reveal } from "@/components/ui/Reveal";
 
 const faqs = [
   {
@@ -26,14 +29,16 @@ const faqs = [
 
 export function FAQ() {
   return (
-    <section className="bg-ivory py-16 md:py-20">
+    <section className="bg-ivory py-12 md:py-20">
       <div className="mx-auto max-w-3xl px-4 lg:px-6">
         <SectionHeading
           eyebrow="Got Questions?"
           title="Frequently Asked Questions"
           description="Clear answers to the most common queries from UK pilgrims."
         />
-        <Accordion items={faqs} />
+        <Reveal delay={80}>
+          <Accordion items={faqs} />
+        </Reveal>
       </div>
     </section>
   );

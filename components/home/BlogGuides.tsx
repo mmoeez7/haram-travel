@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import { CardRail } from "@/components/ui/CardRail";
 
 const guides = [
   {
@@ -26,41 +27,45 @@ const guides = [
 
 export function BlogGuides() {
   return (
-    <section id="guides" className="bg-cream py-16 md:py-20">
+    <section id="guides" className="bg-cream py-12 md:py-20">
       <div className="mx-auto max-w-7xl px-4 lg:px-6">
         <SectionHeading
           eyebrow="Sacred Knowledge Hub"
           title="The British Pilgrim's Journal & Practical Guides"
           description="Clear, verified Sunnah guidance, packing checklists, and insider tips curated by our experienced UK Umrah directors."
         />
-        <div className="grid gap-6 md:grid-cols-3">
+        <CardRail cols="md:grid-cols-3">
           {guides.map((guide) => (
             <article
               key={guide.title}
-              className="overflow-hidden rounded-2xl border border-border bg-white transition hover:border-gold/50"
+              className="card-lift overflow-hidden rounded-xl border border-border bg-white hover:border-gold/50 md:rounded-2xl"
             >
-              <div className="relative h-44 overflow-hidden">
+              <div className="relative h-32 overflow-hidden sm:h-36 md:h-44">
                 <Image
                   src={guide.image}
                   alt={guide.title}
                   fill
                   className="object-cover"
-                  sizes="(max-width: 768px) 100vw, 33vw"
+                  sizes="(max-width: 768px) 80vw, 33vw"
                 />
               </div>
-              <div className="p-6">
-                <h3 className="font-display text-xl font-semibold text-charcoal">{guide.title}</h3>
-                <p className="mt-3 text-sm leading-relaxed text-muted">{guide.excerpt}</p>
+              <div className="p-4 md:p-6">
+                <h3 className="font-display text-base font-semibold text-charcoal md:text-xl">
+                  {guide.title}
+                </h3>
+                <p className="mt-2 text-xs leading-relaxed text-muted md:mt-3 md:text-sm">
+                  {guide.excerpt}
+                </p>
                 <Link
                   href="/about-us"
-                  className="mt-5 inline-flex items-center gap-1 text-sm font-semibold text-gold-dark hover:text-gold"
+                  className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-gold-dark hover:text-gold md:mt-5"
                 >
                   Read guide <ArrowRight className="h-4 w-4" />
                 </Link>
               </div>
             </article>
           ))}
-        </div>
+        </CardRail>
       </div>
     </section>
   );
