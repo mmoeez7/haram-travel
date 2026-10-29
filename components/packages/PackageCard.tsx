@@ -17,7 +17,7 @@ export function PackageCard({ pkg }: { pkg: PackageItem }) {
           className="object-cover"
           sizes="(max-width: 768px) 100vw, 33vw"
         />
-        <span className="absolute left-3 top-3 rounded-md bg-charcoal/90 px-2.5 py-1 text-xs font-semibold text-white">
+        <span className="absolute left-3 top-3 rounded-md bg-gold px-2.5 py-1 text-xs font-semibold text-charcoal">
           {pkg.badge}
         </span>
       </div>
@@ -63,16 +63,16 @@ export function PackageCard({ pkg }: { pkg: PackageItem }) {
           <div className="mb-2 grid grid-cols-2 gap-2">
             <Button
               href={whatsappUrl(waMessage)}
-              variant="outline"
+              variant="whatsapp"
               className="!px-3 !py-2 text-xs"
               target="_blank"
               rel="noopener noreferrer"
             >
-              <MessageCircle className="h-3.5 w-3.5 text-whatsapp" />
+              <MessageCircle className="h-3.5 w-3.5 text-white" />
               WhatsApp
             </Button>
-            <Button href={telUrl()} variant="outline" className="!px-3 !py-2 text-xs">
-              <Phone className="h-3.5 w-3.5 text-gold" />
+            <Button href={telUrl()} variant="call" className="!px-3 !py-2 text-xs">
+              <Phone className="h-3.5 w-3.5" />
               Call Now
             </Button>
           </div>

@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Ubuntu } from "next/font/google";
-import { TopBar } from "@/components/layout/TopBar";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { FloatingWidgets } from "@/components/layout/FloatingWidgets";
@@ -31,7 +30,6 @@ export default function RootLayout({
   return (
     <html lang="en-GB">
       <body className={`${ubuntu.variable} ${ubuntu.className} antialiased`}>
-        <TopBar />
         <Header />
         <main>{children}</main>
         <Footer />

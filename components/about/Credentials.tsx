@@ -1,4 +1,4 @@
-import { Shield, Landmark, Plane, Star } from "lucide-react";
+import { Shield, Landmark, Plane, Star, MessageCircle } from "lucide-react";
 import { SITE, telUrl, whatsappUrl } from "@/lib/constants";
 import { Button } from "@/components/ui/Button";
 import { SectionHeading } from "@/components/ui/SectionHeading";
@@ -48,6 +48,7 @@ export function Credentials() {
               target="_blank"
               rel="noopener noreferrer"
             >
+              <MessageCircle className="h-4 w-4" />
               Chat on WhatsApp
             </Button>
           </div>

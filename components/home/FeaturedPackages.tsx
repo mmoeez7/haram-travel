@@ -13,8 +13,8 @@ export function FeaturedPackages() {
       <div className="mx-auto max-w-7xl px-4 lg:px-6">
         <SectionHeading
           eyebrow="Handcrafted Itineraries"
-          title="Featured Umrah Packages 2025/26"
-          description="Choose from verified walking-distance hotels across 3, 4 and 5-star comfort — flights, visa and transfers included."
+          title="Featured Umrah Packages 2026/27"
+          description="Every Package includes return UK flights, handpicked hotels, full Saudi Umrah visa handling, and private ground transport"
         />
         <CategoryFilters active="all" />
 

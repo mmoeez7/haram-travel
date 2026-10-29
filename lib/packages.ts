@@ -107,7 +107,7 @@ export const umrahPackages: PackageItem[] = [
     season: "all",
     category: "umrah",
     image:
-      "https://images.unsplash.com/photo-1580418827634-2301f746e0e1?w=800&q=80",
+      "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&q=80",
   },
   {
     id: "4star-12",
@@ -124,7 +124,7 @@ export const umrahPackages: PackageItem[] = [
     season: "all",
     category: "umrah",
     image:
-      "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&q=80",
+      "https://images.unsplash.com/photo-1582719508461-905c673771fd?w=800&q=80",
   },
   {
     id: "5star-7",
@@ -141,7 +141,7 @@ export const umrahPackages: PackageItem[] = [
     season: "all",
     category: "umrah",
     image:
-      "https://images.unsplash.com/photo-1590075865003-e48277faa566?w=800&q=80",
+      "https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=800&q=80",
   },
   {
     id: "5star-10",
@@ -175,7 +175,7 @@ export const umrahPackages: PackageItem[] = [
     season: "all",
     category: "umrah",
     image:
-      "https://images.unsplash.com/photo-1580418827634-2301f746e0e1?w=800&q=80",
+      "https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=800&q=80",
   },
   {
     id: "dec-budget",
@@ -260,7 +260,7 @@ export const umrahPackages: PackageItem[] = [
     season: "easter",
     category: "umrah",
     image:
-      "https://images.unsplash.com/photo-1590075865003-e48277faa566?w=800&q=80",
+      "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=800&q=80",
   },
   {
     id: "ramadan-last10",
@@ -294,7 +294,7 @@ export const umrahPackages: PackageItem[] = [
     season: "ramadan",
     category: "umrah",
     image:
-      "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&q=80",
+      "https://images.unsplash.com/photo-1582719508461-905c673771fd?w=800&q=80",
   },
 ];
 
@@ -385,7 +385,7 @@ export const hajjPackages: PackageItem[] = [
     ],
     category: "hajj",
     image:
-      "https://images.unsplash.com/photo-1590075865003-e48277faa566?w=800&q=80",
+      "https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=800&q=80",
   },
 ];
 

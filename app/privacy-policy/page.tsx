@@ -32,9 +32,12 @@ export default function PrivacyPolicyPage() {
                 <Link
                   key={section.id}
                   href={`#${section.id}`}
-                  className="block rounded-lg px-3 py-2 text-sm text-ink transition hover:bg-cream hover:text-gold-dark"
+                  className="flex items-start gap-2.5 rounded-lg px-3 py-2 text-sm text-ink transition hover:bg-cream hover:text-gold-dark"
                 >
-                  {index + 1}. {section.title.split("&")[0].trim()}
+                  <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-gradient-to-l from-gold to-gold-dark text-[10px] font-bold text-charcoal">
+                    {index + 1}
+                  </span>
+                  <span className="leading-snug">{section.title}</span>
                 </Link>
               ))}
             </nav>

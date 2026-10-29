@@ -1,12 +1,13 @@
 import Link from "next/link";
 import { type ReactNode } from "react";
 
-type Variant = "gold" | "dark" | "whatsapp" | "outline" | "ghost";
+type Variant = "gold" | "dark" | "whatsapp" | "call" | "outline" | "ghost";
 
 const variants: Record<Variant, string> = {
-  gold: "bg-gold text-white hover:bg-gold-dark shadow-sm",
-  dark: "bg-charcoal text-white hover:bg-ink",
+  gold: "bg-gradient-to-l from-gold to-gold-dark text-charcoal shadow-sm hover:from-gold-dark hover:to-gold",
+  dark: "bg-gradient-to-l from-gold to-gold-dark text-charcoal hover:from-gold-dark hover:to-gold",
   whatsapp: "bg-whatsapp text-white hover:bg-whatsapp-dark",
+  call: "border border-call-border bg-call text-call-border hover:border-call-hover hover:bg-call-hover hover:text-white [&_svg]:text-call-border hover:[&_svg]:text-white",
   outline:
     "border border-border bg-white text-charcoal hover:border-gold hover:text-gold-dark",
   ghost: "bg-transparent text-charcoal hover:text-gold-dark",

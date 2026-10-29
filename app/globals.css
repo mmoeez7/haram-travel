@@ -4,8 +4,8 @@
   --cream: #faf6ef;
   --cream-dark: #f0e8d8;
   --ivory: #fffdf8;
-  --gold: #c5a059;
-  --gold-dark: #a8843f;
+  --gold: #d4af37;
+  --gold-dark: #b8962e;
   --gold-soft: #e8d5a8;
   --charcoal: #1a1a1a;
   --ink: #2c2c2c;
@@ -13,6 +13,9 @@
   --forest: #1a3c34;
   --whatsapp: #25d366;
   --whatsapp-dark: #1da851;
+  --call: #fee2e2;
+  --call-border: #b91c1c;
+  --call-hover: #dc2626;
   --border: #e5ddd0;
   --white: #ffffff;
 }
@@ -30,6 +33,9 @@
   --color-forest: var(--forest);
   --color-whatsapp: var(--whatsapp);
   --color-whatsapp-dark: var(--whatsapp-dark);
+  --color-call: var(--call);
+  --color-call-border: var(--call-border);
+  --color-call-hover: var(--call-hover);
   --color-border: var(--border);
   --font-display: var(--font-ubuntu);
   --font-sans: var(--font-ubuntu);

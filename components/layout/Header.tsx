@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Menu, X } from "lucide-react";
+import { Menu, MessageCircle, X } from "lucide-react";
 import { useState } from "react";
 import { NAV_LINKS, whatsappUrl } from "@/lib/constants";
 import { Button } from "@/components/ui/Button";
@@ -11,7 +11,7 @@ export function Header() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-border bg-ivory/95 backdrop-blur">
+    <header className="sticky top-0 z-50 border-b border-border bg-cream">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 lg:px-6">
         <Logo priority />
 
@@ -28,10 +28,17 @@ export function Header() {
         </nav>
 
         <div className="hidden items-center gap-2 md:flex">
-          <Button href={whatsappUrl()} variant="whatsapp" target="_blank" rel="noopener noreferrer">
+          <Button
+            href={whatsappUrl()}
+            variant="whatsapp"
+            className="!rounded-full"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <MessageCircle className="h-4 w-4" />
             WhatsApp
           </Button>
-          <Button href="/booking-form" variant="dark">
+          <Button href="/booking-form" variant="dark" className="!rounded-full">
             Find Package →
           </Button>
         </div>
@@ -47,7 +54,7 @@ export function Header() {
       </div>
 
       {open ? (
-        <div className="border-t border-border bg-ivory px-4 py-4 xl:hidden">
+        <div className="border-t border-border bg-cream px-4 py-4 xl:hidden">
           <nav className="flex flex-col gap-3">
             {NAV_LINKS.map((link) => (
               <Link
@@ -61,10 +68,17 @@ export function Header() {
             ))}
           </nav>
           <div className="mt-4 flex flex-col gap-2">
-            <Button href={whatsappUrl()} variant="whatsapp" target="_blank" rel="noopener noreferrer">
+            <Button
+              href={whatsappUrl()}
+              variant="whatsapp"
+              className="!rounded-full"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <MessageCircle className="h-4 w-4" />
               WhatsApp
             </Button>
-            <Button href="/booking-form" variant="dark">
+            <Button href="/booking-form" variant="dark" className="!rounded-full">
               Find Package →
             </Button>
           </div>

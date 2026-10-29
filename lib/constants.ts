@@ -16,20 +16,20 @@ export const SITE = {
 } as const;
 
 export const NAV_LINKS = [
-  { href: "/umrah-packages", label: "Umrah Packages" },
-  { href: "/about-us", label: "About Us" },
-  { href: "/#why-us", label: "Why Us" },
-  { href: "/#hotel-guide", label: "Hotel Guide" },
-  { href: "/#guides", label: "Pilgrim Guides" },
-  { href: "/contact-us", label: "Contact Us" },
+  { href: "/umrah-packages", label: "Umrah Package" },
+  { href: "/cost-calculator", label: "0% Cost Calculator" },
+  { href: "/hotel-walking-guide", label: "Hotel Walking Guide" },
+  { href: "/why-us", label: "Why Us" },
+  { href: "/pilgrim-reviews", label: "Pilgrims Reviews" },
 ] as const;
 
 export const FOOTER_PACKAGES = [
   { href: "/umrah-packages", label: "3-Star Economy Umrah" },
   { href: "/umrah-packages", label: "4-Star Executive Packages" },
   { href: "/umrah-packages", label: "5-Star VIP Clock Tower" },
-  { href: "/ramadan-umrah-packages", label: "Ramadan Packages" },
+  { href: "/ramadan-umrah-packages", label: "Ramadan 2027 Packages" },
   { href: "/umrah-packages", label: "Family & Group Umrah" },
+  { href: "/#guides", label: "Pilgrim Guides & Articles" },
 ] as const;
 
 export const FOOTER_DEPARTURES = [

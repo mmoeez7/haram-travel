@@ -1,3 +1,4 @@
+import { MessageCircle, Phone } from "lucide-react";
 import { SITE, telUrl, whatsappUrl } from "@/lib/constants";
 import { Button } from "@/components/ui/Button";
 
@@ -14,9 +15,11 @@ export function CustomQuote() {
         </p>
         <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
           <Button href={whatsappUrl()} variant="whatsapp" target="_blank" rel="noopener noreferrer">
+            <MessageCircle className="h-4 w-4" />
             Chat on WhatsApp
           </Button>
-          <Button href={telUrl()} variant="dark">
+          <Button href={telUrl()} variant="call">
+            <Phone className="h-4 w-4" />
             Call {SITE.phone}
           </Button>
         </div>

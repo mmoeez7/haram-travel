@@ -22,7 +22,7 @@ const cards = [
     action: {
       href: telUrl(),
       label: `Call ${SITE.phone}`,
-      variant: "dark" as const,
+      variant: "call" as const,
       external: false,
     },
     detail: SITE.phone,

@@ -29,6 +29,7 @@ export function FAQ() {
     <section className="bg-ivory py-16 md:py-20">
       <div className="mx-auto max-w-3xl px-4 lg:px-6">
         <SectionHeading
+          eyebrow="Got Questions?"
           title="Frequently Asked Questions"
           description="Clear answers to the most common queries from UK pilgrims."
         />

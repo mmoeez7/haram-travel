@@ -86,7 +86,7 @@ export function PackageFinder() {
           </select>
         </label>
         <div className="flex items-end">
-          <Button type="submit" variant="dark" className="w-full !py-3">
+          <Button type="submit" variant="dark" className="w-full !rounded-full !py-3">
             Find My Package →
           </Button>
         </div>
