@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { ChevronDown, Menu, MessageCircle, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { NAV_ITEMS, whatsappUrl, type NavItem } from "@/lib/constants";
+import { whatsappUrl, type NavItem } from "@/lib/constants";
 import { Button } from "@/components/ui/Button";
 import { Logo } from "@/components/layout/Logo";
 
@@ -48,10 +48,10 @@ function DesktopNavItem({ item }: { item: NavItem }) {
       </button>
 
       {open ? (
-        <div className="absolute left-0 top-full z-50 min-w-[240px] overflow-hidden rounded-md border border-border bg-white pt-2 shadow-lg">
+        <div className="absolute left-0 top-full z-50 max-h-[70vh] min-w-[260px] overflow-y-auto rounded-md border border-border bg-white pt-2 shadow-lg">
           {item.children.map((child, index) => (
             <Link
-              key={child.href}
+              key={`${child.href}-${child.label}`}
               href={child.href}
               className={`block px-4 py-2.5 text-sm text-charcoal transition hover:bg-cream hover:text-gold-dark ${
                 index > 0 ? "border-t border-border" : ""
@@ -67,7 +67,7 @@ function DesktopNavItem({ item }: { item: NavItem }) {
   );
 }
 
-export function Header() {
+export function Header({ navItems }: { navItems: NavItem[] }) {
   const [open, setOpen] = useState(false);
   const [mobileExpanded, setMobileExpanded] = useState<string | null>(null);
 
@@ -77,7 +77,7 @@ export function Header() {
         <Logo priority />
 
         <nav className="hidden items-center gap-5 xl:flex">
-          {NAV_ITEMS.map((item) => (
+          {navItems.map((item) => (
             <DesktopNavItem key={item.label} item={item} />
           ))}
         </nav>
@@ -111,7 +111,7 @@ export function Header() {
       {open ? (
         <div className="border-t border-border bg-cream px-4 py-4 xl:hidden">
           <nav className="flex flex-col">
-            {NAV_ITEMS.map((item) => {
+            {navItems.map((item) => {
               const hasChildren = Boolean(item.children?.length);
               const expanded = mobileExpanded === item.label;
 
@@ -142,10 +142,10 @@ export function Header() {
                     />
                   </button>
                   {expanded ? (
-                    <div className="mb-3 overflow-hidden rounded-md border border-border bg-white">
+                    <div className="mb-3 max-h-72 overflow-y-auto rounded-md border border-border bg-white">
                       {item.children!.map((child, index) => (
                         <Link
-                          key={child.href}
+                          key={`${child.href}-${child.label}`}
                           href={child.href}
                           className={`block px-4 py-2.5 text-sm text-charcoal ${
                             index > 0 ? "border-t border-border" : ""

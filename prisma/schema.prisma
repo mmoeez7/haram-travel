@@ -1,0 +1,238 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  SUPER_ADMIN
+  ADMIN
+  EDITOR
+}
+
+enum CityType {
+  MAKKAH
+  MADINAH
+}
+
+enum CategoryKind {
+  STAR
+  SEASON
+  JOURNEY
+  CUSTOM
+}
+
+enum JourneyType {
+  UMRAH
+  HAJJ
+}
+
+enum SeasonType {
+  ALL
+  JANUARY
+  FEBRUARY
+  EASTER
+  RAMADAN
+  SEPTEMBER
+  OCTOBER
+  NOVEMBER
+  DECEMBER
+}
+
+enum PackageHotelRole {
+  MAKKAH
+  MADINAH
+}
+
+model AdminUser {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  passwordHash String    @map("password_hash")
+  name         String
+  role         UserRole  @default(ADMIN)
+  isActive     Boolean   @default(true) @map("is_active")
+  lastLoginAt  DateTime? @map("last_login_at")
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt @map("updated_at")
+  deletedAt    DateTime? @map("deleted_at")
+
+  packagesCreated Package[]       @relation("PackageCreatedBy")
+  packagesUpdated Package[]       @relation("PackageUpdatedBy")
+  auditLogs       AdminAuditLog[]
+
+  @@index([isActive])
+  @@map("admin_users")
+}
+
+model Category {
+  id          String       @id @default(cuid())
+  name        String
+  slug        String
+  kind        CategoryKind @default(CUSTOM)
+  description String?
+  sortOrder   Int          @default(0) @map("sort_order")
+  published   Boolean      @default(false)
+  createdAt   DateTime     @default(now()) @map("created_at")
+  updatedAt   DateTime     @updatedAt @map("updated_at")
+  deletedAt   DateTime?    @map("deleted_at")
+
+  packages PackageCategory[]
+
+  @@unique([slug])
+  @@index([published, sortOrder])
+  @@map("categories")
+}
+
+model Hotel {
+  id                 String    @id @default(cuid())
+  name               String
+  slug               String
+  city               CityType
+  stars              Int
+  walkingMinutes     Int?      @map("walking_minutes")
+  distanceToHaramM   Int?      @map("distance_to_haram_m")
+  address            String?
+  shortDescription   String?   @map("short_description")
+  description        String?
+  coverImageUrl      String?   @map("cover_image_url")
+  coverImageAlt      String?   @map("cover_image_alt")
+  amenities          String[]  @default([])
+  published          Boolean   @default(false)
+  sortOrder          Int       @default(0) @map("sort_order")
+  createdAt          DateTime  @default(now()) @map("created_at")
+  updatedAt          DateTime  @updatedAt @map("updated_at")
+  deletedAt          DateTime? @map("deleted_at")
+
+  images   HotelImage[]
+  packages PackageHotel[]
+
+  @@unique([slug])
+  @@index([city, published, sortOrder])
+  @@index([stars])
+  @@map("hotels")
+}
+
+model HotelImage {
+  id        String   @id @default(cuid())
+  hotelId   String   @map("hotel_id")
+  url       String
+  alt       String?
+  sortOrder Int      @default(0) @map("sort_order")
+  isCover   Boolean  @default(false) @map("is_cover")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  hotel Hotel @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+
+  @@index([hotelId, sortOrder])
+  @@map("hotel_images")
+}
+
+model Package {
+  id               String      @id @default(cuid())
+  title            String
+  subtitle         String
+  slug             String
+  journeyType      JourneyType @default(UMRAH) @map("journey_type")
+  stars            Int
+  nights           Int
+  makkahNights     Int         @map("makkah_nights")
+  madinahNights    Int         @map("madinah_nights")
+  priceFrom        Decimal     @map("price_from") @db.Decimal(10, 2)
+  deposit          Decimal     @db.Decimal(10, 2)
+  currency         String      @default("GBP") @db.Char(3)
+  badge            String?
+  season           SeasonType  @default(ALL)
+  features         String[]    @default([])
+  shortDescription String?     @map("short_description")
+  description      String?
+  coverImageUrl    String?     @map("cover_image_url")
+  coverImageAlt    String?     @map("cover_image_alt")
+  featured         Boolean     @default(false)
+  published        Boolean     @default(false)
+  sortOrder        Int         @default(0) @map("sort_order")
+  metaTitle        String?     @map("meta_title")
+  metaDescription  String?     @map("meta_description")
+  createdById      String?     @map("created_by")
+  updatedById      String?     @map("updated_by")
+  publishedAt      DateTime?   @map("published_at")
+  createdAt        DateTime    @default(now()) @map("created_at")
+  updatedAt        DateTime    @updatedAt @map("updated_at")
+  deletedAt        DateTime?   @map("deleted_at")
+
+  createdBy  AdminUser?         @relation("PackageCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+  updatedBy  AdminUser?         @relation("PackageUpdatedBy", fields: [updatedById], references: [id], onDelete: SetNull)
+  images     PackageImage[]
+  categories PackageCategory[]
+  hotels     PackageHotel[]
+
+  @@unique([slug])
+  @@index([published, journeyType, stars, season, sortOrder])
+  @@index([featured, sortOrder])
+  @@index([priceFrom])
+  @@map("packages")
+}
+
+model PackageImage {
+  id        String   @id @default(cuid())
+  packageId String   @map("package_id")
+  url       String
+  alt       String?
+  sortOrder Int      @default(0) @map("sort_order")
+  isCover   Boolean  @default(false) @map("is_cover")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  package Package @relation(fields: [packageId], references: [id], onDelete: Cascade)
+
+  @@index([packageId, sortOrder])
+  @@map("package_images")
+}
+
+model PackageCategory {
+  packageId  String   @map("package_id")
+  categoryId String   @map("category_id")
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  package  Package  @relation(fields: [packageId], references: [id], onDelete: Cascade)
+  category Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@id([packageId, categoryId])
+  @@index([categoryId])
+  @@map("package_categories")
+}
+
+model PackageHotel {
+  id        String           @id @default(cuid())
+  packageId String           @map("package_id")
+  hotelId   String           @map("hotel_id")
+  role      PackageHotelRole
+  nights    Int?
+  notes     String?
+  createdAt DateTime         @default(now()) @map("created_at")
+
+  package Package @relation(fields: [packageId], references: [id], onDelete: Cascade)
+  hotel   Hotel   @relation(fields: [hotelId], references: [id], onDelete: Restrict)
+
+  @@unique([packageId, role])
+  @@index([hotelId])
+  @@map("package_hotels")
+}
+
+model AdminAuditLog {
+  id          String   @id @default(cuid())
+  adminUserId String?  @map("admin_user_id")
+  action      String
+  entityType  String   @map("entity_type")
+  entityId    String?  @map("entity_id")
+  metadata    Json     @default("{}")
+  ipAddress   String?  @map("ip_address")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  adminUser AdminUser? @relation(fields: [adminUserId], references: [id], onDelete: SetNull)
+
+  @@index([createdAt])
+  @@index([entityType, entityId])
+  @@map("admin_audit_logs")
+}

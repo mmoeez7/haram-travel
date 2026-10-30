@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { Check, MessageCircle, Phone } from "lucide-react";
 import type { PackageItem } from "@/lib/packages";
 import { telUrl, whatsappUrl } from "@/lib/constants";
@@ -6,10 +7,11 @@ import { Button } from "@/components/ui/Button";
 
 export function PackageCard({ pkg }: { pkg: PackageItem }) {
   const waMessage = `Assalamu Alaikum, I'm interested in ${pkg.title} (${pkg.subtitle}) from £${pkg.priceFrom}pp.`;
+  const href = `/packages/${pkg.id}`;
 
   return (
     <article className="card-lift flex h-full flex-col overflow-hidden rounded-xl border border-border bg-white shadow-sm md:rounded-2xl">
-      <div className="relative h-36 overflow-hidden sm:h-40 md:h-48">
+      <Link href={href} className="relative block h-36 overflow-hidden sm:h-40 md:h-48">
         <Image
           src={pkg.image}
           alt={pkg.title}
@@ -20,11 +22,13 @@ export function PackageCard({ pkg }: { pkg: PackageItem }) {
         <span className="absolute left-2.5 top-2.5 rounded-md bg-gold px-2 py-0.5 text-[10px] font-semibold text-charcoal md:left-3 md:top-3 md:px-2.5 md:py-1 md:text-xs">
           {pkg.badge}
         </span>
-      </div>
+      </Link>
 
       <div className="flex flex-1 flex-col p-3.5 sm:p-4 md:p-5">
         <h3 className="font-display text-base font-semibold uppercase tracking-wide text-charcoal sm:text-lg md:text-xl">
-          {pkg.title}
+          <Link href={href} className="hover:text-gold-dark">
+            {pkg.title}
+          </Link>
         </h3>
         <p className="mt-0.5 text-xs font-medium text-gold-dark md:mt-1 md:text-sm">
           {pkg.subtitle}

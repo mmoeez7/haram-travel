@@ -12,20 +12,23 @@ type SeasonalDealPageProps = {
   season?: SeasonKey;
 };
 
-function packagesForSeason(season?: SeasonKey): PackageItem[] {
+async function packagesForSeason(season?: SeasonKey): Promise<PackageItem[]> {
   if (season) {
-    const seasonal = getSeasonalPackages(season);
+    const seasonal = await getSeasonalPackages(season);
     if (seasonal.length) return seasonal;
   }
-  return [...getUmrahByStars(3), ...getUmrahByStars(4)].slice(0, 6);
+  const [three, four] = await Promise.all([getUmrahByStars(3), getUmrahByStars(4)]);
+  return [...three, ...four].slice(0, 6);
 }
 
-export function SeasonalDealPage({
+export async function SeasonalDealPage({
   title,
   description,
   pathLabel,
   season,
 }: SeasonalDealPageProps) {
+  const packages = await packagesForSeason(season);
+
   return (
     <>
       <section className="bg-cream pt-12 pb-6">
@@ -43,11 +46,7 @@ export function SeasonalDealPage({
           <p className="mt-4 max-w-2xl text-muted">{description}</p>
         </div>
       </section>
-      <PackageSection
-        title={title}
-        description={description}
-        packages={packagesForSeason(season)}
-      />
+      <PackageSection title={title} description={description} packages={packages} />
       <CustomQuote />
     </>
   );

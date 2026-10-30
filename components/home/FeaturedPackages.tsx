@@ -1,17 +1,23 @@
 "use client";
 
-import { getUmrahByStars } from "@/lib/packages";
+import type { PackageItem } from "@/lib/packages";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { CardRail } from "@/components/ui/CardRail";
 import { Reveal } from "@/components/ui/Reveal";
 import { CategoryFilters } from "@/components/packages/CategoryFilters";
 import { PackageCard } from "@/components/packages/PackageCard";
 
-export function FeaturedPackages() {
-  const threeStar = getUmrahByStars(3);
-  const fourStar = getUmrahByStars(4);
-  const fiveStar = getUmrahByStars(5);
+type FeaturedPackagesProps = {
+  threeStar: PackageItem[];
+  fourStar: PackageItem[];
+  fiveStar: PackageItem[];
+};
 
+export function FeaturedPackages({
+  threeStar,
+  fourStar,
+  fiveStar,
+}: FeaturedPackagesProps) {
   const groups = [
     {
       id: undefined as string | undefined,

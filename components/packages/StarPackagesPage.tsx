@@ -10,12 +10,14 @@ type StarPackagesPageProps = {
   pathLabel: string;
 };
 
-export function StarPackagesPage({
+export async function StarPackagesPage({
   stars,
   title,
   description,
   pathLabel,
 }: StarPackagesPageProps) {
+  const packages = await getUmrahByStars(stars);
+
   return (
     <>
       <section className="bg-cream pt-12 pb-6">
@@ -33,11 +35,7 @@ export function StarPackagesPage({
           <p className="mt-4 max-w-2xl text-muted">{description}</p>
         </div>
       </section>
-      <PackageSection
-        title={title}
-        description={description}
-        packages={getUmrahByStars(stars)}
-      />
+      <PackageSection title={title} description={description} packages={packages} />
       <CustomQuote />
     </>
   );

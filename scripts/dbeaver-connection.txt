@@ -1,0 +1,15 @@
+Haram Travel — DBeaver connection (local PostgreSQL)
+
+Host:     127.0.0.1
+Port:     5432
+Database: haram_travel
+Username: haram_travel_app
+Password: (see .env DATABASE_URL)
+
+Start the server before connecting:
+  npm run db:start
+
+Postgres binaries (user-space install):
+  ~/micromamba/envs/haram-pg/bin
+Data directory:
+  ~/pgsql/haram-travel-data

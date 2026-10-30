@@ -38,42 +38,21 @@ export type NavItem = {
   children?: NavChild[];
 };
 
-/** Matches haramtravel.uk primary navigation */
+/**
+ * Static fallback only. Live site nav is built from published packages
+ * via `getSiteNavItems()` in `lib/nav.ts`.
+ */
 export const NAV_ITEMS: NavItem[] = [
   { href: "/", label: "Home" },
-  {
-    href: "/umrah-packages",
-    label: "Umrah Packages",
-    children: [
-      { href: "/3-star-umrah-packages", label: "3 Star Umrah Packages" },
-      { href: "/4-star-umrah-packages", label: "4 Star Umrah Packages" },
-      { href: "/5-star-umrah-packages", label: "5 Star Umrah Packages" },
-    ],
-  },
-  {
-    href: "#",
-    label: "Umrah Deals",
-    children: [
-      { href: "/january-umrah-package", label: "January Umrah Package" },
-      { href: "/february-umrah-package", label: "February Umrah Package" },
-      { href: "/easter-umrah-package", label: "Easter Umrah Package" },
-      { href: "/ramadan-umrah-package", label: "Ramadan Umrah Package" },
-      { href: "/september-umrah-package", label: "September Umrah Package" },
-      { href: "/october-umrah-package", label: "October Umrah Package" },
-      { href: "/november-umrah-package", label: "November Umrah Package" },
-      { href: "/december-umrah-package", label: "December Umrah Package" },
-    ],
-  },
+  { href: "/umrah-packages", label: "Umrah Packages" },
   { href: "/blogs", label: "Blogs" },
   { href: "/customized-umrah-packages", label: "Beat My Price" },
   { href: "/about-us", label: "About Us" },
   { href: "/contact-us", label: "Contact Us" },
 ];
 
-/** @deprecated Use NAV_ITEMS — kept for any leftover imports */
-export const NAV_LINKS = NAV_ITEMS.filter((item) => !item.children).map(
-  ({ href, label }) => ({ href, label })
-);
+/** @deprecated Prefer getSiteNavItems() */
+export const NAV_LINKS = NAV_ITEMS.map(({ href, label }) => ({ href, label }));
 
 export const FOOTER_PACKAGES = [
   { href: "/umrah-packages", label: "3-Star Economy Umrah" },
