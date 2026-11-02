@@ -1,21 +1,26 @@
 "use client";
 
 import Link from "next/link";
+import { Pencil, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { adminFetch } from "@/lib/admin-fetch";
 import {
   AdminCard,
   AdminPageHeader,
+  AdminTableSkeleton,
   adminDangerButtonClass,
-  adminGoldButtonClass,
+  adminEditLinkClass,
   adminPageClass,
+  adminStatusDraftClass,
+  adminStatusPublishedClass,
 } from "@/components/admin/admin-ui";
+import { AdminLoadingLink } from "@/components/admin/AdminLoadingLink";
+import { AdminAsyncButton } from "@/components/admin/AdminAsyncButton";
 
 type Category = {
   id: string;
   name: string;
   slug: string;
-  kind: string;
   published: boolean;
 };
 
@@ -52,11 +57,6 @@ export function AdminCategoriesClient() {
       <AdminPageHeader
         title="Categories"
         description="Group packages by star, season, or journey."
-        actions={
-          <Link href="/admin/categories/new" className={adminGoldButtonClass}>
-            Add category
-          </Link>
-        }
       />
 
       {error ? (
@@ -65,9 +65,15 @@ export function AdminCategoriesClient() {
         </p>
       ) : null}
 
-      <AdminCard>
+      <div className="admin-enter admin-enter-delay-1 mb-3 flex justify-end">
+        <AdminLoadingLink href="/admin/categories/new" pendingLabel="Opening…">
+          Add category
+        </AdminLoadingLink>
+      </div>
+
+      <AdminCard className="admin-enter admin-enter-delay-2">
         {loading ? (
-          <p className="text-sm text-muted">Loading categories…</p>
+          <AdminTableSkeleton rows={6} cols={4} />
         ) : (
           <div className="overflow-x-auto">
             <table className="min-w-full text-left text-sm">
@@ -75,9 +81,8 @@ export function AdminCategoriesClient() {
                 <tr>
                   <th className="px-2 py-2">Name</th>
                   <th className="px-2 py-2">Slug</th>
-                  <th className="px-2 py-2">Kind</th>
                   <th className="px-2 py-2">Status</th>
-                  <th className="px-2 py-2">Actions</th>
+                  <th className="px-2 py-2 text-center">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -85,33 +90,34 @@ export function AdminCategoriesClient() {
                   <tr key={category.id} className="border-b border-border/60">
                     <td className="px-2 py-3 font-medium text-charcoal">{category.name}</td>
                     <td className="px-2 py-3 text-muted">{category.slug}</td>
-                    <td className="px-2 py-3">{category.kind}</td>
                     <td className="px-2 py-3">
                       <span
-                        className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${
+                        className={
                           category.published
-                            ? "bg-forest/10 text-forest"
-                            : "bg-cream-dark text-muted"
-                        }`}
+                            ? adminStatusPublishedClass
+                            : adminStatusDraftClass
+                        }
                       >
                         {category.published ? "Published" : "Draft"}
                       </span>
                     </td>
                     <td className="px-2 py-3">
-                      <div className="flex gap-2">
+                      <div className="flex items-center justify-center gap-2">
                         <Link
                           href={`/admin/categories/${category.id}`}
-                          className="text-sm font-semibold text-gold-dark hover:underline"
+                          className={adminEditLinkClass}
                         >
+                          <Pencil className="h-3.5 w-3.5" aria-hidden />
                           Edit
                         </Link>
-                        <button
-                          type="button"
-                          onClick={() => void remove(category.id)}
+                        <AdminAsyncButton
+                          onClick={() => remove(category.id)}
+                          pendingLabel="Deleting…"
+                          idleIcon={<Trash2 className="h-3.5 w-3.5" />}
                           className={adminDangerButtonClass}
                         >
                           Delete
-                        </button>
+                        </AdminAsyncButton>
                       </div>
                     </td>
                   </tr>

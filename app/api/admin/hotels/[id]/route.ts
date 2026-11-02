@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { requireAdminApi, jsonError } from "@/lib/admin-api-auth";
-import { writeAuditLog, slugify } from "@/lib/admin";
+import { writeAuditLog } from "@/lib/admin";
 import { csvToArray, hotelSchema } from "@/lib/admin-schemas";
 
 type Params = { params: Promise<{ id: string }> };
@@ -25,9 +25,14 @@ export async function PATCH(request: Request, { params }: Params) {
   const { id } = await params;
   const body = await request.json();
 
+  const existing = await prisma.hotel.findFirst({
+    where: { id, deletedAt: null },
+  });
+  if (!existing) return jsonError("Hotel not found", 404);
+
   const parsed = hotelSchema.safeParse({
     ...body,
-    slug: body.slug || slugify(String(body.name || "")),
+    slug: body.slug || existing.slug,
     amenities: Array.isArray(body.amenities)
       ? body.amenities.join(", ")
       : body.amenities,
@@ -35,11 +40,6 @@ export async function PATCH(request: Request, { params }: Params) {
   if (!parsed.success) {
     return jsonError(parsed.error.issues[0]?.message ?? "Invalid hotel");
   }
-
-  const existing = await prisma.hotel.findFirst({
-    where: { id, deletedAt: null },
-  });
-  if (!existing) return jsonError("Hotel not found", 404);
 
   const coverImageUrl = parsed.data.coverImageUrl || null;
   const hotel = await prisma.hotel.update({

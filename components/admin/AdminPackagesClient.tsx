@@ -1,17 +1,27 @@
 "use client";
 
 import Link from "next/link";
+import { Pencil, Search, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { adminFetch } from "@/lib/admin-fetch";
 import {
   AdminCard,
   AdminPageHeader,
+  AdminTableSkeleton,
   adminDangerButtonClass,
-  adminGoldButtonClass,
-  adminInputClass,
+  adminEditLinkClass,
   adminPageClass,
-  adminSecondaryButtonClass,
+  adminStatusDraftClass,
+  adminStatusPublishedClass,
 } from "@/components/admin/admin-ui";
+import { AdminLoadingLink } from "@/components/admin/AdminLoadingLink";
+import { AdminAsyncButton } from "@/components/admin/AdminAsyncButton";
+
+const filterControlClass =
+  "h-10 w-full rounded-xl border border-border bg-white px-3.5 text-sm text-ink outline-none ring-gold transition focus:ring-2";
+
+const filterSelectClass =
+  "admin-select h-10 w-full rounded-xl border border-border px-3.5 text-sm text-ink outline-none ring-gold transition focus:ring-2";
 
 type PackageRow = {
   id: string;
@@ -63,38 +73,46 @@ export function AdminPackagesClient() {
       <AdminPageHeader
         title="Packages"
         description="Create and publish Umrah and Hajj packages."
-        actions={
-          <Link href="/admin/packages/new" className={adminGoldButtonClass}>
-            Add package
-          </Link>
-        }
       />
 
       <form
-        className="mb-4 flex flex-wrap gap-2"
+        className="admin-enter admin-enter-delay-1 mb-4 flex flex-wrap items-center gap-2"
         onSubmit={(event) => {
           event.preventDefault();
           void load();
         }}
       >
-        <input
-          value={q}
-          onChange={(e) => setQ(e.target.value)}
-          placeholder="Search packages"
-          className={`${adminInputClass} mt-0 max-w-xs`}
-        />
+        <label className="relative block min-w-[220px] max-w-xs flex-1">
+          <Search
+            className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted"
+            aria-hidden
+          />
+          <input
+            value={q}
+            onChange={(e) => setQ(e.target.value)}
+            placeholder="Search packages"
+            className={`${filterControlClass} pl-9`}
+          />
+        </label>
         <select
           value={status}
-          onChange={(e) => setStatus(e.target.value)}
-          className={`${adminInputClass} mt-0 max-w-[160px]`}
+          onChange={(e) => {
+            const nextStatus = e.target.value;
+            setStatus(nextStatus);
+            void load(q, nextStatus);
+          }}
+          className={`${filterSelectClass} max-w-[180px]`}
+          aria-label="Filter by status"
         >
           <option value="">All</option>
           <option value="published">Published</option>
           <option value="draft">Draft</option>
         </select>
-        <button type="submit" className={adminSecondaryButtonClass}>
-          Filter
-        </button>
+        <div className="ml-auto">
+          <AdminLoadingLink href="/admin/packages/new" pendingLabel="Opening…">
+            Add package
+          </AdminLoadingLink>
+        </div>
       </form>
 
       {error ? (
@@ -103,9 +121,9 @@ export function AdminPackagesClient() {
         </p>
       ) : null}
 
-      <AdminCard>
+      <AdminCard className="admin-enter admin-enter-delay-2">
         {loading ? (
-          <p className="text-sm text-muted">Loading packages…</p>
+          <AdminTableSkeleton rows={7} cols={6} />
         ) : (
           <div className="overflow-x-auto">
             <table className="min-w-full text-left text-sm">
@@ -116,7 +134,7 @@ export function AdminPackagesClient() {
                   <th className="px-2 py-2">Stars</th>
                   <th className="px-2 py-2">Price</th>
                   <th className="px-2 py-2">Status</th>
-                  <th className="px-2 py-2">Actions</th>
+                  <th className="px-2 py-2 text-center">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -128,30 +146,32 @@ export function AdminPackagesClient() {
                     <td className="px-2 py-3">£{Number(pkg.priceFrom).toLocaleString()}</td>
                     <td className="px-2 py-3">
                       <span
-                        className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${
+                        className={
                           pkg.published
-                            ? "bg-forest/10 text-forest"
-                            : "bg-cream-dark text-muted"
-                        }`}
+                            ? adminStatusPublishedClass
+                            : adminStatusDraftClass
+                        }
                       >
                         {pkg.published ? "Published" : "Draft"}
                       </span>
                     </td>
                     <td className="px-2 py-3">
-                      <div className="flex gap-2">
+                      <div className="flex items-center justify-center gap-2">
                         <Link
                           href={`/admin/packages/${pkg.id}`}
-                          className="text-sm font-semibold text-gold-dark hover:underline"
+                          className={adminEditLinkClass}
                         >
+                          <Pencil className="h-3.5 w-3.5" aria-hidden />
                           Edit
                         </Link>
-                        <button
-                          type="button"
-                          onClick={() => void remove(pkg.id)}
+                        <AdminAsyncButton
+                          onClick={() => remove(pkg.id)}
+                          pendingLabel="Deleting…"
+                          idleIcon={<Trash2 className="h-3.5 w-3.5" />}
                           className={adminDangerButtonClass}
                         >
                           Delete
-                        </button>
+                        </AdminAsyncButton>
                       </div>
                     </td>
                   </tr>

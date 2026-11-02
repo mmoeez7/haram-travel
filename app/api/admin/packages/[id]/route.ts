@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/db";
 import { requireAdminApi, jsonError } from "@/lib/admin-api-auth";
-import { writeAuditLog, slugify } from "@/lib/admin";
+import { writeAuditLog } from "@/lib/admin";
 import { linesToArray, packageSchema } from "@/lib/admin-schemas";
 
 type Params = { params: Promise<{ id: string }> };
@@ -31,9 +31,14 @@ export async function PATCH(request: Request, { params }: Params) {
   const { id } = await params;
   const body = await request.json();
 
+  const existing = await prisma.package.findFirst({
+    where: { id, deletedAt: null },
+  });
+  if (!existing) return jsonError("Package not found", 404);
+
   const parsed = packageSchema.safeParse({
     ...body,
-    slug: body.slug || slugify(String(body.title || "")),
+    slug: body.slug || existing.slug,
     features: normalizeFeatures(body.features),
     categoryIds: body.categoryIds ?? [],
   });
@@ -43,11 +48,6 @@ export async function PATCH(request: Request, { params }: Params) {
   if (parsed.data.makkahNights + parsed.data.madinahNights > parsed.data.nights) {
     return jsonError("Makkah + Madinah nights cannot exceed total nights.");
   }
-
-  const existing = await prisma.package.findFirst({
-    where: { id, deletedAt: null },
-  });
-  if (!existing) return jsonError("Package not found", 404);
 
   const coverImageUrl = parsed.data.coverImageUrl || null;
   const data = {

@@ -7,8 +7,10 @@ export const categorySchema = z.object({
     .min(2)
     .max(120)
     .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "Slug must be lowercase kebab-case"),
-  kind: z.enum(["STAR", "SEASON", "JOURNEY", "CUSTOM"]),
+  kind: z.enum(["STAR", "SEASON", "JOURNEY", "CUSTOM"]).default("CUSTOM"),
   description: z.string().max(2000).optional().or(z.literal("")),
+  coverImageUrl: z.string().optional().or(z.literal("")),
+  coverImageAlt: z.string().max(200).optional().or(z.literal("")),
   sortOrder: z.coerce.number().int().min(0).default(0),
   published: z.coerce.boolean().default(false),
 });

@@ -1,4 +1,4 @@
-export type StorageFolder = "packages" | "hotels";
+export type StorageFolder = "packages" | "hotels" | "categories";
 
 export type UploadedObject = {
   /** Stable storage key (path relative to provider root). */

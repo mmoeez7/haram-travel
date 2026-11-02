@@ -1,17 +1,25 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { Loader2 } from "lucide-react";
+import { useRef, useState } from "react";
 import { adminFetch } from "@/lib/admin-fetch";
 import {
   AdminCard,
   AdminPageHeader,
+  adminCancelButtonClass,
   adminInputClass,
   adminLabelClass,
+  adminSelectClass,
   adminPageClass,
   adminPrimaryButtonClass,
   adminSecondaryButtonClass,
 } from "@/components/admin/admin-ui";
+import {
+  AdminCoverUpload,
+  uploadAdminCover,
+  type CoverUploadState,
+} from "@/components/admin/AdminCoverUpload";
 
 type Hotel = {
   id: string;
@@ -31,52 +39,47 @@ type Hotel = {
   published: boolean;
 };
 
-async function uploadCover(file: File) {
-  const form = new FormData();
-  form.set("file", file);
-  form.set("folder", "hotels");
-  const response = await fetch("/api/admin/upload", {
-    method: "POST",
-    body: form,
-  });
-  const payload = await response.json();
-  if (!response.ok) throw new Error(payload.error || "Upload failed");
-  return payload.url as string;
-}
-
 export function HotelFormClient({ hotel }: { hotel?: Hotel }) {
   const router = useRouter();
+  const formRef = useRef<HTMLFormElement>(null);
   const [error, setError] = useState("");
-  const [saving, setSaving] = useState(false);
+  const [saving, setSaving] = useState<"draft" | "publish" | null>(null);
+  const [cover, setCover] = useState<CoverUploadState>({
+    file: null,
+    previewUrl: hotel?.coverImageUrl ?? null,
+    removed: false,
+  });
 
-  async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setSaving(true);
+  async function save(published: boolean) {
+    const form = formRef.current;
+    if (!form) return;
+    if (!form.reportValidity()) return;
+
+    setSaving(published ? "publish" : "draft");
     setError("");
-    const form = new FormData(event.currentTarget);
-    let coverImageUrl = String(form.get("coverImageUrl") || "");
-    const coverFile = form.get("coverFile");
+    const data = new FormData(form);
 
     try {
-      if (coverFile instanceof File && coverFile.size > 0) {
-        coverImageUrl = await uploadCover(coverFile);
+      let coverImageUrl = cover.removed ? "" : (hotel?.coverImageUrl ?? "");
+      if (cover.file) {
+        coverImageUrl = await uploadAdminCover(cover.file, "hotels");
       }
 
+      const name = String(data.get("name") || "");
       const payload = {
-        name: String(form.get("name") || ""),
-        slug: String(form.get("slug") || ""),
-        city: String(form.get("city") || "MAKKAH"),
-        stars: Number(form.get("stars") || 4),
-        walkingMinutes: form.get("walkingMinutes") || undefined,
-        distanceToHaramM: form.get("distanceToHaramM") || undefined,
-        address: String(form.get("address") || ""),
-        shortDescription: String(form.get("shortDescription") || ""),
-        description: String(form.get("description") || ""),
-        amenities: String(form.get("amenities") || ""),
+        name,
+        city: String(data.get("city") || "MAKKAH"),
+        stars: Number(data.get("stars") || 4),
+        walkingMinutes: data.get("walkingMinutes") || undefined,
+        distanceToHaramM: data.get("distanceToHaramM") || undefined,
+        address: String(data.get("address") || ""),
+        shortDescription: String(data.get("shortDescription") || ""),
+        description: String(data.get("description") || ""),
+        amenities: String(data.get("amenities") || ""),
         coverImageUrl,
-        coverImageAlt: String(form.get("coverImageAlt") || ""),
-        sortOrder: Number(form.get("sortOrder") || 0),
-        published: form.get("published") === "on",
+        coverImageAlt: String(data.get("coverImageAlt") || name),
+        sortOrder: Number(data.get("sortOrder") || 0),
+        published,
       };
 
       if (hotel) {
@@ -94,10 +97,11 @@ export function HotelFormClient({ hotel }: { hotel?: Hotel }) {
       router.refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Save failed");
-    } finally {
-      setSaving(false);
+      setSaving(null);
     }
   }
+
+  const busy = saving !== null;
 
   return (
     <div className={adminPageClass}>
@@ -105,24 +109,24 @@ export function HotelFormClient({ hotel }: { hotel?: Hotel }) {
         title={hotel ? "Edit hotel" : "New hotel"}
         description="Hotel details appear on packages and walking-distance guides."
       />
-      <AdminCard className="max-w-3xl">
+      <AdminCard>
         {error ? (
           <p className="mb-4 rounded-xl border border-call-border/30 bg-call px-3 py-2 text-sm text-call-border">
             {error}
           </p>
         ) : null}
-        <form onSubmit={onSubmit} className="grid gap-4 md:grid-cols-2">
+        <form
+          ref={formRef}
+          onSubmit={(event) => event.preventDefault()}
+          className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3"
+        >
           <label className={adminLabelClass}>
             Name
             <input name="name" required defaultValue={hotel?.name} className={adminInputClass} />
           </label>
           <label className={adminLabelClass}>
-            Slug
-            <input name="slug" required defaultValue={hotel?.slug} className={adminInputClass} />
-          </label>
-          <label className={adminLabelClass}>
             City
-            <select name="city" defaultValue={hotel?.city ?? "MAKKAH"} className={adminInputClass}>
+            <select name="city" defaultValue={hotel?.city ?? "MAKKAH"} className={adminSelectClass}>
               <option value="MAKKAH">Makkah</option>
               <option value="MADINAH">Madinah</option>
             </select>
@@ -159,61 +163,6 @@ export function HotelFormClient({ hotel }: { hotel?: Hotel }) {
               className={adminInputClass}
             />
           </label>
-          <label className={`${adminLabelClass} md:col-span-2`}>
-            Address
-            <input name="address" defaultValue={hotel?.address ?? ""} className={adminInputClass} />
-          </label>
-          <label className={`${adminLabelClass} md:col-span-2`}>
-            Short description
-            <textarea
-              name="shortDescription"
-              rows={2}
-              defaultValue={hotel?.shortDescription ?? ""}
-              className={adminInputClass}
-            />
-          </label>
-          <label className={`${adminLabelClass} md:col-span-2`}>
-            Description
-            <textarea
-              name="description"
-              rows={4}
-              defaultValue={hotel?.description ?? ""}
-              className={adminInputClass}
-            />
-          </label>
-          <label className={`${adminLabelClass} md:col-span-2`}>
-            Amenities (comma separated)
-            <input
-              name="amenities"
-              defaultValue={hotel?.amenities?.join(", ") ?? ""}
-              className={adminInputClass}
-            />
-          </label>
-          <label className={`${adminLabelClass} md:col-span-2`}>
-            Cover image URL
-            <input
-              name="coverImageUrl"
-              defaultValue={hotel?.coverImageUrl ?? ""}
-              className={adminInputClass}
-            />
-          </label>
-          <label className={`${adminLabelClass} md:col-span-2`}>
-            Or upload cover image
-            <input
-              name="coverFile"
-              type="file"
-              accept="image/jpeg,image/png,image/webp,image/gif"
-              className="mt-1 w-full text-sm"
-            />
-          </label>
-          <label className={adminLabelClass}>
-            Cover alt text
-            <input
-              name="coverImageAlt"
-              defaultValue={hotel?.coverImageAlt ?? ""}
-              className={adminInputClass}
-            />
-          </label>
           <label className={adminLabelClass}>
             Sort order
             <input
@@ -223,18 +172,89 @@ export function HotelFormClient({ hotel }: { hotel?: Hotel }) {
               className={adminInputClass}
             />
           </label>
-          <label className="flex items-center gap-2 text-sm font-medium text-charcoal md:col-span-2">
-            <input name="published" type="checkbox" defaultChecked={hotel?.published ?? false} />
-            Published
+          <label className={`${adminLabelClass} sm:col-span-2 xl:col-span-3`}>
+            Address
+            <input name="address" defaultValue={hotel?.address ?? ""} className={adminInputClass} />
           </label>
-          <div className="flex gap-2 md:col-span-2">
-            <button type="submit" disabled={saving} className={adminPrimaryButtonClass}>
-              {saving ? "Saving…" : "Save hotel"}
+          <label className={`${adminLabelClass} sm:col-span-2 xl:col-span-3`}>
+            Short description
+            <textarea
+              name="shortDescription"
+              rows={2}
+              defaultValue={hotel?.shortDescription ?? ""}
+              className={adminInputClass}
+            />
+          </label>
+          <label className={`${adminLabelClass} sm:col-span-2 xl:col-span-3`}>
+            Description
+            <textarea
+              name="description"
+              rows={4}
+              defaultValue={hotel?.description ?? ""}
+              className={adminInputClass}
+            />
+          </label>
+          <label className={`${adminLabelClass} sm:col-span-2 xl:col-span-3`}>
+            Amenities (comma separated)
+            <input
+              name="amenities"
+              defaultValue={hotel?.amenities?.join(", ") ?? ""}
+              className={adminInputClass}
+            />
+          </label>
+
+          <AdminCoverUpload
+            className="sm:col-span-2 xl:col-span-3"
+            initialUrl={hotel?.coverImageUrl}
+            disabled={busy}
+            onChange={setCover}
+            onError={setError}
+          />
+
+          <label className={`${adminLabelClass} sm:col-span-2 xl:col-span-3`}>
+            Cover alt text
+            <input
+              name="coverImageAlt"
+              defaultValue={hotel?.coverImageAlt ?? ""}
+              className={adminInputClass}
+            />
+          </label>
+          <div className="flex flex-wrap gap-2 sm:col-span-2 xl:col-span-3">
+            <button
+              type="button"
+              disabled={busy}
+              onClick={() => void save(false)}
+              className={adminSecondaryButtonClass}
+            >
+              {saving === "draft" ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
+                  Saving…
+                </>
+              ) : (
+                "Draft"
+              )}
             </button>
             <button
               type="button"
+              disabled={busy}
+              onClick={() => void save(true)}
+              className={adminPrimaryButtonClass}
+            >
+              {saving === "publish" ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
+                  Publishing…
+                </>
+              ) : (
+                "Publish"
+              )}
+            </button>
+            <button
+              type="button"
+              disabled={busy}
               onClick={() => router.push("/admin/hotels")}
-              className={adminSecondaryButtonClass}
+              className={adminCancelButtonClass}
             >
               Cancel
             </button>

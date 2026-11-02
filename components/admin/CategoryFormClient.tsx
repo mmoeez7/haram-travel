@@ -1,7 +1,8 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { Loader2 } from "lucide-react";
+import { useRef, useState } from "react";
 import { adminFetch } from "@/lib/admin-fetch";
 import {
   AdminCard,
@@ -9,9 +10,15 @@ import {
   adminInputClass,
   adminLabelClass,
   adminPageClass,
+  adminCancelButtonClass,
   adminPrimaryButtonClass,
   adminSecondaryButtonClass,
 } from "@/components/admin/admin-ui";
+import {
+  AdminCoverUpload,
+  uploadAdminCover,
+  type CoverUploadState,
+} from "@/components/admin/AdminCoverUpload";
 
 type Category = {
   id: string;
@@ -19,30 +26,56 @@ type Category = {
   slug: string;
   kind: string;
   description: string | null;
+  coverImageUrl: string | null;
+  coverImageAlt: string | null;
   sortOrder: number;
   published: boolean;
 };
 
 export function CategoryFormClient({ category }: { category?: Category }) {
   const router = useRouter();
+  const formRef = useRef<HTMLFormElement>(null);
   const [error, setError] = useState("");
-  const [saving, setSaving] = useState(false);
+  const [saving, setSaving] = useState<"draft" | "publish" | null>(null);
+  const [cover, setCover] = useState<CoverUploadState>({
+    file: null,
+    previewUrl: category?.coverImageUrl ?? null,
+    removed: false,
+  });
 
-  async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setSaving(true);
+  async function save(published: boolean) {
+    const form = formRef.current;
+    if (!form) return;
+
+    setSaving(published ? "publish" : "draft");
     setError("");
-    const form = new FormData(event.currentTarget);
-    const payload = {
-      name: String(form.get("name") || ""),
-      slug: String(form.get("slug") || ""),
-      kind: String(form.get("kind") || "CUSTOM"),
-      description: String(form.get("description") || ""),
-      sortOrder: Number(form.get("sortOrder") || 0),
-      published: form.get("published") === "on",
-    };
+
+    const data = new FormData(form);
+    const name = String(data.get("name") || "").trim();
+    const description = String(data.get("description") || "");
+
+    if (name.length < 2) {
+      setError("Name must be at least 2 characters.");
+      setSaving(null);
+      return;
+    }
 
     try {
+      let coverImageUrl = cover.removed ? "" : (category?.coverImageUrl ?? "");
+      if (cover.file) {
+        coverImageUrl = await uploadAdminCover(cover.file, "categories");
+      }
+
+      const payload = {
+        name,
+        kind: category?.kind ?? "CUSTOM",
+        description,
+        coverImageUrl,
+        coverImageAlt: name,
+        sortOrder: category?.sortOrder ?? 0,
+        published,
+      };
+
       if (category) {
         await adminFetch(`/api/admin/categories/${category.id}`, {
           method: "PATCH",
@@ -58,10 +91,11 @@ export function CategoryFormClient({ category }: { category?: Category }) {
       router.refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Save failed");
-    } finally {
-      setSaving(false);
+      setSaving(null);
     }
   }
+
+  const busy = saving !== null;
 
   return (
     <div className={adminPageClass}>
@@ -75,24 +109,22 @@ export function CategoryFormClient({ category }: { category?: Category }) {
             {error}
           </p>
         ) : null}
-        <form onSubmit={onSubmit} className="space-y-4">
+
+        <form
+          ref={formRef}
+          className="space-y-5"
+          onSubmit={(event) => event.preventDefault()}
+        >
           <label className={adminLabelClass}>
             Name
-            <input name="name" required defaultValue={category?.name} className={adminInputClass} />
+            <input
+              name="name"
+              required
+              defaultValue={category?.name}
+              className={adminInputClass}
+            />
           </label>
-          <label className={adminLabelClass}>
-            Slug
-            <input name="slug" required defaultValue={category?.slug} className={adminInputClass} />
-          </label>
-          <label className={adminLabelClass}>
-            Kind
-            <select name="kind" defaultValue={category?.kind ?? "CUSTOM"} className={adminInputClass}>
-              <option value="STAR">STAR</option>
-              <option value="SEASON">SEASON</option>
-              <option value="JOURNEY">JOURNEY</option>
-              <option value="CUSTOM">CUSTOM</option>
-            </select>
-          </label>
+
           <label className={adminLabelClass}>
             Description
             <textarea
@@ -102,27 +134,50 @@ export function CategoryFormClient({ category }: { category?: Category }) {
               className={adminInputClass}
             />
           </label>
-          <label className={adminLabelClass}>
-            Sort order
-            <input
-              name="sortOrder"
-              type="number"
-              defaultValue={category?.sortOrder ?? 0}
-              className={adminInputClass}
-            />
-          </label>
-          <label className="flex items-center gap-2 text-sm font-medium text-charcoal">
-            <input name="published" type="checkbox" defaultChecked={category?.published ?? false} />
-            Published
-          </label>
-          <div className="flex gap-2">
-            <button type="submit" disabled={saving} className={adminPrimaryButtonClass}>
-              {saving ? "Saving…" : "Save category"}
+
+          <AdminCoverUpload
+            initialUrl={category?.coverImageUrl}
+            disabled={busy}
+            onChange={setCover}
+            onError={setError}
+          />
+
+          <div className="flex flex-wrap gap-2 pt-1">
+            <button
+              type="button"
+              disabled={busy}
+              onClick={() => void save(false)}
+              className={adminSecondaryButtonClass}
+            >
+              {saving === "draft" ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
+                  Saving…
+                </>
+              ) : (
+                "Draft"
+              )}
             </button>
             <button
               type="button"
+              disabled={busy}
+              onClick={() => void save(true)}
+              className={adminPrimaryButtonClass}
+            >
+              {saving === "publish" ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
+                  Publishing…
+                </>
+              ) : (
+                "Publish"
+              )}
+            </button>
+            <button
+              type="button"
+              disabled={busy}
               onClick={() => router.push("/admin/categories")}
-              className={adminSecondaryButtonClass}
+              className={adminCancelButtonClass}
             >
               Cancel
             </button>

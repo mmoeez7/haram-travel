@@ -71,5 +71,6 @@ export const localStorageProvider: StorageProvider = {
 export function folderFromPublicUrl(url: string): StorageFolder | null {
   if (url.startsWith("/uploads/packages/")) return "packages";
   if (url.startsWith("/uploads/hotels/")) return "hotels";
+  if (url.startsWith("/uploads/categories/")) return "categories";
   return null;
 }

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
   Building2,
+  ChevronRight,
   LayoutDashboard,
   LogOut,
   Menu,
@@ -13,6 +14,7 @@ import {
   X,
 } from "lucide-react";
 import { useState, type ReactNode } from "react";
+import { AdminAsyncButton } from "@/components/admin/AdminAsyncButton";
 
 type AdminShellProps = {
   user: { name?: string | null; email?: string | null };
@@ -21,9 +23,9 @@ type AdminShellProps = {
 
 const navItems = [
   { label: "Dashboard", href: "/admin", icon: LayoutDashboard, match: "exact" as const },
-  { label: "Packages", href: "/admin/packages", icon: Package, match: "prefix" as const },
   { label: "Categories", href: "/admin/categories", icon: Tags, match: "prefix" as const },
   { label: "Hotels", href: "/admin/hotels", icon: Building2, match: "prefix" as const },
+  { label: "Packages", href: "/admin/packages", icon: Package, match: "prefix" as const },
 ];
 
 function isActive(pathname: string, href: string, match: "exact" | "prefix") {
@@ -45,9 +47,9 @@ export function AdminShell({ user, children }: AdminShellProps) {
     }
   }
 
-  const nav = (
-    <nav className="mt-8 flex flex-1 flex-col gap-1.5">
-      {navItems.map((item) => {
+  const navLinks = (
+    <>
+      {navItems.map((item, index) => {
         const Icon = item.icon;
         const active = isActive(pathname, item.href, item.match);
         return (
@@ -55,7 +57,7 @@ export function AdminShell({ user, children }: AdminShellProps) {
             key={item.href}
             href={item.href}
             onClick={() => setMobileOpen(false)}
-            className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition ${
+            className={`admin-enter admin-enter-delay-${index + 1} flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition ${
               active
                 ? "border border-gold/40 bg-gold/15 text-charcoal"
                 : "border border-transparent text-ink/80 hover:border-border hover:bg-cream"
@@ -72,7 +74,33 @@ export function AdminShell({ user, children }: AdminShellProps) {
           </Link>
         );
       })}
-    </nav>
+    </>
+  );
+
+  const logoutCard = (
+    <div className="admin-enter admin-enter-delay-5 rounded-2xl border border-border bg-white p-3">
+      <Link
+        href="/admin/account"
+        onClick={() => setMobileOpen(false)}
+        className="flex cursor-pointer items-center gap-2 rounded-xl px-1 py-0.5 transition hover:bg-cream"
+      >
+        <div className="min-w-0 flex-1">
+          <p className="truncate text-sm font-semibold text-charcoal">
+            {user.name ?? "Admin"}
+          </p>
+          <p className="truncate text-xs text-muted">{user.email}</p>
+        </div>
+        <ChevronRight className="h-4 w-4 shrink-0 text-muted" aria-hidden />
+      </Link>
+      <AdminAsyncButton
+        onClick={handleLogout}
+        pendingLabel="Signing out…"
+        idleIcon={<LogOut className="h-3.5 w-3.5" />}
+        className="mt-3 inline-flex w-full cursor-pointer items-center justify-center rounded-xl border border-border px-3 py-2 text-xs font-semibold text-ink hover:border-gold hover:bg-cream disabled:cursor-not-allowed disabled:opacity-80"
+      >
+        Sign out
+      </AdminAsyncButton>
+    </div>
   );
 
   return (
@@ -83,8 +111,8 @@ export function AdminShell({ user, children }: AdminShellProps) {
           <div className="absolute right-0 top-20 h-96 w-96 rounded-full bg-forest/5 blur-3xl" />
         </div>
 
-        <aside className="relative z-20 hidden w-64 shrink-0 flex-col border-r border-border bg-ivory/90 px-4 py-6 backdrop-blur lg:flex">
-          <div>
+        <aside className="admin-slide-in sticky top-0 z-20 hidden h-screen w-64 shrink-0 flex-col border-r border-border bg-ivory/95 px-4 py-6 backdrop-blur lg:flex">
+          <div className="admin-enter shrink-0">
             <p className="font-display text-lg font-semibold uppercase tracking-wide text-charcoal">
               Haram Travel
             </p>
@@ -93,21 +121,10 @@ export function AdminShell({ user, children }: AdminShellProps) {
               Admin Workspace
             </div>
           </div>
-          {nav}
-          <div className="mt-4 rounded-2xl border border-border bg-white p-3">
-            <p className="truncate text-sm font-semibold text-charcoal">
-              {user.name ?? "Admin"}
-            </p>
-            <p className="truncate text-xs text-muted">{user.email}</p>
-            <button
-              type="button"
-              onClick={handleLogout}
-              className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-border px-3 py-2 text-xs font-semibold text-ink hover:border-gold"
-            >
-              <LogOut className="h-3.5 w-3.5" />
-              Sign out
-            </button>
-          </div>
+          <nav className="mt-8 flex min-h-0 flex-1 flex-col gap-1.5 overflow-y-auto">
+            {navLinks}
+          </nav>
+          <div className="mt-4 shrink-0">{logoutCard}</div>
         </aside>
 
         <div className="relative z-10 flex min-w-0 flex-1 flex-col">
@@ -118,7 +135,7 @@ export function AdminShell({ user, children }: AdminShellProps) {
             <button
               type="button"
               onClick={() => setMobileOpen((v) => !v)}
-              className="rounded-lg border border-border bg-white p-2"
+              className="cursor-pointer rounded-lg border border-border bg-white p-2"
               aria-label="Toggle menu"
             >
               {mobileOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
@@ -127,21 +144,12 @@ export function AdminShell({ user, children }: AdminShellProps) {
 
           {mobileOpen ? (
             <div className="border-b border-border bg-ivory px-4 py-4 lg:hidden">
-              {nav}
-              <button
-                type="button"
-                onClick={handleLogout}
-                className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-call-border"
-              >
-                <LogOut className="h-4 w-4" />
-                Sign out
-              </button>
+              <nav className="flex flex-col gap-1.5">{navLinks}</nav>
+              <div className="mt-4">{logoutCard}</div>
             </div>
           ) : null}
 
-          <div className={pathname.startsWith("/admin") ? "flex-1" : ""}>
-            {children}
-          </div>
+          <div className="flex-1">{children}</div>
         </div>
       </div>
     </div>

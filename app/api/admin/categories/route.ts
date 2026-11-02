@@ -34,6 +34,8 @@ export async function POST(request: Request) {
       slug: parsed.data.slug,
       kind: parsed.data.kind,
       description: parsed.data.description || null,
+      coverImageUrl: parsed.data.coverImageUrl || null,
+      coverImageAlt: parsed.data.coverImageAlt || parsed.data.name,
       sortOrder: parsed.data.sortOrder,
       published: parsed.data.published,
     },

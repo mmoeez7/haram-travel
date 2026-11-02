@@ -1,17 +1,26 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { Loader2 } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { adminFetch } from "@/lib/admin-fetch";
 import {
   AdminCard,
+  AdminFormSkeleton,
   AdminPageHeader,
+  adminCancelButtonClass,
   adminInputClass,
   adminLabelClass,
+  adminSelectClass,
   adminPageClass,
   adminPrimaryButtonClass,
   adminSecondaryButtonClass,
 } from "@/components/admin/admin-ui";
+import {
+  AdminCoverUpload,
+  uploadAdminCover,
+  type CoverUploadState,
+} from "@/components/admin/AdminCoverUpload";
 
 type Category = { id: string; name: string };
 type Hotel = { id: string; name: string; city: string; stars: number };
@@ -41,24 +50,20 @@ type PackageDetail = {
   hotels: { hotelId: string; role: string }[];
 };
 
-async function uploadCover(file: File) {
-  const form = new FormData();
-  form.set("file", file);
-  form.set("folder", "packages");
-  const response = await fetch("/api/admin/upload", { method: "POST", body: form });
-  const payload = await response.json();
-  if (!response.ok) throw new Error(payload.error || "Upload failed");
-  return payload.url as string;
-}
-
 export function PackageFormClient({ packageId }: { packageId?: string }) {
   const router = useRouter();
+  const formRef = useRef<HTMLFormElement>(null);
   const [categories, setCategories] = useState<Category[]>([]);
   const [hotels, setHotels] = useState<Hotel[]>([]);
   const [pkg, setPkg] = useState<PackageDetail | null>(null);
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(Boolean(packageId));
-  const [saving, setSaving] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState<"draft" | "publish" | null>(null);
+  const [cover, setCover] = useState<CoverUploadState>({
+    file: null,
+    previewUrl: null,
+    removed: false,
+  });
 
   useEffect(() => {
     async function load() {
@@ -74,6 +79,11 @@ export function PackageFormClient({ packageId }: { packageId?: string }) {
             `/api/admin/packages/${packageId}`
           );
           setPkg(detail.package);
+          setCover({
+            file: null,
+            previewUrl: detail.package.coverImageUrl,
+            removed: false,
+          });
         }
       } catch (err) {
         setError(err instanceof Error ? err.message : "Failed to load form");
@@ -84,43 +94,45 @@ export function PackageFormClient({ packageId }: { packageId?: string }) {
     void load();
   }, [packageId]);
 
-  async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setSaving(true);
+  async function save(published: boolean) {
+    const form = formRef.current;
+    if (!form) return;
+    if (!form.reportValidity()) return;
+
+    setSaving(published ? "publish" : "draft");
     setError("");
-    const form = new FormData(event.currentTarget);
-    let coverImageUrl = String(form.get("coverImageUrl") || "");
-    const coverFile = form.get("coverFile");
+    const data = new FormData(form);
 
     try {
-      if (coverFile instanceof File && coverFile.size > 0) {
-        coverImageUrl = await uploadCover(coverFile);
+      let coverImageUrl = cover.removed ? "" : (pkg?.coverImageUrl ?? "");
+      if (cover.file) {
+        coverImageUrl = await uploadAdminCover(cover.file, "packages");
       }
 
+      const title = String(data.get("title") || "");
       const payload = {
-        title: String(form.get("title") || ""),
-        subtitle: String(form.get("subtitle") || ""),
-        slug: String(form.get("slug") || ""),
-        journeyType: String(form.get("journeyType") || "UMRAH"),
-        stars: Number(form.get("stars") || 3),
-        nights: Number(form.get("nights") || 7),
-        makkahNights: Number(form.get("makkahNights") || 0),
-        madinahNights: Number(form.get("madinahNights") || 0),
-        priceFrom: Number(form.get("priceFrom") || 0),
-        deposit: Number(form.get("deposit") || 0),
-        badge: String(form.get("badge") || ""),
-        season: String(form.get("season") || "ALL"),
-        features: String(form.get("features") || ""),
-        shortDescription: String(form.get("shortDescription") || ""),
-        description: String(form.get("description") || ""),
+        title,
+        subtitle: String(data.get("subtitle") || ""),
+        journeyType: String(data.get("journeyType") || "UMRAH"),
+        stars: Number(data.get("stars") || 3),
+        nights: Number(data.get("nights") || 7),
+        makkahNights: Number(data.get("makkahNights") || 0),
+        madinahNights: Number(data.get("madinahNights") || 0),
+        priceFrom: Number(data.get("priceFrom") || 0),
+        deposit: Number(data.get("deposit") || 0),
+        badge: String(data.get("badge") || ""),
+        season: String(data.get("season") || "ALL"),
+        features: String(data.get("features") || ""),
+        shortDescription: String(data.get("shortDescription") || ""),
+        description: String(data.get("description") || ""),
         coverImageUrl,
-        coverImageAlt: String(form.get("coverImageAlt") || ""),
-        featured: form.get("featured") === "on",
-        published: form.get("published") === "on",
-        sortOrder: Number(form.get("sortOrder") || 0),
-        categoryIds: form.getAll("categoryIds").map(String),
-        makkahHotelId: String(form.get("makkahHotelId") || ""),
-        madinahHotelId: String(form.get("madinahHotelId") || ""),
+        coverImageAlt: String(data.get("coverImageAlt") || title),
+        featured: data.get("featured") === "on",
+        published,
+        sortOrder: Number(data.get("sortOrder") || 0),
+        categoryIds: data.getAll("categoryIds").map(String),
+        makkahHotelId: String(data.get("makkahHotelId") || ""),
+        madinahHotelId: String(data.get("madinahHotelId") || ""),
       };
 
       if (packageId) {
@@ -138,10 +150,11 @@ export function PackageFormClient({ packageId }: { packageId?: string }) {
       router.refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Save failed");
-    } finally {
-      setSaving(false);
+      setSaving(null);
     }
   }
+
+  const busy = saving !== null;
 
   const selectedCategoryIds = new Set(pkg?.categories.map((c) => c.categoryId) ?? []);
   const makkahHotelId = pkg?.hotels.find((h) => h.role === "MAKKAH")?.hotelId ?? "";
@@ -156,14 +169,18 @@ export function PackageFormClient({ packageId }: { packageId?: string }) {
         description="Packages sync to the public site when published."
       />
       <AdminCard>
-        {loading ? <p className="text-sm text-muted">Loading…</p> : null}
+        {loading ? <AdminFormSkeleton fields={8} /> : null}
         {error ? (
           <p className="mb-4 rounded-xl border border-call-border/30 bg-call px-3 py-2 text-sm text-call-border">
             {error}
           </p>
         ) : null}
         {!loading ? (
-          <form onSubmit={onSubmit} className="grid gap-4 md:grid-cols-2">
+          <form
+            ref={formRef}
+            onSubmit={(event) => event.preventDefault()}
+            className="grid gap-4 md:grid-cols-2"
+          >
             <label className={adminLabelClass}>
               Title
               <input name="title" required defaultValue={pkg?.title} className={adminInputClass} />
@@ -178,15 +195,11 @@ export function PackageFormClient({ packageId }: { packageId?: string }) {
               />
             </label>
             <label className={adminLabelClass}>
-              Slug
-              <input name="slug" required defaultValue={pkg?.slug} className={adminInputClass} />
-            </label>
-            <label className={adminLabelClass}>
               Journey type
               <select
                 name="journeyType"
                 defaultValue={pkg?.journeyType ?? "UMRAH"}
-                className={adminInputClass}
+                className={adminSelectClass}
               >
                 <option value="UMRAH">Umrah</option>
                 <option value="HAJJ">Hajj</option>
@@ -206,7 +219,7 @@ export function PackageFormClient({ packageId }: { packageId?: string }) {
             </label>
             <label className={adminLabelClass}>
               Season
-              <select name="season" defaultValue={pkg?.season ?? "ALL"} className={adminInputClass}>
+              <select name="season" defaultValue={pkg?.season ?? "ALL"} className={adminSelectClass}>
                 {[
                   "ALL",
                   "JANUARY",
@@ -344,7 +357,7 @@ export function PackageFormClient({ packageId }: { packageId?: string }) {
               <select
                 name="makkahHotelId"
                 defaultValue={makkahHotelId}
-                className={adminInputClass}
+                className={adminSelectClass}
               >
                 <option value="">None</option>
                 {makkahHotels.map((hotel) => (
@@ -359,7 +372,7 @@ export function PackageFormClient({ packageId }: { packageId?: string }) {
               <select
                 name="madinahHotelId"
                 defaultValue={madinahHotelId}
-                className={adminInputClass}
+                className={adminSelectClass}
               >
                 <option value="">None</option>
                 {madinahHotels.map((hotel) => (
@@ -370,23 +383,14 @@ export function PackageFormClient({ packageId }: { packageId?: string }) {
               </select>
             </label>
 
-            <label className={`${adminLabelClass} md:col-span-2`}>
-              Cover image URL
-              <input
-                name="coverImageUrl"
-                defaultValue={pkg?.coverImageUrl ?? ""}
-                className={adminInputClass}
-              />
-            </label>
-            <label className={`${adminLabelClass} md:col-span-2`}>
-              Or upload cover image
-              <input
-                name="coverFile"
-                type="file"
-                accept="image/jpeg,image/png,image/webp,image/gif"
-                className="mt-1 w-full text-sm"
-              />
-            </label>
+            <AdminCoverUpload
+              key={pkg?.id ?? "new-package"}
+              className="md:col-span-2"
+              initialUrl={pkg?.coverImageUrl}
+              disabled={busy}
+              onChange={setCover}
+              onError={setError}
+            />
             <label className={`${adminLabelClass} md:col-span-2`}>
               Cover alt text
               <input
@@ -396,25 +400,47 @@ export function PackageFormClient({ packageId }: { packageId?: string }) {
               />
             </label>
 
-            <div className="flex flex-wrap gap-4 md:col-span-2">
-              <label className="flex items-center gap-2 text-sm font-medium text-charcoal">
-                <input name="published" type="checkbox" defaultChecked={pkg?.published ?? false} />
-                Published
-              </label>
-              <label className="flex items-center gap-2 text-sm font-medium text-charcoal">
-                <input name="featured" type="checkbox" defaultChecked={pkg?.featured ?? false} />
-                Featured
-              </label>
-            </div>
+            <label className="flex items-center gap-2 text-sm font-medium text-charcoal md:col-span-2">
+              <input name="featured" type="checkbox" defaultChecked={pkg?.featured ?? false} />
+              Featured
+            </label>
 
-            <div className="flex gap-2 md:col-span-2">
-              <button type="submit" disabled={saving} className={adminPrimaryButtonClass}>
-                {saving ? "Saving…" : "Save package"}
+            <div className="flex flex-wrap gap-2 md:col-span-2">
+              <button
+                type="button"
+                disabled={busy}
+                onClick={() => void save(false)}
+                className={adminSecondaryButtonClass}
+              >
+                {saving === "draft" ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
+                    Saving…
+                  </>
+                ) : (
+                  "Draft"
+                )}
               </button>
               <button
                 type="button"
+                disabled={busy}
+                onClick={() => void save(true)}
+                className={adminPrimaryButtonClass}
+              >
+                {saving === "publish" ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
+                    Publishing…
+                  </>
+                ) : (
+                  "Publish"
+                )}
+              </button>
+              <button
+                type="button"
+                disabled={busy}
                 onClick={() => router.push("/admin/packages")}
-                className={adminSecondaryButtonClass}
+                className={adminCancelButtonClass}
               >
                 Cancel
               </button>

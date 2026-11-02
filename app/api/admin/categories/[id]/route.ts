@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { requireAdminApi, jsonError } from "@/lib/admin-api-auth";
-import { writeAuditLog, slugify } from "@/lib/admin";
+import { writeAuditLog } from "@/lib/admin";
 import { categorySchema } from "@/lib/admin-schemas";
 
 type Params = { params: Promise<{ id: string }> };
@@ -24,18 +24,18 @@ export async function PATCH(request: Request, { params }: Params) {
   const { id } = await params;
   const body = await request.json();
 
-  const parsed = categorySchema.safeParse({
-    ...body,
-    slug: body.slug || slugify(String(body.name || "")),
-  });
-  if (!parsed.success) {
-    return jsonError(parsed.error.issues[0]?.message ?? "Invalid category");
-  }
-
   const existing = await prisma.category.findFirst({
     where: { id, deletedAt: null },
   });
   if (!existing) return jsonError("Category not found", 404);
+
+  const parsed = categorySchema.safeParse({
+    ...body,
+    slug: body.slug || existing.slug,
+  });
+  if (!parsed.success) {
+    return jsonError(parsed.error.issues[0]?.message ?? "Invalid category");
+  }
 
   const category = await prisma.category.update({
     where: { id },
@@ -44,6 +44,8 @@ export async function PATCH(request: Request, { params }: Params) {
       slug: parsed.data.slug,
       kind: parsed.data.kind,
       description: parsed.data.description || null,
+      coverImageUrl: parsed.data.coverImageUrl || null,
+      coverImageAlt: parsed.data.coverImageAlt || parsed.data.name,
       sortOrder: parsed.data.sortOrder,
       published: parsed.data.published,
     },

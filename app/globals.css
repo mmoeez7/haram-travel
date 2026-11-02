@@ -165,6 +165,163 @@ h3,
   }
 }
 
+/* Admin login: image first (RTL), then form */
+@keyframes login-slide-rtl {
+  from {
+    opacity: 0;
+    transform: translateX(48px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes login-panel-in {
+  from {
+    opacity: 0;
+    transform: translateX(28px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes login-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.login-slide-rtl {
+  animation: login-slide-rtl 1.15s cubic-bezier(0.16, 1, 0.3, 1) both;
+  will-change: transform, opacity;
+}
+
+.login-panel-in {
+  animation: login-panel-in 1s cubic-bezier(0.16, 1, 0.3, 1) 0.45s both;
+  will-change: transform, opacity;
+}
+
+.login-fade-up {
+  animation: login-fade-up 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.login-fade-up-delay-1 {
+  animation-delay: 0.7s;
+}
+
+.login-fade-up-delay-2 {
+  animation-delay: 0.85s;
+}
+
+.login-fade-up-delay-3 {
+  animation-delay: 1s;
+}
+
+.login-fade-up-delay-4 {
+  animation-delay: 1.12s;
+}
+
+/* Admin workspace enter */
+@keyframes admin-enter {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes admin-slide-in {
+  from {
+    opacity: 0;
+    transform: translateX(-16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.admin-enter {
+  animation: admin-enter 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.admin-slide-in {
+  animation: admin-slide-in 0.75s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.admin-enter-delay-1 {
+  animation-delay: 0.08s;
+}
+
+.admin-enter-delay-2 {
+  animation-delay: 0.16s;
+}
+
+.admin-enter-delay-3 {
+  animation-delay: 0.24s;
+}
+
+.admin-enter-delay-4 {
+  animation-delay: 0.32s;
+}
+
+.admin-enter-delay-5 {
+  animation-delay: 0.4s;
+}
+
+.admin-enter-delay-6 {
+  animation-delay: 0.48s;
+}
+
+@keyframes admin-shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Native select with padded chevron (Tailwind bg-[url] is unreliable for data URIs) */
+.admin-select {
+  appearance: none;
+  background-color: var(--white);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b6560' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.85rem center;
+  background-size: 1rem 1rem;
+  padding-right: 2.5rem;
+}
+
+.admin-shimmer {
+  position: relative;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--cream-dark) 85%, var(--border));
+  border-radius: 0.75rem;
+}
+
+.admin-shimmer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in srgb, var(--ivory) 70%, transparent),
+    transparent
+  );
+  animation: admin-shimmer 1.35s ease-in-out infinite;
+}
+
 .card-lift {
   transition:
     transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
@@ -187,10 +344,19 @@ h3,
 
   .hero-enter,
   .hero-bg,
-  .float-in {
+  .float-in,
+  .login-slide-rtl,
+  .login-panel-in,
+  .login-fade-up,
+  .admin-enter,
+  .admin-slide-in {
     animation: none;
     opacity: 1;
     transform: none;
+  }
+
+  .admin-shimmer::after {
+    animation: none;
   }
 
   .card-lift:hover {

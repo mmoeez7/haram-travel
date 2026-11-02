@@ -6,9 +6,9 @@ import { adminFetch } from "@/lib/admin-fetch";
 import {
   AdminPageHeader,
   AdminStatCard,
-  adminGoldButtonClass,
   adminPageClass,
 } from "@/components/admin/admin-ui";
+import { AdminLoadingLink } from "@/components/admin/AdminLoadingLink";
 
 type DashboardStats = {
   packages: number;
@@ -28,54 +28,81 @@ export function AdminDashboardClient() {
       .catch((err) => setError(err.message));
   }, []);
 
+  const featureLinks = [
+    {
+      href: "/admin/categories",
+      title: "Categories",
+      text: "Organize packages by star rating, season, and journey type.",
+    },
+    {
+      href: "/admin/hotels",
+      title: "Hotels",
+      text: "Maintain Makkah and Madinah hotel inventory for packages.",
+    },
+    {
+      href: "/admin/packages",
+      title: "Packages",
+      text: "Create and publish Umrah & Hajj packages with hotels and images.",
+    },
+  ];
+
   return (
     <div className={adminPageClass}>
       <AdminPageHeader
         title="Dashboard"
         description="Manage dynamic Haram Travel content from one workspace."
         actions={
-          <Link href="/admin/packages/new" className={adminGoldButtonClass}>
+          <AdminLoadingLink href="/admin/packages/new" pendingLabel="Opening…">
             Add package
-          </Link>
+          </AdminLoadingLink>
         }
       />
 
       {error ? (
-        <p className="rounded-xl border border-call-border/30 bg-call px-3 py-2 text-sm text-call-border">
+        <p className="admin-enter admin-enter-delay-1 rounded-xl border border-call-border/30 bg-call px-3 py-2 text-sm text-call-border">
           {error}
         </p>
       ) : null}
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
-        <AdminStatCard label="Packages" value={stats?.packages ?? "—"} />
-        <AdminStatCard label="Published" value={stats?.published ?? "—"} />
-        <AdminStatCard label="Drafts" value={stats?.drafts ?? "—"} />
-        <AdminStatCard label="Hotels" value={stats?.hotels ?? "—"} />
-        <AdminStatCard label="Categories" value={stats?.categories ?? "—"} />
+        <AdminStatCard
+          className="admin-enter admin-enter-delay-1"
+          label="Packages"
+          value={stats?.packages ?? "—"}
+          loading={!stats && !error}
+        />
+        <AdminStatCard
+          className="admin-enter admin-enter-delay-2"
+          label="Published"
+          value={stats?.published ?? "—"}
+          loading={!stats && !error}
+        />
+        <AdminStatCard
+          className="admin-enter admin-enter-delay-3"
+          label="Drafts"
+          value={stats?.drafts ?? "—"}
+          loading={!stats && !error}
+        />
+        <AdminStatCard
+          className="admin-enter admin-enter-delay-4"
+          label="Hotels"
+          value={stats?.hotels ?? "—"}
+          loading={!stats && !error}
+        />
+        <AdminStatCard
+          className="admin-enter admin-enter-delay-5"
+          label="Categories"
+          value={stats?.categories ?? "—"}
+          loading={!stats && !error}
+        />
       </div>
 
       <div className="mt-8 grid gap-4 md:grid-cols-3">
-        {[
-          {
-            href: "/admin/packages",
-            title: "Packages",
-            text: "Create and publish Umrah & Hajj packages with hotels and images.",
-          },
-          {
-            href: "/admin/categories",
-            title: "Categories",
-            text: "Organize packages by star rating, season, and journey type.",
-          },
-          {
-            href: "/admin/hotels",
-            title: "Hotels",
-            text: "Maintain Makkah and Madinah hotel inventory for packages.",
-          },
-        ].map((item) => (
+        {featureLinks.map((item, index) => (
           <Link
             key={item.href}
             href={item.href}
-            className="rounded-2xl border border-border bg-white p-5 transition hover:border-gold"
+            className={`card-lift admin-enter admin-enter-delay-${index + 3} rounded-2xl border border-border bg-white p-5 transition hover:border-gold`}
           >
             <h2 className="font-display text-lg font-semibold uppercase tracking-wide text-charcoal">
               {item.title}

@@ -68,16 +68,18 @@ model AdminUser {
 }
 
 model Category {
-  id          String       @id @default(cuid())
-  name        String
-  slug        String
-  kind        CategoryKind @default(CUSTOM)
-  description String?
-  sortOrder   Int          @default(0) @map("sort_order")
-  published   Boolean      @default(false)
-  createdAt   DateTime     @default(now()) @map("created_at")
-  updatedAt   DateTime     @updatedAt @map("updated_at")
-  deletedAt   DateTime?    @map("deleted_at")
+  id            String       @id @default(cuid())
+  name          String
+  slug          String
+  kind          CategoryKind @default(CUSTOM)
+  description   String?
+  coverImageUrl String?      @map("cover_image_url")
+  coverImageAlt String?      @map("cover_image_alt")
+  sortOrder     Int          @default(0) @map("sort_order")
+  published     Boolean      @default(false)
+  createdAt     DateTime     @default(now()) @map("created_at")
+  updatedAt     DateTime     @updatedAt @map("updated_at")
+  deletedAt     DateTime?    @map("deleted_at")
 
   packages PackageCategory[]
 
