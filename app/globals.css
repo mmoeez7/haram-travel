@@ -43,6 +43,8 @@
   --color-border: var(--border);
   --font-display: var(--font-ubuntu);
   --font-sans: var(--font-ubuntu);
+  /* Site content width — slightly wider than default 7xl (80rem) */
+  --container-7xl: 90rem;
 }
 
 html {
@@ -334,6 +336,61 @@ h3,
   box-shadow: 0 14px 32px rgba(0, 0, 0, 0.1);
 }
 
+/* ——— Site loader (reload / first paint) ——— */
+.site-loader {
+  transition: opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    visibility 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.site-loader-out {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.site-loader-logo {
+  animation: site-loader-breathe 1.4s ease-in-out infinite;
+}
+
+.site-loader-bar {
+  height: 2px;
+  width: 7.5rem;
+  overflow: hidden;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--gold) 25%, transparent);
+}
+
+.site-loader-bar::after {
+  content: "";
+  display: block;
+  height: 100%;
+  width: 40%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--gold), var(--gold-dark));
+  animation: site-loader-sweep 1.1s ease-in-out infinite;
+}
+
+@keyframes site-loader-breathe {
+  0%,
+  100% {
+    opacity: 0.88;
+    transform: scale(0.98);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes site-loader-sweep {
+  0% {
+    transform: translateX(-120%);
+  }
+  100% {
+    transform: translateX(280%);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .reveal,
   .reveal.is-visible {
@@ -349,7 +406,9 @@ h3,
   .login-panel-in,
   .login-fade-up,
   .admin-enter,
-  .admin-slide-in {
+  .admin-slide-in,
+  .site-loader-logo,
+  .site-loader-bar::after {
     animation: none;
     opacity: 1;
     transform: none;

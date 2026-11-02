@@ -13,7 +13,7 @@ export const metadata = createMetadata({
 export default function PrivacyPolicyPage() {
   return (
     <section className="bg-cream py-12 md:py-16">
-      <div className="mx-auto max-w-7xl px-4 lg:px-6">
+      <div className="mx-auto max-w-7xl px-3 lg:px-4">
         <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Privacy Policy" }]} />
         <span className="mb-3 inline-block rounded-full bg-gold-soft/60 px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-gold-dark">
           Customer Terms & Data Policy

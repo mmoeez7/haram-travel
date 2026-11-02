@@ -1,4 +1,5 @@
-import { MessageCircle, Phone } from "lucide-react";
+import { Phone } from "lucide-react";
+import { FaWhatsapp } from "react-icons/fa";
 import { createMetadata } from "@/lib/seo";
 import { SITE, telUrl, whatsappUrl } from "@/lib/constants";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
@@ -15,7 +16,7 @@ export const metadata = createMetadata({
 export default function BeatMyPricePage() {
   return (
     <section className="bg-cream py-12 md:py-16">
-      <div className="mx-auto max-w-7xl px-4 lg:px-6">
+      <div className="mx-auto max-w-7xl px-3 lg:px-4">
         <Breadcrumbs
           items={[
             { label: "Home", href: "/" },
@@ -32,7 +33,7 @@ export default function BeatMyPricePage() {
 
         <div className="mt-6 flex flex-wrap gap-3">
           <Button href={whatsappUrl("Assalamu Alaikum, I'd like you to beat my Umrah quote.")} variant="whatsapp" target="_blank" rel="noopener noreferrer">
-            <MessageCircle className="h-4 w-4" />
+            <FaWhatsapp className="h-4 w-4" />
             WhatsApp Your Quote
           </Button>
           <Button href={telUrl()} variant="call">

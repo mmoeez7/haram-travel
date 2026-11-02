@@ -1,4 +1,5 @@
-import { Shield, Landmark, Plane, Star, MessageCircle } from "lucide-react";
+import { Shield, Landmark, Plane, Star } from "lucide-react";
+import { FaWhatsapp } from "react-icons/fa";
 import { SITE, telUrl, whatsappUrl } from "@/lib/constants";
 import { Button } from "@/components/ui/Button";
 import { SectionHeading } from "@/components/ui/SectionHeading";
@@ -30,7 +31,7 @@ const cards = [
 export function Credentials() {
   return (
     <section className="bg-charcoal py-12 text-white md:py-16">
-      <div className="mx-auto max-w-7xl px-4 lg:px-6">
+      <div className="mx-auto max-w-7xl px-3 lg:px-4">
         <div className="mx-auto max-w-3xl text-center">
           <h2 className="font-display text-2xl font-semibold uppercase tracking-wide md:text-4xl">
             Perform Umrah with Total Peace of Mind
@@ -49,7 +50,7 @@ export function Credentials() {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <MessageCircle className="h-4 w-4" />
+              <FaWhatsapp className="h-4 w-4" />
               Chat on WhatsApp
             </Button>
           </div>

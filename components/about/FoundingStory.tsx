@@ -3,7 +3,7 @@ import Image from "next/image";
 export function FoundingStory() {
   return (
     <section className="bg-cream py-16">
-      <div className="mx-auto grid max-w-7xl items-center gap-10 px-4 lg:grid-cols-2 lg:px-6">
+      <div className="mx-auto grid max-w-7xl items-center gap-10 px-3 lg:grid-cols-2 lg:px-4">
         <div>
           <span className="mb-3 inline-block rounded-full bg-gold-soft/60 px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-gold-dark">
             Our Founding Story

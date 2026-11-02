@@ -1,7 +1,8 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { MessageCircle, Phone } from "lucide-react";
+import { Phone } from "lucide-react";
+import { FaWhatsapp } from "react-icons/fa";
 import { SITE, telUrl, whatsappUrl } from "@/lib/constants";
 import { Button } from "@/components/ui/Button";
 
@@ -104,7 +105,7 @@ export function CostCalculator() {
             target="_blank"
             rel="noopener noreferrer"
           >
-            <MessageCircle className="h-4 w-4" />
+            <FaWhatsapp className="h-4 w-4" />
             Chat on WhatsApp
           </Button>
           <Button href={telUrl()} variant="call" className="!rounded-full">

@@ -2,8 +2,12 @@
 
 import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { adminFetch } from "@/lib/admin-fetch";
+import {
+  UMRAH_DEALS_ROOT_SLUG,
+  UMRAH_PACKAGES_ROOT_SLUG,
+} from "@/lib/category-roots";
 import {
   AdminCard,
   AdminPageHeader,
@@ -13,6 +17,7 @@ import {
   adminCancelButtonClass,
   adminPrimaryButtonClass,
   adminSecondaryButtonClass,
+  adminSelectClass,
 } from "@/components/admin/admin-ui";
 import {
   AdminCoverUpload,
@@ -25,6 +30,7 @@ type Category = {
   name: string;
   slug: string;
   kind: string;
+  parentId: string | null;
   description: string | null;
   coverImageUrl: string | null;
   coverImageAlt: string | null;
@@ -32,16 +38,44 @@ type Category = {
   published: boolean;
 };
 
+type RootOption = { id: string; name: string; slug: string };
+
 export function CategoryFormClient({ category }: { category?: Category }) {
   const router = useRouter();
   const formRef = useRef<HTMLFormElement>(null);
   const [error, setError] = useState("");
   const [saving, setSaving] = useState<"draft" | "publish" | null>(null);
+  const [roots, setRoots] = useState<RootOption[]>([]);
   const [cover, setCover] = useState<CoverUploadState>({
     file: null,
     previewUrl: category?.coverImageUrl ?? null,
     removed: false,
   });
+
+  const isRoot =
+    Boolean(category) &&
+    category?.parentId === null &&
+    (category?.slug === UMRAH_PACKAGES_ROOT_SLUG ||
+      category?.slug === UMRAH_DEALS_ROOT_SLUG);
+
+  useEffect(() => {
+    async function loadRoots() {
+      try {
+        const data = await adminFetch<{ categories: RootOption[] }>(
+          "/api/admin/categories?rootsOnly=1"
+        );
+        setRoots(
+          data.categories.filter(
+            (c) =>
+              c.slug === UMRAH_PACKAGES_ROOT_SLUG || c.slug === UMRAH_DEALS_ROOT_SLUG
+          )
+        );
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Failed to load parent groups");
+      }
+    }
+    if (!isRoot) void loadRoots();
+  }, [isRoot]);
 
   async function save(published: boolean) {
     const form = formRef.current;
@@ -53,9 +87,16 @@ export function CategoryFormClient({ category }: { category?: Category }) {
     const data = new FormData(form);
     const name = String(data.get("name") || "").trim();
     const description = String(data.get("description") || "");
+    const parentId = String(data.get("parentId") || "");
 
     if (name.length < 2) {
       setError("Name must be at least 2 characters.");
+      setSaving(null);
+      return;
+    }
+
+    if (!isRoot && !parentId) {
+      setError("Select a parent group.");
       setSaving(null);
       return;
     }
@@ -69,6 +110,7 @@ export function CategoryFormClient({ category }: { category?: Category }) {
       const payload = {
         name,
         kind: category?.kind ?? "CUSTOM",
+        parentId: isRoot ? null : parentId,
         description,
         coverImageUrl,
         coverImageAlt: name,
@@ -101,7 +143,7 @@ export function CategoryFormClient({ category }: { category?: Category }) {
     <div className={adminPageClass}>
       <AdminPageHeader
         title={category ? "Edit category" : "New category"}
-        description="Categories power filters and package groupings on the public site."
+        description="Subcategories sit under Umrah Packages or Umrah Deals."
       />
       <AdminCard className="max-w-2xl">
         {error ? (
@@ -115,6 +157,29 @@ export function CategoryFormClient({ category }: { category?: Category }) {
           className="space-y-5"
           onSubmit={(event) => event.preventDefault()}
         >
+          {!isRoot ? (
+            <label className={adminLabelClass}>
+              Parent group
+              <select
+                name="parentId"
+                required
+                defaultValue={category?.parentId ?? ""}
+                className={adminSelectClass}
+              >
+                <option value="">Select group</option>
+                {roots.map((root) => (
+                  <option key={root.id} value={root.id}>
+                    {root.name}
+                  </option>
+                ))}
+              </select>
+            </label>
+          ) : (
+            <p className="rounded-xl border border-border bg-cream/60 px-3 py-2 text-sm text-muted">
+              Root group — packages must use a subcategory under this parent.
+            </p>
+          )}
+
           <label className={adminLabelClass}>
             Name
             <input

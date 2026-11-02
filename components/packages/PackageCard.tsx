@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Check, MessageCircle, Phone } from "lucide-react";
+import { Check, Phone } from "lucide-react";
+import { FaWhatsapp } from "react-icons/fa";
 import type { PackageItem } from "@/lib/packages";
 import { telUrl, whatsappUrl } from "@/lib/constants";
 import { Button } from "@/components/ui/Button";
@@ -74,7 +75,7 @@ export function PackageCard({ pkg }: { pkg: PackageItem }) {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <MessageCircle className="h-3.5 w-3.5 text-white" />
+              <FaWhatsapp className="h-3.5 w-3.5 text-white" />
               WhatsApp
             </Button>
             <Button
@@ -86,7 +87,7 @@ export function PackageCard({ pkg }: { pkg: PackageItem }) {
               Call Now
             </Button>
           </div>
-          <Button href="/booking-form" variant="gold" className="w-full !py-2 text-xs md:!py-2.5 md:text-sm">
+          <Button href={href} variant="gold" className="w-full !py-2 text-xs md:!py-2.5 md:text-sm">
             Inquire & Book Now →
           </Button>
         </div>

@@ -1,12 +1,13 @@
 import Link from "next/link";
-import { Mail, MapPin, MessageCircle, Phone } from "lucide-react";
+import { Mail, MapPin, Phone } from "lucide-react";
+import { FaWhatsapp } from "react-icons/fa";
 import { FOOTER_DEPARTURES, FOOTER_PACKAGES, SITE, telUrl, whatsappUrl } from "@/lib/constants";
 import { Logo } from "@/components/layout/Logo";
 
 export function Footer() {
   return (
     <footer className="border-t border-border bg-[#faf6ef]">
-      <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 md:grid-cols-2 lg:grid-cols-4 lg:px-6">
+      <div className="mx-auto grid max-w-7xl gap-10 px-3 py-14 md:grid-cols-2 lg:grid-cols-4 lg:px-4">
         <div>
           <div className="mb-4">
             <Logo />
@@ -69,7 +70,7 @@ export function Footer() {
               </a>
             </li>
             <li className="flex items-start gap-2.5">
-              <MessageCircle className="mt-0.5 h-4 w-4 shrink-0 text-[#e11d48]" />
+              <FaWhatsapp className="mt-0.5 h-4 w-4 shrink-0 text-[#25d366]" />
               <a
                 href={whatsappUrl()}
                 target="_blank"
@@ -91,7 +92,7 @@ export function Footer() {
       </div>
 
       <div className="border-t border-border">
-        <div className="mx-auto flex max-w-7xl flex-col gap-4 px-4 py-6 lg:flex-row lg:items-start lg:justify-between lg:px-6">
+        <div className="mx-auto flex max-w-7xl flex-col gap-4 px-3 py-6 lg:flex-row lg:items-start lg:justify-between lg:px-4">
           <div className="max-w-3xl space-y-2 text-xs leading-relaxed text-muted">
             <p>
               © {new Date().getFullYear()} Haram Travel Ltd. All Rights Reserved. Company Registered

@@ -46,7 +46,6 @@ export const NAV_ITEMS: NavItem[] = [
   { href: "/", label: "Home" },
   { href: "/umrah-packages", label: "Umrah Packages" },
   { href: "/blogs", label: "Blogs" },
-  { href: "/customized-umrah-packages", label: "Beat My Price" },
   { href: "/about-us", label: "About Us" },
   { href: "/contact-us", label: "Contact Us" },
 ];

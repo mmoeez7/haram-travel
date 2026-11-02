@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { ChevronDown, Menu, MessageCircle, X } from "lucide-react";
+import { ChevronDown, Menu, X } from "lucide-react";
+import { FaWhatsapp } from "react-icons/fa";
 import { useEffect, useRef, useState } from "react";
 import { whatsappUrl, type NavItem } from "@/lib/constants";
 import { Button } from "@/components/ui/Button";
@@ -73,7 +74,7 @@ export function Header({ navItems }: { navItems: NavItem[] }) {
 
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-cream/95 backdrop-blur-sm transition-shadow duration-300 supports-[backdrop-filter]:bg-cream/90">
-      <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 lg:px-6">
+      <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-3 py-3 lg:px-4">
         <Logo priority />
 
         <nav className="hidden items-center gap-5 xl:flex">
@@ -90,7 +91,7 @@ export function Header({ navItems }: { navItems: NavItem[] }) {
             target="_blank"
             rel="noopener noreferrer"
           >
-            <MessageCircle className="h-4 w-4" />
+            <FaWhatsapp className="h-4 w-4" />
             WhatsApp
           </Button>
           <Button href="/booking-form" variant="dark" className="!rounded-full">
@@ -109,7 +110,7 @@ export function Header({ navItems }: { navItems: NavItem[] }) {
       </div>
 
       {open ? (
-        <div className="border-t border-border bg-cream px-4 py-4 xl:hidden">
+        <div className="border-t border-border bg-cream px-3 py-4 xl:hidden">
           <nav className="flex flex-col">
             {navItems.map((item) => {
               const hasChildren = Boolean(item.children?.length);
@@ -170,7 +171,7 @@ export function Header({ navItems }: { navItems: NavItem[] }) {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <MessageCircle className="h-4 w-4" />
+              <FaWhatsapp className="h-4 w-4" />
               WhatsApp
             </Button>
             <Button href="/booking-form" variant="dark" className="!rounded-full">

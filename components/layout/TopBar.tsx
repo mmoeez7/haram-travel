@@ -4,7 +4,7 @@ import { SITE, telUrl } from "@/lib/constants";
 export function TopBar() {
   return (
     <div className="hidden border-b border-forest/20 bg-forest text-white md:block">
-      <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-2 text-xs tracking-wide lg:px-6">
+      <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-3 py-2 text-xs tracking-wide lg:px-4">
         <div className="flex items-center gap-2">
           <Lock className="h-3.5 w-3.5 text-gold-soft" />
           <span>Confidential & Secure Pilgrim Data</span>

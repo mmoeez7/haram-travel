@@ -1,8 +1,15 @@
 import { NextResponse } from "next/server";
+import type { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/db";
 import { requireAdminApi, jsonError } from "@/lib/admin-api-auth";
 import { writeAuditLog, slugify } from "@/lib/admin";
 import { linesToArray, packageSchema } from "@/lib/admin-schemas";
+import { assertAssignableUmrahCategory } from "@/lib/package-category";
+import {
+  buildPaginationMeta,
+  parseAdminPage,
+  parseAdminPageSize,
+} from "@/lib/admin-pagination";
 import { revalidatePath } from "next/cache";
 
 function normalizeFeatures(value: unknown) {
@@ -17,26 +24,42 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const status = searchParams.get("status");
   const q = searchParams.get("q")?.trim();
+  const page = parseAdminPage(searchParams);
+  const pageSize = parseAdminPageSize(searchParams);
 
+  const where: Prisma.PackageWhereInput = {
+    deletedAt: null,
+    ...(status === "draft" ? { published: false } : {}),
+    ...(status === "published" ? { published: true } : {}),
+    ...(q
+      ? {
+          OR: [
+            { title: { contains: q, mode: "insensitive" } },
+            { slug: { contains: q, mode: "insensitive" } },
+            { badge: { contains: q, mode: "insensitive" } },
+          ],
+        }
+      : {}),
+  };
+
+  if (page === null) {
+    const packages = await prisma.package.findMany({
+      where,
+      orderBy: [{ sortOrder: "asc" }, { updatedAt: "desc" }],
+    });
+    return NextResponse.json({ packages });
+  }
+
+  const total = await prisma.package.count({ where });
+  const pagination = buildPaginationMeta(total, page, pageSize);
   const packages = await prisma.package.findMany({
-    where: {
-      deletedAt: null,
-      ...(status === "draft" ? { published: false } : {}),
-      ...(status === "published" ? { published: true } : {}),
-      ...(q
-        ? {
-            OR: [
-              { title: { contains: q, mode: "insensitive" } },
-              { slug: { contains: q, mode: "insensitive" } },
-              { badge: { contains: q, mode: "insensitive" } },
-            ],
-          }
-        : {}),
-    },
+    where,
     orderBy: [{ sortOrder: "asc" }, { updatedAt: "desc" }],
+    skip: (pagination.page - 1) * pagination.pageSize,
+    take: pagination.pageSize,
   });
 
-  return NextResponse.json({ packages });
+  return NextResponse.json({ packages, pagination });
 }
 
 export async function POST(request: Request) {
@@ -48,13 +71,20 @@ export async function POST(request: Request) {
     ...body,
     slug: body.slug || slugify(String(body.title || "")),
     features: normalizeFeatures(body.features),
-    categoryIds: body.categoryIds ?? [],
+    categoryId: body.categoryId ?? "",
   });
   if (!parsed.success) {
     return jsonError(parsed.error.issues[0]?.message ?? "Invalid package");
   }
   if (parsed.data.makkahNights + parsed.data.madinahNights > parsed.data.nights) {
     return jsonError("Makkah + Madinah nights cannot exceed total nights.");
+  }
+
+  const categoryId =
+    parsed.data.journeyType === "UMRAH" ? parsed.data.categoryId || "" : "";
+  if (categoryId) {
+    const check = await assertAssignableUmrahCategory(prisma, categoryId);
+    if (!check.ok) return jsonError(check.message);
   }
 
   const coverImageUrl = parsed.data.coverImageUrl || null;
@@ -87,12 +117,9 @@ export async function POST(request: Request) {
   const pkg = await prisma.$transaction(async (tx) => {
     const saved = await tx.package.create({ data });
 
-    if (parsed.data.categoryIds.length) {
-      await tx.packageCategory.createMany({
-        data: parsed.data.categoryIds.map((categoryId) => ({
-          packageId: saved.id,
-          categoryId,
-        })),
+    if (categoryId) {
+      await tx.packageCategory.create({
+        data: { packageId: saved.id, categoryId },
       });
     }
     if (parsed.data.makkahHotelId) {
@@ -143,6 +170,7 @@ export async function POST(request: Request) {
   revalidatePath("/4-star-umrah-packages");
   revalidatePath("/5-star-umrah-packages");
   revalidatePath("/hajj-packages");
+  revalidatePath("/categories", "layout");
   revalidatePath(`/packages/${pkg.slug}`);
   return NextResponse.json({ package: pkg }, { status: 201 });
 }

@@ -27,7 +27,7 @@ export default async function BookingFormPage({
 
   return (
     <section className="bg-cream py-12 md:py-16">
-      <div className="mx-auto max-w-7xl px-4 lg:px-6">
+      <div className="mx-auto max-w-7xl px-3 lg:px-4">
         <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Booking Form" }]} />
         <h1 className="font-display text-4xl font-semibold uppercase tracking-wide text-charcoal md:text-5xl">
           Find & Book Your Sacred Package

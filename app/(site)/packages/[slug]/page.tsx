@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { Check, MessageCircle, Phone } from "lucide-react";
+import { Check, Phone } from "lucide-react";
+import { FaWhatsapp } from "react-icons/fa";
 import { createMetadata } from "@/lib/seo";
 import { getPackageBySlug } from "@/lib/packages";
 import { telUrl, whatsappUrl } from "@/lib/constants";
@@ -35,7 +36,7 @@ export default async function PackageDetailPage({ params }: PageProps) {
   return (
     <>
       <section className="bg-cream pt-12 pb-10">
-        <div className="mx-auto grid max-w-7xl gap-8 px-4 lg:grid-cols-2 lg:px-6">
+        <div className="mx-auto grid max-w-7xl gap-8 px-3 lg:grid-cols-2 lg:px-4">
           <div>
             <Breadcrumbs
               items={[
@@ -90,7 +91,7 @@ export default async function PackageDetailPage({ params }: PageProps) {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <MessageCircle className="h-4 w-4 text-white" />
+                <FaWhatsapp className="h-4 w-4 text-white" />
                 WhatsApp
               </Button>
               <Button href={telUrl()} variant="call">

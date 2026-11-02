@@ -22,7 +22,7 @@ const guarantees = [
 export function Guarantees() {
   return (
     <section className="bg-ivory py-16">
-      <div className="mx-auto max-w-7xl px-4 lg:px-6">
+      <div className="mx-auto max-w-7xl px-3 lg:px-4">
         <SectionHeading
           eyebrow="The Haram Travel Difference"
           title="The 4 Sacred Guarantees"

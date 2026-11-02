@@ -26,7 +26,7 @@ export function VideoReviews() {
 
   return (
     <section className="bg-cream py-12 md:py-20">
-      <div className="mx-auto max-w-7xl px-4 lg:px-6">
+      <div className="mx-auto max-w-7xl px-3 lg:px-4">
         <SectionHeading
           eyebrow="Live Experience"
           title="Customer Umrah Video Reviews"

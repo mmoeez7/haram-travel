@@ -2,8 +2,13 @@
 
 import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { adminFetch } from "@/lib/admin-fetch";
+import {
+  UMRAH_DEALS_ROOT_SLUG,
+  UMRAH_PACKAGES_ROOT_SLUG,
+  type UmrahRootSlug,
+} from "@/lib/category-roots";
 import {
   AdminCard,
   AdminFormSkeleton,
@@ -22,7 +27,12 @@ import {
   type CoverUploadState,
 } from "@/components/admin/AdminCoverUpload";
 
-type Category = { id: string; name: string };
+type Category = {
+  id: string;
+  name: string;
+  parentId: string | null;
+  parent: { id: string; name: string; slug: string } | null;
+};
 type Hotel = { id: string; name: string; city: string; stars: number };
 type PackageDetail = {
   id: string;
@@ -59,6 +69,9 @@ export function PackageFormClient({ packageId }: { packageId?: string }) {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState<"draft" | "publish" | null>(null);
+  const [journeyType, setJourneyType] = useState("UMRAH");
+  const [umrahGroup, setUmrahGroup] = useState<UmrahRootSlug>(UMRAH_PACKAGES_ROOT_SLUG);
+  const [categoryId, setCategoryId] = useState("");
   const [cover, setCover] = useState<CoverUploadState>({
     file: null,
     previewUrl: null,
@@ -79,11 +92,23 @@ export function PackageFormClient({ packageId }: { packageId?: string }) {
             `/api/admin/packages/${packageId}`
           );
           setPkg(detail.package);
+          setJourneyType(detail.package.journeyType);
           setCover({
             file: null,
             previewUrl: detail.package.coverImageUrl,
             removed: false,
           });
+
+          const linkedId = detail.package.categories[0]?.categoryId ?? "";
+          if (linkedId) {
+            const linked = cats.categories.find((c) => c.id === linkedId);
+            if (linked?.parent?.slug === UMRAH_DEALS_ROOT_SLUG) {
+              setUmrahGroup(UMRAH_DEALS_ROOT_SLUG);
+            } else {
+              setUmrahGroup(UMRAH_PACKAGES_ROOT_SLUG);
+            }
+            setCategoryId(linkedId);
+          }
         }
       } catch (err) {
         setError(err instanceof Error ? err.message : "Failed to load form");
@@ -94,10 +119,33 @@ export function PackageFormClient({ packageId }: { packageId?: string }) {
     void load();
   }, [packageId]);
 
+  const filteredCategories = useMemo(
+    () =>
+      categories.filter(
+        (c) => c.parentId && c.parent?.slug === umrahGroup
+      ),
+    [categories, umrahGroup]
+  );
+
+  function changeUmrahGroup(next: UmrahRootSlug) {
+    setUmrahGroup(next);
+    setCategoryId((current) => {
+      const stillValid = categories.some(
+        (c) => c.id === current && c.parent?.slug === next
+      );
+      return stillValid ? current : "";
+    });
+  }
+
   async function save(published: boolean) {
     const form = formRef.current;
     if (!form) return;
     if (!form.reportValidity()) return;
+
+    if (journeyType === "UMRAH" && !categoryId) {
+      setError("Select a category for this Umrah package.");
+      return;
+    }
 
     setSaving(published ? "publish" : "draft");
     setError("");
@@ -113,7 +161,7 @@ export function PackageFormClient({ packageId }: { packageId?: string }) {
       const payload = {
         title,
         subtitle: String(data.get("subtitle") || ""),
-        journeyType: String(data.get("journeyType") || "UMRAH"),
+        journeyType,
         stars: Number(data.get("stars") || 3),
         nights: Number(data.get("nights") || 7),
         makkahNights: Number(data.get("makkahNights") || 0),
@@ -130,7 +178,7 @@ export function PackageFormClient({ packageId }: { packageId?: string }) {
         featured: data.get("featured") === "on",
         published,
         sortOrder: Number(data.get("sortOrder") || 0),
-        categoryIds: data.getAll("categoryIds").map(String),
+        categoryId: journeyType === "UMRAH" ? categoryId : "",
         makkahHotelId: String(data.get("makkahHotelId") || ""),
         madinahHotelId: String(data.get("madinahHotelId") || ""),
       };
@@ -155,8 +203,6 @@ export function PackageFormClient({ packageId }: { packageId?: string }) {
   }
 
   const busy = saving !== null;
-
-  const selectedCategoryIds = new Set(pkg?.categories.map((c) => c.categoryId) ?? []);
   const makkahHotelId = pkg?.hotels.find((h) => h.role === "MAKKAH")?.hotelId ?? "";
   const madinahHotelId = pkg?.hotels.find((h) => h.role === "MADINAH")?.hotelId ?? "";
   const makkahHotels = hotels.filter((h) => h.city === "MAKKAH");
@@ -198,7 +244,11 @@ export function PackageFormClient({ packageId }: { packageId?: string }) {
               Journey type
               <select
                 name="journeyType"
-                defaultValue={pkg?.journeyType ?? "UMRAH"}
+                value={journeyType}
+                onChange={(event) => {
+                  setJourneyType(event.target.value);
+                  if (event.target.value === "HAJJ") setCategoryId("");
+                }}
                 className={adminSelectClass}
               >
                 <option value="UMRAH">Umrah</option>
@@ -335,22 +385,61 @@ export function PackageFormClient({ packageId }: { packageId?: string }) {
               />
             </label>
 
-            <fieldset className="rounded-xl border border-border p-4 md:col-span-2">
-              <legend className="px-1 text-sm font-semibold text-charcoal">Categories</legend>
-              <div className="grid gap-2 sm:grid-cols-2 md:grid-cols-3">
-                {categories.map((category) => (
-                  <label key={category.id} className="flex items-center gap-2 text-sm">
-                    <input
-                      type="checkbox"
-                      name="categoryIds"
-                      value={category.id}
-                      defaultChecked={selectedCategoryIds.has(category.id)}
-                    />
-                    {category.name}
-                  </label>
-                ))}
-              </div>
-            </fieldset>
+            {journeyType === "UMRAH" ? (
+              <fieldset className="rounded-xl border border-border p-4 md:col-span-2">
+                <legend className="px-1 text-sm font-semibold text-charcoal">
+                  Umrah category
+                </legend>
+                <div className="mb-4 inline-flex rounded-xl border border-border bg-cream/50 p-1">
+                  <button
+                    type="button"
+                    disabled={busy}
+                    onClick={() => changeUmrahGroup(UMRAH_PACKAGES_ROOT_SLUG)}
+                    className={`rounded-lg px-3 py-1.5 text-sm font-semibold transition ${
+                      umrahGroup === UMRAH_PACKAGES_ROOT_SLUG
+                        ? "bg-forest text-white"
+                        : "text-ink hover:bg-white"
+                    }`}
+                  >
+                    Umrah Packages
+                  </button>
+                  <button
+                    type="button"
+                    disabled={busy}
+                    onClick={() => changeUmrahGroup(UMRAH_DEALS_ROOT_SLUG)}
+                    className={`rounded-lg px-3 py-1.5 text-sm font-semibold transition ${
+                      umrahGroup === UMRAH_DEALS_ROOT_SLUG
+                        ? "bg-forest text-white"
+                        : "text-ink hover:bg-white"
+                    }`}
+                  >
+                    Umrah Deals
+                  </button>
+                </div>
+                <label className={adminLabelClass}>
+                  Category
+                  <select
+                    name="categoryId"
+                    required
+                    value={categoryId}
+                    onChange={(event) => setCategoryId(event.target.value)}
+                    className={adminSelectClass}
+                  >
+                    <option value="">Select category</option>
+                    {filteredCategories.map((category) => (
+                      <option key={category.id} value={category.id}>
+                        {category.name}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                {filteredCategories.length === 0 ? (
+                  <p className="mt-2 text-xs text-muted">
+                    No subcategories under this group yet. Create one in Categories first.
+                  </p>
+                ) : null}
+              </fieldset>
+            ) : null}
 
             <label className={adminLabelClass}>
               Makkah hotel

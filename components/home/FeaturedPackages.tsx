@@ -1,11 +1,12 @@
 "use client";
 
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 import type { PackageItem } from "@/lib/packages";
 import { SectionHeading } from "@/components/ui/SectionHeading";
-import { CardRail } from "@/components/ui/CardRail";
 import { Reveal } from "@/components/ui/Reveal";
 import { CategoryFilters } from "@/components/packages/CategoryFilters";
-import { PackageCard } from "@/components/packages/PackageCard";
+import { PackageCarousel } from "@/components/packages/PackageCarousel";
 
 type FeaturedPackagesProps = {
   threeStar: PackageItem[];
@@ -25,6 +26,7 @@ export function FeaturedPackages({
       description:
         "Reliable economy comfort with flights included, courtyard-friendly hotels, and full visa support for first-time and returning pilgrims.",
       packages: threeStar,
+      seeMoreHref: "/categories/3-star",
     },
     {
       id: undefined as string | undefined,
@@ -32,6 +34,7 @@ export function FeaturedPackages({
       description:
         "Executive hotels closer to the Haram with elevated dining, quieter rooms, and family configurations for 7, 10 or 12 nights.",
       packages: fourStar,
+      seeMoreHref: "/categories/4-star",
     },
     {
       id: "5-star" as string | undefined,
@@ -39,12 +42,13 @@ export function FeaturedPackages({
       description:
         "Clock Tower and courtyard VIP stays for pilgrims who want footsteps-from-Haram luxury with white-glove UK & Saudi support.",
       packages: fiveStar,
+      seeMoreHref: "/categories/5-star",
     },
   ];
 
   return (
     <section id="packages" className="bg-cream py-12 md:py-20">
-      <div className="mx-auto max-w-7xl px-4 lg:px-6">
+      <div className="mx-auto max-w-7xl px-3 lg:px-4">
         <SectionHeading
           eyebrow="Handcrafted Itineraries"
           title="Featured Umrah Packages 2026/27"
@@ -55,21 +59,30 @@ export function FeaturedPackages({
         </Reveal>
 
         <div className="mt-8 space-y-10 md:mt-14 md:space-y-16">
-          {groups.map((group) => (
-            <div key={group.title} id={group.id}>
-              <Reveal>
-                <h3 className="mb-2 font-display text-xl font-semibold uppercase tracking-wide text-charcoal md:text-2xl">
-                  {group.title}
-                </h3>
-                <p className="mb-6 max-w-2xl text-sm text-muted">{group.description}</p>
-              </Reveal>
-              <CardRail>
-                {group.packages.map((pkg) => (
-                  <PackageCard key={pkg.id} pkg={pkg} />
-                ))}
-              </CardRail>
-            </div>
-          ))}
+          {groups.map((group) =>
+            group.packages.length ? (
+              <div key={group.title} id={group.id}>
+                <Reveal>
+                  <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+                    <div className="max-w-2xl">
+                      <h3 className="mb-2 font-display text-xl font-semibold uppercase tracking-wide text-charcoal md:text-2xl">
+                        {group.title}
+                      </h3>
+                      <p className="text-sm text-muted">{group.description}</p>
+                    </div>
+                    <Link
+                      href={group.seeMoreHref}
+                      className="inline-flex shrink-0 items-center gap-1.5 self-start rounded-md border border-border bg-white px-4 py-2 text-sm font-semibold text-charcoal transition hover:border-gold hover:text-gold-dark sm:self-auto"
+                    >
+                      See more
+                      <ArrowRight className="h-4 w-4" aria-hidden />
+                    </Link>
+                  </div>
+                </Reveal>
+                <PackageCarousel packages={group.packages} limit={3} />
+              </div>
+            ) : null
+          )}
         </div>
       </div>
     </section>

@@ -1,4 +1,5 @@
-import { MessageCircle, Phone, Ticket } from "lucide-react";
+import { Phone, Ticket } from "lucide-react";
+import { FaWhatsapp } from "react-icons/fa";
 import { SITE, telUrl, whatsappUrl } from "@/lib/constants";
 
 const baseBtn =
@@ -43,7 +44,7 @@ export function FloatingWidgets() {
         aria-label="Chat on WhatsApp"
       >
         <span className="flex h-10 w-10 shrink-0 items-center justify-center md:h-11 md:w-11">
-          <MessageCircle className="h-3.5 w-3.5 md:h-4 md:w-4" />
+          <FaWhatsapp className="h-3.5 w-3.5 md:h-4 md:w-4" />
         </span>
         <span className="whitespace-nowrap pr-4 text-xs font-semibold opacity-0 transition-opacity duration-700 delay-100 group-hover:opacity-100 group-focus-visible:opacity-100">
           Chat on WhatsApp

@@ -2,11 +2,11 @@ import {
   ArrowRight,
   Building2,
   MapPin,
-  MessageCircle,
   Phone,
   PhoneCall,
   Zap,
 } from "lucide-react";
+import { FaWhatsapp } from "react-icons/fa";
 import { SITE, telUrl, whatsappUrl } from "@/lib/constants";
 import { CardRail } from "@/components/ui/CardRail";
 
@@ -17,7 +17,7 @@ const cards = [
       label: "Fastest Channel • 15 Min Response",
       className: "bg-[#e8f7ef] text-[#0f8f66]",
     },
-    icon: MessageCircle,
+    icon: FaWhatsapp,
     iconBox: "bg-[#e8f7ef] text-[#00b374] border-[#b8e6d0]",
     title: "WhatsApp Live Concierge",
     text: "Chat directly with a senior UK pilgrimage consultant. Get instant customized hotel rates, GDS flight options, and visa advice.",
@@ -26,7 +26,7 @@ const cards = [
     cta: {
       href: whatsappUrl(),
       label: "Chat on WhatsApp Now",
-      icon: MessageCircle,
+      icon: FaWhatsapp,
       iconClass: "text-white",
       className:
         "bg-[#00b374] text-white shadow-sm hover:-translate-y-0.5 hover:bg-[#009a64] hover:shadow-md active:translate-y-0",

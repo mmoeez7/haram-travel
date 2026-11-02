@@ -14,7 +14,7 @@ export default function BlogsPage() {
   return (
     <>
       <section className="bg-cream pt-12 pb-4">
-        <div className="mx-auto max-w-7xl px-4 lg:px-6">
+        <div className="mx-auto max-w-7xl px-3 lg:px-4">
           <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Blogs" }]} />
           <h1 className="font-display text-3xl font-semibold uppercase tracking-wide text-charcoal md:text-5xl">
             Blogs &amp; Pilgrim Guides

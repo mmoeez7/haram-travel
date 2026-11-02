@@ -30,7 +30,7 @@ const faqs = [
 export function FAQ() {
   return (
     <section className="bg-ivory py-12 md:py-20">
-      <div className="mx-auto max-w-3xl px-4 lg:px-6">
+      <div className="mx-auto max-w-3xl px-3 lg:px-4">
         <SectionHeading
           eyebrow="Got Questions?"
           title="Frequently Asked Questions"

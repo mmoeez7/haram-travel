@@ -26,7 +26,7 @@ export function Hero() {
         aria-hidden
       />
 
-      <div className="relative z-10 mx-auto w-full max-w-7xl px-4 lg:px-6">
+      <div className="relative z-10 mx-auto w-full max-w-7xl px-3 lg:px-4">
         <div className="mx-auto max-w-4xl text-center">
           <span className="hero-enter mb-2.5 inline-block rounded-full border border-gold/40 bg-gold/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-gold-soft backdrop-blur-sm md:mb-3 md:px-4 md:py-1.5 md:text-xs md:tracking-[0.16em]">
             Voted UK&apos;s Most Reliable Umrah Specialist 2024/25

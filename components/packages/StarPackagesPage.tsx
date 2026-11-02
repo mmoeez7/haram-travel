@@ -21,7 +21,7 @@ export async function StarPackagesPage({
   return (
     <>
       <section className="bg-cream pt-12 pb-6">
-        <div className="mx-auto max-w-7xl px-4 lg:px-6">
+        <div className="mx-auto max-w-7xl px-3 lg:px-4">
           <Breadcrumbs
             items={[
               { label: "Home", href: "/" },

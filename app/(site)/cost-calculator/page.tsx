@@ -13,7 +13,7 @@ export const metadata = createMetadata({
 export default function CostCalculatorPage() {
   return (
     <section className="bg-cream py-12 md:py-16">
-      <div className="mx-auto max-w-7xl px-4 lg:px-6">
+      <div className="mx-auto max-w-7xl px-3 lg:px-4">
         <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "0% Cost Calculator" }]} />
         <h1 className="font-display text-4xl font-semibold uppercase tracking-wide text-charcoal md:text-5xl">
           Instant Umrah Budget & Installment Calculator

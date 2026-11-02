@@ -4,6 +4,7 @@ import { prisma } from "@/lib/db";
 import { requireAdminApi, jsonError } from "@/lib/admin-api-auth";
 import { writeAuditLog } from "@/lib/admin";
 import { linesToArray, packageSchema } from "@/lib/admin-schemas";
+import { assertAssignableUmrahCategory } from "@/lib/package-category";
 
 type Params = { params: Promise<{ id: string }> };
 
@@ -40,13 +41,20 @@ export async function PATCH(request: Request, { params }: Params) {
     ...body,
     slug: body.slug || existing.slug,
     features: normalizeFeatures(body.features),
-    categoryIds: body.categoryIds ?? [],
+    categoryId: body.categoryId ?? "",
   });
   if (!parsed.success) {
     return jsonError(parsed.error.issues[0]?.message ?? "Invalid package");
   }
   if (parsed.data.makkahNights + parsed.data.madinahNights > parsed.data.nights) {
     return jsonError("Makkah + Madinah nights cannot exceed total nights.");
+  }
+
+  const categoryId =
+    parsed.data.journeyType === "UMRAH" ? parsed.data.categoryId || "" : "";
+  if (categoryId) {
+    const check = await assertAssignableUmrahCategory(prisma, categoryId);
+    if (!check.ok) return jsonError(check.message);
   }
 
   const coverImageUrl = parsed.data.coverImageUrl || null;
@@ -79,12 +87,9 @@ export async function PATCH(request: Request, { params }: Params) {
     const saved = await tx.package.update({ where: { id }, data });
 
     await tx.packageCategory.deleteMany({ where: { packageId: saved.id } });
-    if (parsed.data.categoryIds.length) {
-      await tx.packageCategory.createMany({
-        data: parsed.data.categoryIds.map((categoryId) => ({
-          packageId: saved.id,
-          categoryId,
-        })),
+    if (categoryId) {
+      await tx.packageCategory.create({
+        data: { packageId: saved.id, categoryId },
       });
     }
 
@@ -142,6 +147,7 @@ export async function PATCH(request: Request, { params }: Params) {
   revalidatePath("/4-star-umrah-packages");
   revalidatePath("/5-star-umrah-packages");
   revalidatePath("/hajj-packages");
+  revalidatePath("/categories", "layout");
   revalidatePath(`/packages/${pkg.slug}`);
   return NextResponse.json({ package: pkg });
 }

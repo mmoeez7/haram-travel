@@ -5,6 +5,10 @@ import { Pencil, Search, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { adminFetch } from "@/lib/admin-fetch";
 import {
+  ADMIN_PAGE_SIZE,
+  type AdminPaginationMeta,
+} from "@/lib/admin-pagination";
+import {
   AdminCard,
   AdminPageHeader,
   AdminTableSkeleton,
@@ -16,6 +20,7 @@ import {
 } from "@/components/admin/admin-ui";
 import { AdminLoadingLink } from "@/components/admin/AdminLoadingLink";
 import { AdminAsyncButton } from "@/components/admin/AdminAsyncButton";
+import { AdminPagination } from "@/components/admin/AdminPagination";
 
 const filterControlClass =
   "h-10 w-full rounded-xl border border-border bg-white px-3.5 text-sm text-ink outline-none ring-gold transition focus:ring-2";
@@ -32,23 +37,37 @@ type PackageRow = {
   published: boolean;
 };
 
+const emptyMeta: AdminPaginationMeta = {
+  page: 1,
+  pageSize: ADMIN_PAGE_SIZE,
+  total: 0,
+  totalPages: 1,
+};
+
 export function AdminPackagesClient() {
   const [packages, setPackages] = useState<PackageRow[]>([]);
+  const [pagination, setPagination] = useState<AdminPaginationMeta>(emptyMeta);
+  const [page, setPage] = useState(1);
   const [q, setQ] = useState("");
   const [status, setStatus] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
 
-  async function load(nextQ = q, nextStatus = status) {
+  async function load(nextQ = q, nextStatus = status, nextPage = page) {
     setLoading(true);
     try {
       const params = new URLSearchParams();
+      params.set("page", String(nextPage));
+      params.set("limit", String(ADMIN_PAGE_SIZE));
       if (nextQ) params.set("q", nextQ);
       if (nextStatus) params.set("status", nextStatus);
-      const data = await adminFetch<{ packages: PackageRow[] }>(
-        `/api/admin/packages?${params.toString()}`
-      );
+      const data = await adminFetch<{
+        packages: PackageRow[];
+        pagination: AdminPaginationMeta;
+      }>(`/api/admin/packages?${params.toString()}`);
       setPackages(data.packages);
+      setPagination(data.pagination ?? emptyMeta);
+      setPage(data.pagination?.page ?? nextPage);
       setError("");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to load");
@@ -65,7 +84,10 @@ export function AdminPackagesClient() {
   async function remove(id: string) {
     if (!confirm("Delete this package?")) return;
     await adminFetch(`/api/admin/packages/${id}`, { method: "DELETE" });
-    await load();
+    const nextPage =
+      packages.length === 1 && page > 1 ? page - 1 : page;
+    setPage(nextPage);
+    await load(q, status, nextPage);
   }
 
   return (
@@ -79,7 +101,8 @@ export function AdminPackagesClient() {
         className="admin-enter admin-enter-delay-1 mb-4 flex flex-wrap items-center gap-2"
         onSubmit={(event) => {
           event.preventDefault();
-          void load();
+          setPage(1);
+          void load(q, status, 1);
         }}
       >
         <label className="relative block min-w-[220px] max-w-xs flex-1">
@@ -99,7 +122,8 @@ export function AdminPackagesClient() {
           onChange={(e) => {
             const nextStatus = e.target.value;
             setStatus(nextStatus);
-            void load(q, nextStatus);
+            setPage(1);
+            void load(q, nextStatus, 1);
           }}
           className={`${filterSelectClass} max-w-[180px]`}
           aria-label="Filter by status"
@@ -125,60 +149,74 @@ export function AdminPackagesClient() {
         {loading ? (
           <AdminTableSkeleton rows={7} cols={6} />
         ) : (
-          <div className="overflow-x-auto">
-            <table className="min-w-full text-left text-sm">
-              <thead className="border-b border-border text-[10px] uppercase tracking-wide text-muted">
-                <tr>
-                  <th className="px-2 py-2">Title</th>
-                  <th className="px-2 py-2">Type</th>
-                  <th className="px-2 py-2">Stars</th>
-                  <th className="px-2 py-2">Price</th>
-                  <th className="px-2 py-2">Status</th>
-                  <th className="px-2 py-2 text-center">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {packages.map((pkg) => (
-                  <tr key={pkg.id} className="border-b border-border/60">
-                    <td className="px-2 py-3 font-medium text-charcoal">{pkg.title}</td>
-                    <td className="px-2 py-3">{pkg.journeyType}</td>
-                    <td className="px-2 py-3">{pkg.stars}★</td>
-                    <td className="px-2 py-3">£{Number(pkg.priceFrom).toLocaleString()}</td>
-                    <td className="px-2 py-3">
-                      <span
-                        className={
-                          pkg.published
-                            ? adminStatusPublishedClass
-                            : adminStatusDraftClass
-                        }
-                      >
-                        {pkg.published ? "Published" : "Draft"}
-                      </span>
-                    </td>
-                    <td className="px-2 py-3">
-                      <div className="flex items-center justify-center gap-2">
-                        <Link
-                          href={`/admin/packages/${pkg.id}`}
-                          className={adminEditLinkClass}
-                        >
-                          <Pencil className="h-3.5 w-3.5" aria-hidden />
-                          Edit
-                        </Link>
-                        <AdminAsyncButton
-                          onClick={() => remove(pkg.id)}
-                          pendingLabel="Deleting…"
-                          idleIcon={<Trash2 className="h-3.5 w-3.5" />}
-                          className={adminDangerButtonClass}
-                        >
-                          Delete
-                        </AdminAsyncButton>
-                      </div>
-                    </td>
+          <>
+            <div className="overflow-x-auto">
+              <table className="min-w-full text-left text-sm">
+                <thead className="border-b border-border text-[10px] uppercase tracking-wide text-muted">
+                  <tr>
+                    <th className="px-2 py-2">Title</th>
+                    <th className="px-2 py-2">Type</th>
+                    <th className="px-2 py-2">Stars</th>
+                    <th className="px-2 py-2">Price</th>
+                    <th className="px-2 py-2">Status</th>
+                    <th className="px-2 py-2 text-center">Actions</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody>
+                  {packages.map((pkg) => (
+                    <tr key={pkg.id} className="border-b border-border/60">
+                      <td className="px-2 py-3 font-medium text-charcoal">
+                        {pkg.title}
+                      </td>
+                      <td className="px-2 py-3">{pkg.journeyType}</td>
+                      <td className="px-2 py-3">{pkg.stars}★</td>
+                      <td className="px-2 py-3">
+                        £{Number(pkg.priceFrom).toLocaleString()}
+                      </td>
+                      <td className="px-2 py-3">
+                        <span
+                          className={
+                            pkg.published
+                              ? adminStatusPublishedClass
+                              : adminStatusDraftClass
+                          }
+                        >
+                          {pkg.published ? "Published" : "Draft"}
+                        </span>
+                      </td>
+                      <td className="px-2 py-3">
+                        <div className="flex items-center justify-center gap-2">
+                          <Link
+                            href={`/admin/packages/${pkg.id}`}
+                            className={adminEditLinkClass}
+                          >
+                            <Pencil className="h-3.5 w-3.5" aria-hidden />
+                            Edit
+                          </Link>
+                          <AdminAsyncButton
+                            onClick={() => remove(pkg.id)}
+                            pendingLabel="Deleting…"
+                            idleIcon={<Trash2 className="h-3.5 w-3.5" />}
+                            className={adminDangerButtonClass}
+                          >
+                            Delete
+                          </AdminAsyncButton>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <AdminPagination
+              meta={pagination}
+              disabled={loading}
+              onPageChange={(nextPage) => {
+                setPage(nextPage);
+                void load(q, status, nextPage);
+              }}
+            />
+          </>
         )}
       </AdminCard>
     </div>

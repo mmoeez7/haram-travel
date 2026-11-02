@@ -47,15 +47,101 @@ async function main() {
     },
   });
 
+  const umrahPackagesRoot = await prisma.category.upsert({
+    where: { slug: "umrah-packages" },
+    update: {
+      name: "Umrah Packages",
+      kind: "CUSTOM",
+      sortOrder: 0,
+      published: true,
+      parentId: null,
+      deletedAt: null,
+    },
+    create: {
+      name: "Umrah Packages",
+      slug: "umrah-packages",
+      kind: "CUSTOM",
+      sortOrder: 0,
+      published: true,
+    },
+  });
+
+  const umrahDealsRoot = await prisma.category.upsert({
+    where: { slug: "umrah-deals" },
+    update: {
+      name: "Umrah Deals",
+      kind: "CUSTOM",
+      sortOrder: 1,
+      published: true,
+      parentId: null,
+      deletedAt: null,
+    },
+    create: {
+      name: "Umrah Deals",
+      slug: "umrah-deals",
+      kind: "CUSTOM",
+      sortOrder: 1,
+      published: true,
+    },
+  });
+
   const categories = [
-    { name: "3 Star", slug: "3-star", kind: "STAR" as const, sortOrder: 10 },
-    { name: "4 Star", slug: "4-star", kind: "STAR" as const, sortOrder: 20 },
-    { name: "5 Star", slug: "5-star", kind: "STAR" as const, sortOrder: 30 },
-    { name: "December", slug: "december", kind: "SEASON" as const, sortOrder: 40 },
-    { name: "Easter / Half-Term", slug: "easter", kind: "SEASON" as const, sortOrder: 50 },
-    { name: "Ramadan", slug: "ramadan", kind: "SEASON" as const, sortOrder: 60 },
-    { name: "Umrah", slug: "umrah", kind: "JOURNEY" as const, sortOrder: 70 },
-    { name: "Hajj", slug: "hajj", kind: "JOURNEY" as const, sortOrder: 80 },
+    {
+      name: "3 Star",
+      slug: "3-star",
+      kind: "STAR" as const,
+      sortOrder: 10,
+      parentId: umrahPackagesRoot.id,
+    },
+    {
+      name: "4 Star",
+      slug: "4-star",
+      kind: "STAR" as const,
+      sortOrder: 20,
+      parentId: umrahPackagesRoot.id,
+    },
+    {
+      name: "5 Star",
+      slug: "5-star",
+      kind: "STAR" as const,
+      sortOrder: 30,
+      parentId: umrahPackagesRoot.id,
+    },
+    {
+      name: "December",
+      slug: "december",
+      kind: "SEASON" as const,
+      sortOrder: 40,
+      parentId: umrahDealsRoot.id,
+    },
+    {
+      name: "Easter / Half-Term",
+      slug: "easter",
+      kind: "SEASON" as const,
+      sortOrder: 50,
+      parentId: umrahDealsRoot.id,
+    },
+    {
+      name: "Ramadan",
+      slug: "ramadan",
+      kind: "SEASON" as const,
+      sortOrder: 60,
+      parentId: umrahDealsRoot.id,
+    },
+    {
+      name: "Umrah",
+      slug: "umrah",
+      kind: "JOURNEY" as const,
+      sortOrder: 70,
+      parentId: umrahPackagesRoot.id,
+    },
+    {
+      name: "Hajj",
+      slug: "hajj",
+      kind: "JOURNEY" as const,
+      sortOrder: 80,
+      parentId: umrahPackagesRoot.id,
+    },
   ];
 
   for (const category of categories) {
@@ -65,6 +151,7 @@ async function main() {
         name: category.name,
         kind: category.kind,
         sortOrder: category.sortOrder,
+        parentId: category.parentId,
         published: true,
         deletedAt: null,
       },
@@ -237,24 +324,19 @@ async function main() {
       },
     });
 
-    const categorySlugs = [
-      journeyType === "HAJJ" ? "hajj" : "umrah",
-      `${pkg.stars}-star`,
-      ...(pkg.season && pkg.season !== "all" ? [pkg.season] : []),
-    ];
+    // One child category per package: seasonal deals → season slug; else star slug / hajj
+    const primarySlug =
+      journeyType === "HAJJ"
+        ? "hajj"
+        : pkg.season && pkg.season !== "all"
+          ? pkg.season
+          : `${pkg.stars}-star`;
 
-    for (const categorySlug of categorySlugs) {
-      const category = await prisma.category.findUnique({ where: { slug: categorySlug } });
-      if (!category) continue;
-      await prisma.packageCategory.upsert({
-        where: {
-          packageId_categoryId: {
-            packageId: created.id,
-            categoryId: category.id,
-          },
-        },
-        update: {},
-        create: {
+    const category = await prisma.category.findUnique({ where: { slug: primarySlug } });
+    await prisma.packageCategory.deleteMany({ where: { packageId: created.id } });
+    if (category) {
+      await prisma.packageCategory.create({
+        data: {
           packageId: created.id,
           categoryId: category.id,
         },
@@ -288,7 +370,7 @@ async function main() {
   }
 
   console.log(
-    `Seeded admin ${email}, ${allSeedPackages.length} packages, ${hotelsSeed.length} hotels, and ${categories.length} categories.`
+    `Seeded admin ${email}, ${allSeedPackages.length} packages, ${hotelsSeed.length} hotels, 2 roots + ${categories.length} child categories.`
   );
 }
 

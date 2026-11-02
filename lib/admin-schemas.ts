@@ -8,6 +8,7 @@ export const categorySchema = z.object({
     .max(120)
     .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "Slug must be lowercase kebab-case"),
   kind: z.enum(["STAR", "SEASON", "JOURNEY", "CUSTOM"]).default("CUSTOM"),
+  parentId: z.string().min(1).optional().nullable().or(z.literal("")),
   description: z.string().max(2000).optional().or(z.literal("")),
   coverImageUrl: z.string().optional().or(z.literal("")),
   coverImageAlt: z.string().max(200).optional().or(z.literal("")),
@@ -77,9 +78,17 @@ export const packageSchema = z.object({
   featured: z.coerce.boolean().default(false),
   published: z.coerce.boolean().default(false),
   sortOrder: z.coerce.number().int().min(0).default(0),
-  categoryIds: z.array(z.string()).default([]),
+  categoryId: z.string().optional().or(z.literal("")),
   makkahHotelId: z.string().optional().or(z.literal("")),
   madinahHotelId: z.string().optional().or(z.literal("")),
+}).superRefine((data, ctx) => {
+  if (data.journeyType === "UMRAH" && !data.categoryId) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: "Select a category for Umrah packages",
+      path: ["categoryId"],
+    });
+  }
 });
 
 export function linesToArray(value?: string | null) {

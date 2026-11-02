@@ -1,6 +1,7 @@
 "use client";
 
-import { MessageCircle, Phone } from "lucide-react";
+import { Phone } from "lucide-react";
+import { FaWhatsapp } from "react-icons/fa";
 import { SITE, telUrl, whatsappUrl } from "@/lib/constants";
 import { Button } from "@/components/ui/Button";
 import { Reveal } from "@/components/ui/Reveal";
@@ -8,7 +9,7 @@ import { Reveal } from "@/components/ui/Reveal";
 export function CustomQuote() {
   return (
     <section className="bg-cream-dark py-10 md:py-14">
-      <div className="mx-auto max-w-4xl px-4 text-center lg:px-6">
+      <div className="mx-auto max-w-4xl px-3 text-center lg:px-4">
         <Reveal>
           <h2 className="font-display text-2xl font-semibold uppercase tracking-wide text-charcoal md:text-4xl">
             Need Custom Dates, Itinerary or Family Quote?
@@ -20,7 +21,7 @@ export function CustomQuote() {
         </Reveal>
         <Reveal delay={120} className="mt-5 flex flex-col items-stretch justify-center gap-2.5 sm:flex-row sm:flex-wrap sm:items-center md:mt-7 md:gap-3">
           <Button href={whatsappUrl()} variant="whatsapp" target="_blank" rel="noopener noreferrer">
-            <MessageCircle className="h-4 w-4" />
+            <FaWhatsapp className="h-4 w-4" />
             Chat on WhatsApp
           </Button>
           <Button href={telUrl()} variant="call">
