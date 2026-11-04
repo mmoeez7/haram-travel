@@ -144,6 +144,7 @@ export function CategoryFormClient({ category }: { category?: Category }) {
       <AdminPageHeader
         title={category ? "Edit category" : "New category"}
         description="Subcategories sit under Umrah Packages or Umrah Deals."
+        showBack
       />
       <AdminCard className="max-w-2xl">
         {error ? (

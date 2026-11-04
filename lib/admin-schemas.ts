@@ -37,8 +37,7 @@ export const hotelSchema = z.object({
   shortDescription: z.string().max(500).optional().or(z.literal("")),
   description: z.string().max(10000).optional().or(z.literal("")),
   amenities: z.string().optional().or(z.literal("")),
-  coverImageUrl: z.string().optional().or(z.literal("")),
-  coverImageAlt: z.string().max(200).optional().or(z.literal("")),
+  imageUrls: z.array(z.string().min(1)).default([]),
   sortOrder: z.coerce.number().int().min(0).default(0),
   published: z.coerce.boolean().default(false),
 });

@@ -16,10 +16,10 @@ import {
   adminSecondaryButtonClass,
 } from "@/components/admin/admin-ui";
 import {
-  AdminCoverUpload,
-  uploadAdminCover,
-  type CoverUploadState,
-} from "@/components/admin/AdminCoverUpload";
+  AdminMultiImageUpload,
+  type ExistingHotelImage,
+  type MultiImageUploadHandle,
+} from "@/components/admin/AdminMultiImageUpload";
 
 type Hotel = {
   id: string;
@@ -33,22 +33,17 @@ type Hotel = {
   shortDescription: string | null;
   description: string | null;
   amenities: string[];
-  coverImageUrl: string | null;
-  coverImageAlt: string | null;
   sortOrder: number;
   published: boolean;
+  images?: ExistingHotelImage[];
 };
 
 export function HotelFormClient({ hotel }: { hotel?: Hotel }) {
   const router = useRouter();
   const formRef = useRef<HTMLFormElement>(null);
+  const imagesRef = useRef<MultiImageUploadHandle | null>(null);
   const [error, setError] = useState("");
   const [saving, setSaving] = useState<"draft" | "publish" | null>(null);
-  const [cover, setCover] = useState<CoverUploadState>({
-    file: null,
-    previewUrl: hotel?.coverImageUrl ?? null,
-    removed: false,
-  });
 
   async function save(published: boolean) {
     const form = formRef.current;
@@ -60,11 +55,7 @@ export function HotelFormClient({ hotel }: { hotel?: Hotel }) {
     const data = new FormData(form);
 
     try {
-      let coverImageUrl = cover.removed ? "" : (hotel?.coverImageUrl ?? "");
-      if (cover.file) {
-        coverImageUrl = await uploadAdminCover(cover.file, "hotels");
-      }
-
+      const imageUrls = (await imagesRef.current?.collectUrls()) ?? [];
       const name = String(data.get("name") || "");
       const payload = {
         name,
@@ -76,8 +67,7 @@ export function HotelFormClient({ hotel }: { hotel?: Hotel }) {
         shortDescription: String(data.get("shortDescription") || ""),
         description: String(data.get("description") || ""),
         amenities: String(data.get("amenities") || ""),
-        coverImageUrl,
-        coverImageAlt: String(data.get("coverImageAlt") || name),
+        imageUrls,
         sortOrder: Number(data.get("sortOrder") || 0),
         published,
       };
@@ -108,6 +98,7 @@ export function HotelFormClient({ hotel }: { hotel?: Hotel }) {
       <AdminPageHeader
         title={hotel ? "Edit hotel" : "New hotel"}
         description="Hotel details appear on packages and walking-distance guides."
+        showBack
       />
       <AdminCard>
         {error ? (
@@ -203,22 +194,14 @@ export function HotelFormClient({ hotel }: { hotel?: Hotel }) {
             />
           </label>
 
-          <AdminCoverUpload
+          <AdminMultiImageUpload
             className="sm:col-span-2 xl:col-span-3"
-            initialUrl={hotel?.coverImageUrl}
+            initialImages={hotel?.images ?? []}
             disabled={busy}
-            onChange={setCover}
             onError={setError}
+            uploadRef={imagesRef}
           />
 
-          <label className={`${adminLabelClass} sm:col-span-2 xl:col-span-3`}>
-            Cover alt text
-            <input
-              name="coverImageAlt"
-              defaultValue={hotel?.coverImageAlt ?? ""}
-              className={adminInputClass}
-            />
-          </label>
           <div className="flex flex-wrap gap-2 sm:col-span-2 xl:col-span-3">
             <button
               type="button"

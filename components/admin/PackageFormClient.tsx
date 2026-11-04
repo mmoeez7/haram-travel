@@ -26,6 +26,7 @@ import {
   uploadAdminCover,
   type CoverUploadState,
 } from "@/components/admin/AdminCoverUpload";
+import { AdminIncludesInput } from "@/components/admin/AdminIncludesInput";
 
 type Category = {
   id: string;
@@ -72,6 +73,7 @@ export function PackageFormClient({ packageId }: { packageId?: string }) {
   const [journeyType, setJourneyType] = useState("UMRAH");
   const [umrahGroup, setUmrahGroup] = useState<UmrahRootSlug>(UMRAH_PACKAGES_ROOT_SLUG);
   const [categoryId, setCategoryId] = useState("");
+  const [includes, setIncludes] = useState<string[]>([]);
   const [cover, setCover] = useState<CoverUploadState>({
     file: null,
     previewUrl: null,
@@ -93,6 +95,7 @@ export function PackageFormClient({ packageId }: { packageId?: string }) {
           );
           setPkg(detail.package);
           setJourneyType(detail.package.journeyType);
+          setIncludes(detail.package.features ?? []);
           setCover({
             file: null,
             previewUrl: detail.package.coverImageUrl,
@@ -170,7 +173,7 @@ export function PackageFormClient({ packageId }: { packageId?: string }) {
         deposit: Number(data.get("deposit") || 0),
         badge: String(data.get("badge") || ""),
         season: String(data.get("season") || "ALL"),
-        features: String(data.get("features") || ""),
+        features: includes.join("\n"),
         shortDescription: String(data.get("shortDescription") || ""),
         description: String(data.get("description") || ""),
         coverImageUrl,
@@ -213,6 +216,7 @@ export function PackageFormClient({ packageId }: { packageId?: string }) {
       <AdminPageHeader
         title={packageId ? "Edit package" : "New package"}
         description="Packages sync to the public site when published."
+        showBack
       />
       <AdminCard>
         {loading ? <AdminFormSkeleton fields={8} /> : null}
@@ -357,15 +361,12 @@ export function PackageFormClient({ packageId }: { packageId?: string }) {
                 className={adminInputClass}
               />
             </label>
-            <label className={`${adminLabelClass} md:col-span-2`}>
-              Features (one per line)
-              <textarea
-                name="features"
-                rows={5}
-                defaultValue={pkg?.features.join("\n") ?? ""}
-                className={adminInputClass}
-              />
-            </label>
+            <AdminIncludesInput
+              className="md:col-span-2"
+              value={includes}
+              disabled={busy}
+              onChange={setIncludes}
+            />
             <label className={`${adminLabelClass} md:col-span-2`}>
               Short description
               <textarea

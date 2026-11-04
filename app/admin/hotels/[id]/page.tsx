@@ -10,7 +10,10 @@ export default async function EditHotelPage({
 }) {
   await requireAdmin();
   const { id } = await params;
-  const hotel = await prisma.hotel.findFirst({ where: { id, deletedAt: null } });
+  const hotel = await prisma.hotel.findFirst({
+    where: { id, deletedAt: null },
+    include: { images: { orderBy: { sortOrder: "asc" } } },
+  });
   if (!hotel) notFound();
   return <HotelFormClient hotel={hotel} />;
 }

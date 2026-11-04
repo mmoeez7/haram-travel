@@ -132,5 +132,102 @@ export async function getPackageBySlug(slug: string): Promise<PackageItem | null
   return pkg ? mapPackageToItem(pkg) : null;
 }
 
+export type PackageHotelRef = {
+  hotelId: string;
+  nights: number | null;
+  notes: string | null;
+};
+
+export type PackageDetailCategory = {
+  name: string;
+  slug: string;
+  parentName: string | null;
+  parentSlug: string | null;
+};
+
+export type PackageDetail = PackageItem & {
+  slug: string;
+  shortDescription: string | null;
+  description: string | null;
+  coverImageAlt: string | null;
+  makkahHotelRef: PackageHotelRef | null;
+  madinahHotelRef: PackageHotelRef | null;
+  linkedCategory: PackageDetailCategory | null;
+};
+
+export async function getPackageDetailBySlug(
+  slug: string
+): Promise<PackageDetail | null> {
+  noStore();
+  const pkg = await prisma.package.findFirst({
+    where: {
+      ...publicWhere,
+      slug,
+    },
+    include: {
+      hotels: {
+        select: {
+          role: true,
+          hotelId: true,
+          nights: true,
+          notes: true,
+        },
+      },
+      categories: {
+        include: {
+          category: {
+            include: {
+              parent: { select: { name: true, slug: true, deletedAt: true } },
+            },
+          },
+        },
+      },
+    },
+  });
+
+  if (!pkg) return null;
+
+  const makkahLink = pkg.hotels.find((h) => h.role === "MAKKAH");
+  const madinahLink = pkg.hotels.find((h) => h.role === "MADINAH");
+
+  const linkedCategory = pkg.categories
+    .map((c) => c.category)
+    .find((c) => c.deletedAt === null && c.published && c.parentId);
+
+  return {
+    ...mapPackageToItem(pkg),
+    slug: pkg.slug,
+    shortDescription: pkg.shortDescription,
+    description: pkg.description,
+    coverImageAlt: pkg.coverImageAlt,
+    makkahHotelRef: makkahLink
+      ? {
+          hotelId: makkahLink.hotelId,
+          nights: makkahLink.nights,
+          notes: makkahLink.notes,
+        }
+      : null,
+    madinahHotelRef: madinahLink
+      ? {
+          hotelId: madinahLink.hotelId,
+          nights: madinahLink.nights,
+          notes: madinahLink.notes,
+        }
+      : null,
+    linkedCategory: linkedCategory
+      ? {
+          name: linkedCategory.name,
+          slug: linkedCategory.slug,
+          parentName: linkedCategory.parent?.deletedAt
+            ? null
+            : (linkedCategory.parent?.name ?? null),
+          parentSlug: linkedCategory.parent?.deletedAt
+            ? null
+            : (linkedCategory.parent?.slug ?? null),
+        }
+      : null,
+  };
+}
+
 /** @deprecated Prefer getHajjPackages() */
 export const hajjPackages: PackageItem[] = [];

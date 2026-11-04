@@ -3,6 +3,7 @@ import { prisma } from "@/lib/db";
 import { requireAdminApi, jsonError } from "@/lib/admin-api-auth";
 import { writeAuditLog } from "@/lib/admin";
 import { csvToArray, hotelSchema } from "@/lib/admin-schemas";
+import { syncHotelImages } from "@/lib/hotel-images";
 
 type Params = { params: Promise<{ id: string }> };
 
@@ -36,53 +37,48 @@ export async function PATCH(request: Request, { params }: Params) {
     amenities: Array.isArray(body.amenities)
       ? body.amenities.join(", ")
       : body.amenities,
+    imageUrls: body.imageUrls ?? [],
   });
   if (!parsed.success) {
     return jsonError(parsed.error.issues[0]?.message ?? "Invalid hotel");
   }
 
-  const coverImageUrl = parsed.data.coverImageUrl || null;
-  const hotel = await prisma.hotel.update({
-    where: { id },
-    data: {
-      name: parsed.data.name,
-      slug: parsed.data.slug,
-      city: parsed.data.city,
-      stars: parsed.data.stars,
-      walkingMinutes: parsed.data.walkingMinutes ?? null,
-      distanceToHaramM: parsed.data.distanceToHaramM ?? null,
-      address: parsed.data.address || null,
-      shortDescription: parsed.data.shortDescription || null,
-      description: parsed.data.description || null,
-      amenities: csvToArray(parsed.data.amenities),
-      coverImageUrl,
-      coverImageAlt: parsed.data.coverImageAlt || parsed.data.name,
-      sortOrder: parsed.data.sortOrder,
-      published: parsed.data.published,
-    },
-  });
+  const hotel = await prisma.$transaction(async (tx) => {
+    const synced = await syncHotelImages(
+      tx,
+      id,
+      parsed.data.imageUrls,
+      parsed.data.name
+    );
 
-  if (coverImageUrl) {
-    await prisma.hotelImage.deleteMany({
-      where: { hotelId: hotel.id, isCover: true },
-    });
-    await prisma.hotelImage.create({
+    return tx.hotel.update({
+      where: { id },
       data: {
-        hotelId: hotel.id,
-        url: coverImageUrl,
-        alt: hotel.coverImageAlt,
-        isCover: true,
-        sortOrder: 0,
+        name: parsed.data.name,
+        slug: parsed.data.slug,
+        city: parsed.data.city,
+        stars: parsed.data.stars,
+        walkingMinutes: parsed.data.walkingMinutes ?? null,
+        distanceToHaramM: parsed.data.distanceToHaramM ?? null,
+        address: parsed.data.address || null,
+        shortDescription: parsed.data.shortDescription || null,
+        description: parsed.data.description || null,
+        amenities: csvToArray(parsed.data.amenities),
+        coverImageUrl: synced.coverImageUrl,
+        coverImageAlt: synced.coverImageAlt,
+        sortOrder: parsed.data.sortOrder,
+        published: parsed.data.published,
       },
+      include: { images: { orderBy: { sortOrder: "asc" } } },
     });
-  }
+  });
 
   await writeAuditLog({
     adminUserId: session.user.id,
     action: "HOTEL_UPDATE",
     entityType: "hotel",
     entityId: hotel.id,
-    metadata: { slug: hotel.slug },
+    metadata: { slug: hotel.slug, imageCount: hotel.images.length },
   });
 
   return NextResponse.json({ hotel });

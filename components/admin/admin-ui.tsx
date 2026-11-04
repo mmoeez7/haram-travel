@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { AdminBackButton } from "@/components/admin/AdminBackButton";
 
 export const adminPageClass =
   "relative z-10 flex flex-1 flex-col px-4 pb-8 pt-4 text-sm lg:px-6";
@@ -11,17 +12,25 @@ export function AdminPageHeader({
   description,
   actions,
   className = "",
+  showBack = false,
 }: {
   title: string;
   description?: string;
   actions?: ReactNode;
   className?: string;
+  /** Only for create/edit forms — not list screens from the sidebar. */
+  showBack?: boolean;
 }) {
   return (
     <div
       className={`mb-6 flex flex-wrap items-start justify-between gap-3 admin-enter ${className}`}
     >
       <div>
+        {showBack ? (
+          <div className="mb-3">
+            <AdminBackButton />
+          </div>
+        ) : null}
         <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-gold-dark">
           Haram Travel Admin
         </p>
