@@ -1,3 +1,14 @@
+export type SeedSeason =
+  | "all"
+  | "january"
+  | "february"
+  | "easter"
+  | "ramadan"
+  | "september"
+  | "october"
+  | "november"
+  | "december";
+
 export type PackageItem = {
   id: string;
   title: string;
@@ -10,397 +21,115 @@ export type PackageItem = {
   deposit: number;
   badge: string;
   features: string[];
-  season?: "all" | "december" | "easter" | "ramadan";
+  season?: SeedSeason;
   category: "umrah" | "hajj";
   image: string;
 };
 
-const sharedFeatures = [
-  "Flight Included",
-  "Luxury Transportation",
-  "Saudi Visa",
-  "Saudi SIM cards",
-  "Complementary Lunch",
+const features = ["Flight & Visa Included"];
+
+type Stay = {
+  nights: number;
+  makkahNights: number;
+  madinahNights: number;
+};
+
+const stays: Record<number, Stay> = {
+  7: { nights: 7, makkahNights: 4, madinahNights: 3 },
+  10: { nights: 10, makkahNights: 5, madinahNights: 5 },
+  12: { nights: 12, makkahNights: 6, madinahNights: 6 },
+  14: { nights: 14, makkahNights: 7, madinahNights: 7 },
+};
+
+const monthLabel: Record<Exclude<SeedSeason, "all">, string> = {
+  january: "January",
+  february: "February",
+  easter: "Easter",
+  ramadan: "Ramadan",
+  september: "September",
+  october: "October",
+  november: "November",
+  december: "December",
+};
+
+function packageItem(
+  season: SeedSeason,
+  stars: 3 | 4 | 5,
+  nights: number,
+  priceFrom: number
+): PackageItem {
+  const stay = stays[nights];
+  const month = season === "all" ? "" : monthLabel[season];
+  const title = `${month ? `${month} ` : ""}${stars} Star ${nights} Nights Umrah Package`;
+  const slug = `${month ? `${season}-` : ""}${stars}-star-${nights}-nights`;
+
+  return {
+    id: slug,
+    title,
+    subtitle: `${stars} STAR · ${nights} NIGHTS`,
+    stars,
+    nights: stay.nights,
+    makkahNights: stay.makkahNights,
+    madinahNights: stay.madinahNights,
+    priceFrom,
+    deposit: 99,
+    badge: month || `${stars} Star`,
+    features,
+    season,
+    category: "umrah",
+    image: "",
+  };
+}
+
+/** Standard packages from https://haramtravel.uk/ */
+const standardPrices: Array<[3 | 4 | 5, number, number]> = [
+  [3, 7, 515],
+  [3, 10, 549],
+  [3, 14, 580],
+  [4, 7, 589],
+  [4, 10, 615],
+  [4, 14, 660],
+  [5, 7, 699],
+  [5, 10, 745],
+  [5, 14, 830],
+];
+
+/** Monthly deals from the Umrah Deals pages. Prices are [3★7, 3★10, 3★12, 3★14, 4★7, 4★10, 4★12, 4★14, 5★7, 5★10, 5★12, 5★14]. */
+const dealPrices: Record<Exclude<SeedSeason, "all">, number[]> = {
+  january: [535, 565, 599, 625, 575, 605, 640, 659, 635, 699, 740, 775],
+  february: [555, 595, 625, 660, 610, 645, 670, 699, 699, 725, 760, 825],
+  easter: [690, 735, 770, 799, 720, 785, 845, 885, 785, 870, 920, 985],
+  ramadan: [670, 705, 745, 790, 749, 799, 829, 880, 830, 945, 1070, 1149],
+  september: [519, 550, 575, 620, 588, 610, 649, 675, 699, 740, 799, 839],
+  october: [535, 570, 587, 630, 605, 640, 666, 689, 717, 750, 799, 850],
+  november: [510, 529, 549, 580, 615, 640, 670, 695, 740, 775, 810, 860],
+  december: [615, 645, 670, 720, 680, 719, 749, 799, 760, 820, 895, 949],
+};
+
+const dealShapes: Array<[3 | 4 | 5, number]> = [
+  [3, 7],
+  [3, 10],
+  [3, 12],
+  [3, 14],
+  [4, 7],
+  [4, 10],
+  [4, 12],
+  [4, 14],
+  [5, 7],
+  [5, 10],
+  [5, 12],
+  [5, 14],
 ];
 
 export const umrahPackages: PackageItem[] = [
-  {
-    id: "3star-7",
-    title: "3 Star Umrah Package",
-    subtitle: "3 STAR · 7 NIGHTS",
-    stars: 3,
-    nights: 7,
-    makkahNights: 4,
-    madinahNights: 3,
-    priceFrom: 745,
-    deposit: 99,
-    badge: "3* Economy Comfort",
-    features: sharedFeatures,
-    season: "all",
-    category: "umrah",
-    image:
-      "https://images.unsplash.com/photo-1564769625905-50e93615e769?w=800&q=80",
-  },
-  {
-    id: "3star-10",
-    title: "January Umrah Package",
-    subtitle: "3 STAR · 10 NIGHTS",
-    stars: 3,
-    nights: 10,
-    makkahNights: 5,
-    madinahNights: 5,
-    priceFrom: 845,
-    deposit: 149,
-    badge: "3* Economy Comfort",
-    features: sharedFeatures,
-    season: "all",
-    category: "umrah",
-    image:
-      "https://images.unsplash.com/photo-1591604129939-f1efa4d9f7fa?w=800&q=80",
-  },
-  {
-    id: "3star-12",
-    title: "Family Economy Umrah",
-    subtitle: "3 STAR · 12 NIGHTS",
-    stars: 3,
-    nights: 12,
-    makkahNights: 7,
-    madinahNights: 5,
-    priceFrom: 895,
-    deposit: 149,
-    badge: "3* Family Comfort",
-    features: sharedFeatures,
-    season: "all",
-    category: "umrah",
-    image:
-      "https://images.unsplash.com/photo-1542816417-0983c9c9ad53?w=800&q=80",
-  },
-  {
-    id: "4star-7",
-    title: "4 Star Comfort Umrah",
-    subtitle: "4 STAR · 7 NIGHTS",
-    stars: 4,
-    nights: 7,
-    makkahNights: 4,
-    madinahNights: 3,
-    priceFrom: 995,
-    deposit: 199,
-    badge: "4* Executive",
-    features: sharedFeatures,
-    season: "all",
-    category: "umrah",
-    image:
-      "https://images.unsplash.com/photo-1519817650390-64a93db51149?w=800&q=80",
-  },
-  {
-    id: "4star-10",
-    title: "4 Star Deluxe Umrah",
-    subtitle: "4 STAR · 10 NIGHTS",
-    stars: 4,
-    nights: 10,
-    makkahNights: 5,
-    madinahNights: 5,
-    priceFrom: 1095,
-    deposit: 199,
-    badge: "4* Near Haram",
-    features: sharedFeatures,
-    season: "all",
-    category: "umrah",
-    image:
-      "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&q=80",
-  },
-  {
-    id: "4star-12",
-    title: "4 Star Extended Stay",
-    subtitle: "4 STAR · 12 NIGHTS",
-    stars: 4,
-    nights: 12,
-    makkahNights: 7,
-    madinahNights: 5,
-    priceFrom: 1195,
-    deposit: 199,
-    badge: "4* Extended",
-    features: sharedFeatures,
-    season: "all",
-    category: "umrah",
-    image:
-      "https://images.unsplash.com/photo-1582719508461-905c673771fd?w=800&q=80",
-  },
-  {
-    id: "5star-7",
-    title: "5 Star Clock Tower",
-    subtitle: "5 STAR · 7 NIGHTS",
-    stars: 5,
-    nights: 7,
-    makkahNights: 4,
-    madinahNights: 3,
-    priceFrom: 1495,
-    deposit: 299,
-    badge: "5* VIP Clock Tower",
-    features: sharedFeatures,
-    season: "all",
-    category: "umrah",
-    image:
-      "https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=800&q=80",
-  },
-  {
-    id: "5star-10",
-    title: "5 Star Luxury Umrah",
-    subtitle: "5 STAR · 10 NIGHTS",
-    stars: 5,
-    nights: 10,
-    makkahNights: 5,
-    madinahNights: 5,
-    priceFrom: 1695,
-    deposit: 299,
-    badge: "5* Luxury VIP",
-    features: sharedFeatures,
-    season: "all",
-    category: "umrah",
-    image:
-      "https://images.unsplash.com/photo-1565552645632-d725f8bfc19a?w=800&q=80",
-  },
-  {
-    id: "5star-12",
-    title: "5 Star Royal Stay",
-    subtitle: "5 STAR · 12 NIGHTS",
-    stars: 5,
-    nights: 12,
-    makkahNights: 7,
-    madinahNights: 5,
-    priceFrom: 1895,
-    deposit: 299,
-    badge: "5* Royal Suite",
-    features: sharedFeatures,
-    season: "all",
-    category: "umrah",
-    image:
-      "https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=800&q=80",
-  },
-  {
-    id: "dec-budget",
-    title: "December Budget Umrah",
-    subtitle: "3 STAR · 8 NIGHTS",
-    stars: 3,
-    nights: 8,
-    makkahNights: 4,
-    madinahNights: 4,
-    priceFrom: 699,
-    deposit: 99,
-    badge: "December Special",
-    features: sharedFeatures,
-    season: "december",
-    category: "umrah",
-    image:
-      "https://images.unsplash.com/photo-1564769625905-50e93615e769?w=800&q=80",
-  },
-  {
-    id: "dec-comfort",
-    title: "December Comfort Umrah",
-    subtitle: "4 STAR · 10 NIGHTS",
-    stars: 4,
-    nights: 10,
-    makkahNights: 5,
-    madinahNights: 5,
-    priceFrom: 899,
-    deposit: 149,
-    badge: "December Special",
-    features: sharedFeatures,
-    season: "december",
-    category: "umrah",
-    image:
-      "https://images.unsplash.com/photo-1591604129939-f1efa4d9f7fa?w=800&q=80",
-  },
-  {
-    id: "dec-elite",
-    title: "December Elite Umrah",
-    subtitle: "5 STAR · 10 NIGHTS",
-    stars: 5,
-    nights: 10,
-    makkahNights: 5,
-    madinahNights: 5,
-    priceFrom: 1199,
-    deposit: 199,
-    badge: "December Elite",
-    features: sharedFeatures,
-    season: "december",
-    category: "umrah",
-    image:
-      "https://images.unsplash.com/photo-1542816417-0983c9c9ad53?w=800&q=80",
-  },
-  {
-    id: "easter-family",
-    title: "Easter Family Umrah",
-    subtitle: "4 STAR · 10 NIGHTS",
-    stars: 4,
-    nights: 10,
-    makkahNights: 5,
-    madinahNights: 5,
-    priceFrom: 949,
-    deposit: 149,
-    badge: "Half-Term Special",
-    features: sharedFeatures,
-    season: "easter",
-    category: "umrah",
-    image:
-      "https://images.unsplash.com/photo-1519817650390-64a93db51149?w=800&q=80",
-  },
-  {
-    id: "easter-premium",
-    title: "Easter Premium Umrah",
-    subtitle: "5 STAR · 10 NIGHTS",
-    stars: 5,
-    nights: 10,
-    makkahNights: 5,
-    madinahNights: 5,
-    priceFrom: 1295,
-    deposit: 199,
-    badge: "Easter Premium",
-    features: sharedFeatures,
-    season: "easter",
-    category: "umrah",
-    image:
-      "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=800&q=80",
-  },
-  {
-    id: "ramadan-last10",
-    title: "Ramadan Last 10 Nights",
-    subtitle: "4 STAR · 12 NIGHTS",
-    stars: 4,
-    nights: 12,
-    makkahNights: 10,
-    madinahNights: 2,
-    priceFrom: 1395,
-    deposit: 299,
-    badge: "Ramadan 2026",
-    features: sharedFeatures,
-    season: "ramadan",
-    category: "umrah",
-    image:
-      "https://images.unsplash.com/photo-1565552645632-d725f8bfc19a?w=800&q=80",
-  },
-  {
-    id: "ramadan-full",
-    title: "Full Ramadan Umrah",
-    subtitle: "5 STAR · 14 NIGHTS",
-    stars: 5,
-    nights: 14,
-    makkahNights: 10,
-    madinahNights: 4,
-    priceFrom: 1895,
-    deposit: 299,
-    badge: "Ramadan VIP",
-    features: sharedFeatures,
-    season: "ramadan",
-    category: "umrah",
-    image:
-      "https://images.unsplash.com/photo-1582719508461-905c673771fd?w=800&q=80",
-  },
+  ...standardPrices.map(([stars, nights, price]) =>
+    packageItem("all", stars, nights, price)
+  ),
+  ...Object.entries(dealPrices).flatMap(([season, prices]) =>
+    dealShapes.map(([stars, nights], index) =>
+      packageItem(season as Exclude<SeedSeason, "all">, stars, nights, prices[index])
+    )
+  ),
 ];
 
-export const hajjPackages: PackageItem[] = [
-  {
-    id: "hajj-economy",
-    title: "Economy Hajj Package",
-    subtitle: "3 STAR · FULL HAJJ",
-    stars: 3,
-    nights: 25,
-    makkahNights: 15,
-    madinahNights: 10,
-    priceFrom: 6495,
-    deposit: 999,
-    badge: "Economy Hajj",
-    features: [
-      "Flight Included",
-      "Hajj Visa",
-      "Tent Camp Mina/Arafah",
-      "Group Guidance",
-      "AC Transport",
-    ],
-    category: "hajj",
-    image:
-      "https://images.unsplash.com/photo-1564769625905-50e93615e769?w=800&q=80",
-  },
-  {
-    id: "hajj-standard",
-    title: "Standard Hajj Package",
-    subtitle: "4 STAR · FULL HAJJ",
-    stars: 4,
-    nights: 25,
-    makkahNights: 15,
-    madinahNights: 10,
-    priceFrom: 7995,
-    deposit: 1499,
-    badge: "Standard Hajj",
-    features: [
-      "Flight Included",
-      "Hajj Visa",
-      "Better Room Sharing",
-      "Guided Support",
-      "Ziyarat Included",
-    ],
-    category: "hajj",
-    image:
-      "https://images.unsplash.com/photo-1591604129939-f1efa4d9f7fa?w=800&q=80",
-  },
-  {
-    id: "hajj-premium",
-    title: "Premium Hajj Package",
-    subtitle: "5 STAR · FULL HAJJ",
-    stars: 5,
-    nights: 25,
-    makkahNights: 15,
-    madinahNights: 10,
-    priceFrom: 9495,
-    deposit: 1999,
-    badge: "Premium Hajj",
-    features: [
-      "Flight Included",
-      "Priority Visa",
-      "Semi-Private Rooms",
-      "Premium Transport",
-      "Enhanced Guidance",
-    ],
-    category: "hajj",
-    image:
-      "https://images.unsplash.com/photo-1542816417-0983c9c9ad53?w=800&q=80",
-  },
-  {
-    id: "hajj-elite",
-    title: "Luxury Hajj Elite",
-    subtitle: "5 STAR · VIP HAJJ",
-    stars: 5,
-    nights: 28,
-    makkahNights: 16,
-    madinahNights: 12,
-    priceFrom: 11495,
-    deposit: 2499,
-    badge: "VIP Elite Hajj",
-    features: [
-      "Business Flights Option",
-      "Priority Visa",
-      "Private VIP Transport",
-      "Scholar Guidance",
-      "Dedicated Advisor",
-    ],
-    category: "hajj",
-    image:
-      "https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=800&q=80",
-  },
-];
-
-export function getUmrahByStars(stars: 3 | 4 | 5) {
-  return umrahPackages.filter((p) => p.stars === stars && p.season === "all");
-}
-
-export function getSeasonalPackages(season: "december" | "easter" | "ramadan") {
-  return umrahPackages.filter((p) => p.season === season);
-}
-
-export const packageFilters = [
-  { id: "all", label: "All Packages" },
-  { id: "december", label: "December Packages" },
-  { id: "easter", label: "February Half-Term" },
-  { id: "ramadan", label: "Ramadan Packages" },
-  { id: "luxury", label: "5-Star Luxury VIP" },
-] as const;
+export const hajjPackages: PackageItem[] = [];

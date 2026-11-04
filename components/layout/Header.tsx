@@ -94,7 +94,7 @@ export function Header({ navItems }: { navItems: NavItem[] }) {
             <FaWhatsapp className="h-4 w-4" />
             WhatsApp
           </Button>
-          <Button href="/booking-form" variant="dark" className="!rounded-full">
+          <Button href="/umrah-packages" variant="dark" className="!rounded-full">
             Find Package →
           </Button>
         </div>
@@ -174,7 +174,7 @@ export function Header({ navItems }: { navItems: NavItem[] }) {
               <FaWhatsapp className="h-4 w-4" />
               WhatsApp
             </Button>
-            <Button href="/booking-form" variant="dark" className="!rounded-full">
+            <Button href="/umrah-packages" variant="dark" className="!rounded-full">
               Find Package →
             </Button>
           </div>

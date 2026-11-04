@@ -1,9 +1,14 @@
 "use client";
 
 import Image from "next/image";
-import { ImageIcon } from "lucide-react";
+import { ImageIcon, Loader2 } from "lucide-react";
 import { useRef, useState } from "react";
 import { adminLabelClass } from "@/components/admin/admin-ui";
+import {
+  ALLOWED_IMAGE_ACCEPT,
+  isAllowedImageType,
+  MAX_IMAGE_BYTES,
+} from "@/lib/image-upload-limits";
 
 export type CoverUploadState = {
   file: File | null;
@@ -14,10 +19,24 @@ export type CoverUploadState = {
 type AdminCoverUploadProps = {
   initialUrl?: string | null;
   disabled?: boolean;
+  uploading?: boolean;
   className?: string;
   onChange?: (state: CoverUploadState) => void;
   onError?: (message: string) => void;
 };
+
+export function ImageUploadStatus({ label }: { label: string }) {
+  return (
+    <div
+      className="absolute inset-0 z-20 flex flex-col items-center justify-center gap-2 rounded-2xl bg-white/85 px-4 text-center text-call-border"
+      role="status"
+      aria-live="polite"
+    >
+      <Loader2 className="h-8 w-8 animate-spin" aria-hidden />
+      <span className="text-sm font-semibold">{label}</span>
+    </div>
+  );
+}
 
 export async function uploadAdminCover(file: File, folder: "packages" | "hotels" | "categories") {
   const form = new FormData();
@@ -44,6 +63,7 @@ export function resolveCoverImageUrl(
 export function AdminCoverUpload({
   initialUrl = null,
   disabled = false,
+  uploading = false,
   className = "",
   onChange,
   onError,
@@ -59,11 +79,11 @@ export function AdminCoverUpload({
 
   function onCoverChange(nextFile: File | null) {
     if (!nextFile) return;
-    if (!nextFile.type.startsWith("image/")) {
-      onError?.("Please choose an image file.");
+    if (!isAllowedImageType(nextFile.type)) {
+      onError?.("Only JPEG, PNG, WebP, or GIF images are allowed.");
       return;
     }
-    if (nextFile.size > 5 * 1024 * 1024) {
+    if (nextFile.size > MAX_IMAGE_BYTES) {
       onError?.("Image size must be below 5MB.");
       return;
     }
@@ -83,11 +103,11 @@ export function AdminCoverUpload({
   }
 
   return (
-    <div className={className}>
+    <div className={`relative ${className}`} aria-busy={uploading}>
       <p className={adminLabelClass}>Cover image</p>
       <button
         type="button"
-        disabled={disabled}
+        disabled={disabled || uploading}
         onClick={() => fileInputRef.current?.click()}
         onDragOver={(event) => event.preventDefault()}
         onDrop={(event) => {
@@ -116,23 +136,24 @@ export function AdminCoverUpload({
       <input
         ref={fileInputRef}
         type="file"
-        accept="image/*"
+        accept={ALLOWED_IMAGE_ACCEPT}
         className="hidden"
         onChange={(event) => onCoverChange(event.target.files?.[0] ?? null)}
       />
       <p className="mt-2 text-xs text-muted">
-        Image size must be below 5MB. Drag and drop or click to upload.
+        JPEG, PNG, WebP, or GIF under 5MB. Drag and drop or click to upload.
       </p>
       {previewUrl ? (
         <button
           type="button"
-          disabled={disabled}
+          disabled={disabled || uploading}
           onClick={clearCover}
-          className="mt-2 cursor-pointer text-xs font-semibold text-call-border hover:underline"
+          className="mt-2 cursor-pointer text-xs font-semibold text-call-border hover:underline disabled:cursor-not-allowed"
         >
           Remove cover
         </button>
       ) : null}
+      {uploading ? <ImageUploadStatus label="Uploading image…" /> : null}
     </div>
   );
 }

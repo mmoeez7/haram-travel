@@ -29,14 +29,23 @@ type Hotel = {
   stars: number;
   walkingMinutes: number | null;
   distanceToHaramM: number | null;
-  address: string | null;
-  shortDescription: string | null;
   description: string | null;
   amenities: string[];
   sortOrder: number;
   published: boolean;
+  coverImageUrl?: string | null;
+  coverImageAlt?: string | null;
   images?: ExistingHotelImage[];
 };
+
+function initialHotelImages(hotel?: Hotel): ExistingHotelImage[] {
+  if (!hotel) return [];
+  if (hotel.images?.length) return hotel.images;
+  if (hotel.coverImageUrl) {
+    return [{ url: hotel.coverImageUrl, alt: hotel.coverImageAlt }];
+  }
+  return [];
+}
 
 export function HotelFormClient({ hotel }: { hotel?: Hotel }) {
   const router = useRouter();
@@ -63,8 +72,6 @@ export function HotelFormClient({ hotel }: { hotel?: Hotel }) {
         stars: Number(data.get("stars") || 4),
         walkingMinutes: data.get("walkingMinutes") || undefined,
         distanceToHaramM: data.get("distanceToHaramM") || undefined,
-        address: String(data.get("address") || ""),
-        shortDescription: String(data.get("shortDescription") || ""),
         description: String(data.get("description") || ""),
         amenities: String(data.get("amenities") || ""),
         imageUrls,
@@ -164,19 +171,6 @@ export function HotelFormClient({ hotel }: { hotel?: Hotel }) {
             />
           </label>
           <label className={`${adminLabelClass} sm:col-span-2 xl:col-span-3`}>
-            Address
-            <input name="address" defaultValue={hotel?.address ?? ""} className={adminInputClass} />
-          </label>
-          <label className={`${adminLabelClass} sm:col-span-2 xl:col-span-3`}>
-            Short description
-            <textarea
-              name="shortDescription"
-              rows={2}
-              defaultValue={hotel?.shortDescription ?? ""}
-              className={adminInputClass}
-            />
-          </label>
-          <label className={`${adminLabelClass} sm:col-span-2 xl:col-span-3`}>
             Description
             <textarea
               name="description"
@@ -196,7 +190,7 @@ export function HotelFormClient({ hotel }: { hotel?: Hotel }) {
 
           <AdminMultiImageUpload
             className="sm:col-span-2 xl:col-span-3"
-            initialImages={hotel?.images ?? []}
+            initialImages={initialHotelImages(hotel)}
             disabled={busy}
             onError={setError}
             uploadRef={imagesRef}

@@ -1,7 +1,9 @@
+import { Phone } from "lucide-react";
+import { FaWhatsapp } from "react-icons/fa";
 import { createMetadata } from "@/lib/seo";
-import { SITE } from "@/lib/constants";
+import { SITE, telUrl, whatsappUrl } from "@/lib/constants";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
-import { CostCalculator } from "@/components/calculator/CostCalculator";
+import { Button } from "@/components/ui/Button";
 
 export const metadata = createMetadata({
   title: "0% Cost Calculator",
@@ -22,7 +24,21 @@ export default function CostCalculatorPage() {
           0% interest Umrah payment plans. Lock today&apos;s price with a £{SITE.depositFrom}pp
           deposit and spread the balance before departure.
         </p>
-        <CostCalculator />
+        <div className="mt-8 flex flex-wrap gap-3">
+          <Button
+            href={whatsappUrl("Assalamu Alaikum, I'd like help planning my Umrah budget.")}
+            variant="whatsapp"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <FaWhatsapp className="h-4 w-4" />
+            WhatsApp
+          </Button>
+          <Button href={telUrl()} variant="call">
+            <Phone className="h-4 w-4" />
+            Call {SITE.phone}
+          </Button>
+        </div>
       </div>
     </section>
   );

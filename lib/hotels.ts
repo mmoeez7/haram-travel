@@ -8,6 +8,10 @@ export type PublicHotelImage = {
   sortOrder: number;
 };
 
+export function makkahFirstRank(city: "MAKKAH" | "MADINAH") {
+  return city === "MADINAH" ? 1 : 0;
+}
+
 export type PublicHotel = {
   id: string;
   name: string;

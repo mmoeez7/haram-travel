@@ -36,19 +36,24 @@ export default async function PackageDetailPage({ params }: PageProps) {
   return (
     <>
       <section className="bg-cream pt-10 pb-12 md:pt-12 md:pb-16">
-        <div className="mx-auto grid max-w-7xl gap-8 px-3 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-start lg:gap-10 lg:px-4">
-          <div className="space-y-10 md:space-y-12">
-            <PackageDetailHero pkg={pkg} />
-            <PackageDetailBody pkg={pkg} />
-            <PackageHotelDetails
-              makkahHotelRef={pkg.makkahHotelRef}
-              madinahHotelRef={pkg.madinahHotelRef}
-            />
-            <PackageTrustStrip />
+        <div className="mx-auto max-w-7xl px-3 lg:px-4">
+          <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-start lg:gap-10">
+            <div className="space-y-10 md:space-y-12">
+              <PackageDetailHero pkg={pkg} />
+              <PackageDetailBody pkg={pkg} />
+            </div>
+
+            <div className="lg:pt-10">
+              <PackageDetailSidebar pkg={pkg} />
+            </div>
           </div>
 
-          <div className="lg:pt-10">
-            <PackageDetailSidebar pkg={pkg} />
+          <div className="mt-10 md:mt-12">
+            <PackageHotelDetails hotels={pkg.hotelRefs} />
+          </div>
+
+          <div className="mt-10 md:mt-12">
+            <PackageTrustStrip />
           </div>
         </div>
       </section>

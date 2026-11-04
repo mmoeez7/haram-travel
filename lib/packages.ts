@@ -1,6 +1,7 @@
 import { unstable_noStore as noStore } from "next/cache";
 import type { Package as DbPackage, SeasonType } from "@prisma/client";
 import { prisma } from "@/lib/db";
+import { makkahFirstRank } from "@/lib/hotels";
 
 export type PackageItem = {
   id: string;
@@ -69,9 +70,7 @@ export function mapPackageToItem(pkg: DbPackage): PackageItem {
     features: pkg.features,
     season: seasonToUi(pkg.season),
     category: pkg.journeyType === "HAJJ" ? "hajj" : "umrah",
-    image:
-      pkg.coverImageUrl ??
-      "https://images.unsplash.com/photo-1564769625905-50e93615e769?w=800&q=80",
+    image: pkg.coverImageUrl ?? "",
   };
 }
 
@@ -136,6 +135,7 @@ export type PackageHotelRef = {
   hotelId: string;
   nights: number | null;
   notes: string | null;
+  role: "MAKKAH" | "MADINAH";
 };
 
 export type PackageDetailCategory = {
@@ -152,6 +152,7 @@ export type PackageDetail = PackageItem & {
   coverImageAlt: string | null;
   makkahHotelRef: PackageHotelRef | null;
   madinahHotelRef: PackageHotelRef | null;
+  hotelRefs: PackageHotelRef[];
   linkedCategory: PackageDetailCategory | null;
 };
 
@@ -166,6 +167,7 @@ export async function getPackageDetailBySlug(
     },
     include: {
       hotels: {
+        orderBy: { role: "asc" },
         select: {
           role: true,
           hotelId: true,
@@ -187,8 +189,15 @@ export async function getPackageDetailBySlug(
 
   if (!pkg) return null;
 
-  const makkahLink = pkg.hotels.find((h) => h.role === "MAKKAH");
-  const madinahLink = pkg.hotels.find((h) => h.role === "MADINAH");
+  const toHotelRef = (link: (typeof pkg.hotels)[number]): PackageHotelRef => ({
+    hotelId: link.hotelId,
+    nights: link.nights,
+    notes: link.notes,
+    role: link.role,
+  });
+  const hotelRefs = [...pkg.hotels]
+    .sort((a, b) => makkahFirstRank(a.role) - makkahFirstRank(b.role))
+    .map(toHotelRef);
 
   const linkedCategory = pkg.categories
     .map((c) => c.category)
@@ -200,20 +209,9 @@ export async function getPackageDetailBySlug(
     shortDescription: pkg.shortDescription,
     description: pkg.description,
     coverImageAlt: pkg.coverImageAlt,
-    makkahHotelRef: makkahLink
-      ? {
-          hotelId: makkahLink.hotelId,
-          nights: makkahLink.nights,
-          notes: makkahLink.notes,
-        }
-      : null,
-    madinahHotelRef: madinahLink
-      ? {
-          hotelId: madinahLink.hotelId,
-          nights: madinahLink.nights,
-          notes: madinahLink.notes,
-        }
-      : null,
+    makkahHotelRef: hotelRefs.find((hotel) => hotel.role === "MAKKAH") ?? null,
+    madinahHotelRef: hotelRefs.find((hotel) => hotel.role === "MADINAH") ?? null,
+    hotelRefs,
     linkedCategory: linkedCategory
       ? {
           name: linkedCategory.name,

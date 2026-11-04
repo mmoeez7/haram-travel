@@ -1,10 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
-import { Loader2, MapPin, Star } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { ChevronLeft, ChevronRight, Loader2, MapPin, Star } from "lucide-react";
 import type { PackageHotelRef } from "@/lib/packages";
-import type { PublicHotel } from "@/lib/hotels";
+import { makkahFirstRank, type PublicHotel } from "@/lib/hotels";
 
 type HotelCardData = PublicHotel & {
   nights: number | null;
@@ -42,6 +42,14 @@ function HotelCard({
         ]
       : [];
   const active = images[activeIndex] ?? images[0];
+
+  useEffect(() => {
+    if (images.length < 2) return;
+    const timer = window.setTimeout(() => {
+      setActiveIndex((current) => (current + 1) % images.length);
+    }, 3000);
+    return () => window.clearTimeout(timer);
+  }, [activeIndex, images.length]);
   const distance = distanceLabel(hotel);
   const copy =
     hotel.shortDescription?.trim() ||
@@ -50,42 +58,44 @@ function HotelCard({
 
   return (
     <article className="overflow-hidden rounded-2xl border border-border bg-white shadow-sm">
-      <div className="relative h-44 bg-cream sm:h-52">
+      <div className="relative h-44 overflow-hidden bg-cream sm:h-52">
         {active ? (
           <Image
+            key={active.id}
             src={active.url}
             alt={active.alt || hotel.name}
             fill
             className="object-cover"
-            sizes="(max-width: 768px) 100vw, 50vw"
+            sizes="(max-width: 768px) 100vw, 33vw"
           />
         ) : null}
-      </div>
-      {images.length > 1 ? (
-        <div className="flex gap-2 overflow-x-auto border-b border-border bg-cream/40 px-3 py-2">
-          {images.map((image, index) => (
+        {images.length > 1 ? (
+          <>
             <button
-              key={image.id}
               type="button"
-              onClick={() => setActiveIndex(index)}
-              className={`relative h-12 w-16 shrink-0 overflow-hidden rounded-md border transition ${
-                index === activeIndex
-                  ? "border-gold ring-1 ring-gold"
-                  : "border-border opacity-80 hover:opacity-100"
-              }`}
-              aria-label={`Show image ${index + 1}`}
+              onClick={() =>
+                setActiveIndex(
+                  (current) => (current - 1 + images.length) % images.length
+                )
+              }
+              aria-label="Previous photo"
+              className="absolute left-2 top-1/2 z-10 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border-2 border-forest bg-white text-forest shadow-sm transition hover:bg-cream"
             >
-              <Image
-                src={image.url}
-                alt={image.alt || `${hotel.name} ${index + 1}`}
-                fill
-                className="object-cover"
-                sizes="64px"
-              />
+              <ChevronLeft className="h-5 w-5" strokeWidth={2.25} aria-hidden />
             </button>
-          ))}
-        </div>
-      ) : null}
+            <button
+              type="button"
+              onClick={() =>
+                setActiveIndex((current) => (current + 1) % images.length)
+              }
+              aria-label="Next photo"
+              className="absolute right-2 top-1/2 z-10 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border-2 border-forest bg-white text-forest shadow-sm transition hover:bg-cream"
+            >
+              <ChevronRight className="h-5 w-5" strokeWidth={2.25} aria-hidden />
+            </button>
+          </>
+        ) : null}
+      </div>
       <div className="p-4 md:p-5">
         <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-gold-dark">
           {roleLabel}
@@ -153,38 +163,54 @@ async function fetchHotel(ref: PackageHotelRef): Promise<HotelCardData | null> {
   };
 }
 
-type PackageHotelDetailsProps = {
-  makkahHotelRef: PackageHotelRef | null;
-  madinahHotelRef: PackageHotelRef | null;
-};
+function hotelRoleLabel(role: PackageHotelRef["role"]) {
+  return role === "MADINAH" ? "Madinah Hotel" : "Makkah Hotel";
+}
 
-export function PackageHotelDetails({
-  makkahHotelRef,
-  madinahHotelRef,
-}: PackageHotelDetailsProps) {
-  const [makkah, setMakkah] = useState<HotelCardData | null>(null);
-  const [madinah, setMadinah] = useState<HotelCardData | null>(null);
-  const [loading, setLoading] = useState(
-    Boolean(makkahHotelRef || madinahHotelRef)
+function makkahHotelsFirst<T extends { role: PackageHotelRef["role"]; city?: PublicHotel["city"] }>(
+  hotels: T[]
+) {
+  return [...hotels].sort(
+    (a, b) => makkahFirstRank(a.city ?? a.role) - makkahFirstRank(b.city ?? b.role)
   );
+}
+
+export function PackageHotelDetails({ hotels }: { hotels: PackageHotelRef[] }) {
+  const orderedHotels = useMemo(() => makkahHotelsFirst(hotels), [hotels]);
+  const [cards, setCards] = useState<Array<HotelCardData & { role: PackageHotelRef["role"] }> | null>(
+    null
+  );
+  const [loading, setLoading] = useState(orderedHotels.length > 0);
+  const hotelKey = orderedHotels
+    .map((hotel) => `${hotel.role}:${hotel.hotelId}:${hotel.nights ?? ""}`)
+    .join("|");
 
   useEffect(() => {
     let cancelled = false;
 
     async function load() {
-      if (!makkahHotelRef && !madinahHotelRef) {
+      if (!orderedHotels.length) {
+        setCards([]);
         setLoading(false);
         return;
       }
       setLoading(true);
       try {
-        const [makkahHotel, madinahHotel] = await Promise.all([
-          makkahHotelRef ? fetchHotel(makkahHotelRef) : Promise.resolve(null),
-          madinahHotelRef ? fetchHotel(madinahHotelRef) : Promise.resolve(null),
-        ]);
+        const loaded = await Promise.all(
+          orderedHotels.map(async (hotel) => {
+            const detail = await fetchHotel(hotel);
+            return detail ? { ...detail, role: hotel.role } : null;
+          })
+        );
         if (cancelled) return;
-        setMakkah(makkahHotel);
-        setMadinah(madinahHotel);
+        setCards(
+          makkahHotelsFirst(
+            loaded.filter(
+              (hotel): hotel is HotelCardData & { role: PackageHotelRef["role"] } =>
+                hotel !== null
+            )
+          )
+        );
       } finally {
         if (!cancelled) setLoading(false);
       }
@@ -194,9 +220,9 @@ export function PackageHotelDetails({
     return () => {
       cancelled = true;
     };
-  }, [makkahHotelRef?.hotelId, madinahHotelRef?.hotelId, makkahHotelRef, madinahHotelRef]);
+  }, [hotelKey, orderedHotels]);
 
-  if (!makkahHotelRef && !madinahHotelRef) return null;
+  if (!orderedHotels.length) return null;
 
   return (
     <section>
@@ -206,21 +232,21 @@ export function PackageHotelDetails({
       <p className="mt-2 max-w-2xl text-sm text-muted">
         Verified stays selected for comfort and practical access to the Haram.
       </p>
-      <div className="mt-6 grid gap-5 md:grid-cols-2">
-        {makkahHotelRef ? (
-          loading && !makkah ? (
-            <HotelCardSkeleton roleLabel="Makkah Hotel" />
-          ) : makkah ? (
-            <HotelCard roleLabel="Makkah Hotel" hotel={makkah} />
-          ) : null
-        ) : null}
-        {madinahHotelRef ? (
-          loading && !madinah ? (
-            <HotelCardSkeleton roleLabel="Madinah Hotel" />
-          ) : madinah ? (
-            <HotelCard roleLabel="Madinah Hotel" hotel={madinah} />
-          ) : null
-        ) : null}
+      <div className="mt-6 grid grid-cols-1 gap-5 md:grid-cols-3">
+        {loading && !cards
+          ? orderedHotels.map((hotel) => (
+              <HotelCardSkeleton
+                key={`${hotel.role}-${hotel.hotelId}`}
+                roleLabel={hotelRoleLabel(hotel.role)}
+              />
+            ))
+          : makkahHotelsFirst(cards ?? []).map((hotel) => (
+              <HotelCard
+                key={`${hotel.city}-${hotel.id}`}
+                roleLabel={hotelRoleLabel(hotel.city)}
+                hotel={hotel}
+              />
+            ))}
       </div>
     </section>
   );

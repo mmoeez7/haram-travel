@@ -33,7 +33,7 @@ export function PackageDetailSidebar({ pkg }: { pkg: PackageDetail }) {
           <Phone className="h-4 w-4" />
           Call Now
         </Button>
-        <Button href="/booking-form" variant="gold" className="w-full">
+        <Button href="/contact-us" variant="gold" className="w-full">
           Inquire & Book Now →
         </Button>
       </div>

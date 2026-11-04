@@ -20,14 +20,18 @@ export function PackageDetailHero({ pkg }: { pkg: PackageDetail }) {
       />
 
       <div className="relative min-h-[240px] overflow-hidden rounded-2xl border border-border bg-white shadow-sm sm:min-h-[300px] md:min-h-[380px]">
-        <Image
-          src={pkg.image}
-          alt={pkg.coverImageAlt || pkg.title}
-          fill
-          className="object-cover"
-          sizes="(max-width: 1024px) 100vw, 66vw"
-          priority
-        />
+        {pkg.image ? (
+          <Image
+            src={pkg.image}
+            alt={pkg.coverImageAlt || pkg.title}
+            fill
+            className="object-cover"
+            sizes="(max-width: 1024px) 100vw, 66vw"
+            priority
+          />
+        ) : (
+          <div className="absolute inset-0 bg-cream" />
+        )}
         {pkg.badge ? (
           <span className="absolute left-3 top-3 rounded-md bg-gold px-2.5 py-1 text-xs font-semibold text-charcoal md:left-4 md:top-4">
             {pkg.badge}

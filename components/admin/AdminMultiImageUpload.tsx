@@ -4,7 +4,12 @@ import Image from "next/image";
 import { ImageIcon, Trash2, X } from "lucide-react";
 import { useRef, useState, type MutableRefObject } from "react";
 import { adminLabelClass } from "@/components/admin/admin-ui";
-import { uploadAdminCover } from "@/components/admin/AdminCoverUpload";
+import { ImageUploadStatus, uploadAdminCover } from "@/components/admin/AdminCoverUpload";
+import {
+  ALLOWED_IMAGE_ACCEPT,
+  isAllowedImageType,
+  MAX_IMAGE_BYTES,
+} from "@/lib/image-upload-limits";
 
 export type ExistingHotelImage = {
   id?: string;
@@ -42,13 +47,46 @@ export function AdminMultiImageUpload({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [existing, setExisting] = useState<ExistingHotelImage[]>(initialImages);
   const [pending, setPending] = useState<PendingFile[]>([]);
+  const [uploadProgress, setUploadProgress] = useState<{
+    current: number;
+    total: number;
+  } | null>(null);
+  const existingRef = useRef(existing);
+  const pendingRef = useRef(pending);
+  existingRef.current = existing;
+  pendingRef.current = pending;
 
   uploadRef.current = {
     async collectUrls() {
-      const uploaded = await Promise.all(
-        pending.map((item) => uploadAdminCover(item.file, "hotels"))
-      );
-      return [...existing.map((img) => img.url), ...uploaded];
+      const urls = existingRef.current.map((img) => img.url);
+      const queue = [...pendingRef.current];
+      if (!queue.length) return urls;
+
+      setUploadProgress({ current: 1, total: queue.length });
+      try {
+        for (let index = 0; index < queue.length; index += 1) {
+          const item = queue[index];
+          setUploadProgress({ current: index + 1, total: queue.length });
+          try {
+            const url = await uploadAdminCover(item.file, "hotels");
+            urls.push(url);
+            setExisting((prev) => [...prev, { url }]);
+            setPending((prev) => prev.filter((p) => p.key !== item.key));
+            existingRef.current = [...existingRef.current, { url }];
+            pendingRef.current = pendingRef.current.filter((p) => p.key !== item.key);
+          } catch (err) {
+            throw new Error(
+              `Failed to upload ${item.file.name}: ${
+                err instanceof Error ? err.message : "Upload failed"
+              }`
+            );
+          }
+        }
+      } finally {
+        setUploadProgress(null);
+      }
+
+      return urls;
     },
   };
 
@@ -56,11 +94,11 @@ export function AdminMultiImageUpload({
     if (!fileList?.length) return;
     const next: PendingFile[] = [];
     for (const file of Array.from(fileList)) {
-      if (!file.type.startsWith("image/")) {
-        onError?.("Please choose image files only.");
+      if (!isAllowedImageType(file.type)) {
+        onError?.("Only JPEG, PNG, WebP, or GIF images are allowed.");
         continue;
       }
-      if (file.size > 5 * 1024 * 1024) {
+      if (file.size > MAX_IMAGE_BYTES) {
         onError?.("Each image must be below 5MB.");
         continue;
       }
@@ -90,12 +128,18 @@ export function AdminMultiImageUpload({
     })),
   ];
 
+  const uploading = uploadProgress !== null;
+  const uploadLabel =
+    uploadProgress && uploadProgress.total > 1
+      ? `Uploading images… ${uploadProgress.current} of ${uploadProgress.total}`
+      : "Uploading image…";
+
   return (
-    <div className={className}>
+    <div className={`relative ${className}`} aria-busy={uploading}>
       <p className={adminLabelClass}>Hotel images</p>
       <button
         type="button"
-        disabled={disabled}
+        disabled={disabled || uploading}
         onClick={() => fileInputRef.current?.click()}
         onDragOver={(event) => event.preventDefault()}
         onDrop={(event) => {
@@ -109,13 +153,13 @@ export function AdminMultiImageUpload({
           Add hotel images
         </span>
         <span className="text-xs text-muted">
-          Multiple images supported. Each under 5MB.
+          JPEG, PNG, WebP, or GIF. Multiple images, each under 5MB.
         </span>
       </button>
       <input
         ref={fileInputRef}
         type="file"
-        accept="image/*"
+        accept={ALLOWED_IMAGE_ACCEPT}
         multiple
         className="hidden"
         onChange={(event) => {
@@ -172,6 +216,7 @@ export function AdminMultiImageUpload({
           Clear all images
         </button>
       ) : null}
+      {uploading ? <ImageUploadStatus label={uploadLabel} /> : null}
     </div>
   );
 }

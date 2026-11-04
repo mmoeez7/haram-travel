@@ -4,7 +4,7 @@ import { createMetadata } from "@/lib/seo";
 import { SITE, telUrl, whatsappUrl } from "@/lib/constants";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { Button } from "@/components/ui/Button";
-import { InquiryForm } from "@/components/contact/InquiryForm";
+import { BeatPriceForm } from "@/components/contact/InquiryForm";
 
 export const metadata = createMetadata({
   title: "Beat My Price | Customized Umrah Packages",
@@ -43,7 +43,7 @@ export default function BeatMyPricePage() {
         </div>
 
         <div className="mt-10 max-w-3xl">
-          <InquiryForm />
+          <BeatPriceForm />
         </div>
       </div>
     </section>

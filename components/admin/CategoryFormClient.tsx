@@ -45,6 +45,7 @@ export function CategoryFormClient({ category }: { category?: Category }) {
   const formRef = useRef<HTMLFormElement>(null);
   const [error, setError] = useState("");
   const [saving, setSaving] = useState<"draft" | "publish" | null>(null);
+  const [uploadingCover, setUploadingCover] = useState(false);
   const [roots, setRoots] = useState<RootOption[]>([]);
   const [cover, setCover] = useState<CoverUploadState>({
     file: null,
@@ -104,7 +105,12 @@ export function CategoryFormClient({ category }: { category?: Category }) {
     try {
       let coverImageUrl = cover.removed ? "" : (category?.coverImageUrl ?? "");
       if (cover.file) {
-        coverImageUrl = await uploadAdminCover(cover.file, "categories");
+        setUploadingCover(true);
+        try {
+          coverImageUrl = await uploadAdminCover(cover.file, "categories");
+        } finally {
+          setUploadingCover(false);
+        }
       }
 
       const payload = {
@@ -204,6 +210,7 @@ export function CategoryFormClient({ category }: { category?: Category }) {
           <AdminCoverUpload
             initialUrl={category?.coverImageUrl}
             disabled={busy}
+            uploading={uploadingCover}
             onChange={setCover}
             onError={setError}
           />

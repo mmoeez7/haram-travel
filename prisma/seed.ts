@@ -13,12 +13,22 @@ function toSlug(input: string) {
 
 function mapSeason(season?: string): SeasonType {
   switch (season) {
-    case "december":
-      return "DECEMBER";
+    case "january":
+      return "JANUARY";
+    case "february":
+      return "FEBRUARY";
     case "easter":
       return "EASTER";
     case "ramadan":
       return "RAMADAN";
+    case "september":
+      return "SEPTEMBER";
+    case "october":
+      return "OCTOBER";
+    case "november":
+      return "NOVEMBER";
+    case "december":
+      return "DECEMBER";
     default:
       return "ALL";
   }
@@ -87,60 +97,81 @@ async function main() {
 
   const categories = [
     {
-      name: "3 Star",
+      name: "3 Star Umrah Packages",
       slug: "3-star",
       kind: "STAR" as const,
       sortOrder: 10,
       parentId: umrahPackagesRoot.id,
     },
     {
-      name: "4 Star",
+      name: "4 Star Umrah Packages",
       slug: "4-star",
       kind: "STAR" as const,
       sortOrder: 20,
       parentId: umrahPackagesRoot.id,
     },
     {
-      name: "5 Star",
+      name: "5 Star Umrah Packages",
       slug: "5-star",
       kind: "STAR" as const,
       sortOrder: 30,
       parentId: umrahPackagesRoot.id,
     },
     {
-      name: "December",
-      slug: "december",
+      name: "January Umrah Package",
+      slug: "january",
+      kind: "SEASON" as const,
+      sortOrder: 10,
+      parentId: umrahDealsRoot.id,
+    },
+    {
+      name: "February Umrah Package",
+      slug: "february",
+      kind: "SEASON" as const,
+      sortOrder: 20,
+      parentId: umrahDealsRoot.id,
+    },
+    {
+      name: "Easter Umrah Package",
+      slug: "easter",
+      kind: "SEASON" as const,
+      sortOrder: 30,
+      parentId: umrahDealsRoot.id,
+    },
+    {
+      name: "Ramadan Umrah Package",
+      slug: "ramadan",
       kind: "SEASON" as const,
       sortOrder: 40,
       parentId: umrahDealsRoot.id,
     },
     {
-      name: "Easter / Half-Term",
-      slug: "easter",
+      name: "September Umrah Package",
+      slug: "september",
       kind: "SEASON" as const,
       sortOrder: 50,
       parentId: umrahDealsRoot.id,
     },
     {
-      name: "Ramadan",
-      slug: "ramadan",
+      name: "October Umrah Package",
+      slug: "october",
       kind: "SEASON" as const,
       sortOrder: 60,
       parentId: umrahDealsRoot.id,
     },
     {
-      name: "Umrah",
-      slug: "umrah",
-      kind: "JOURNEY" as const,
+      name: "November Umrah Package",
+      slug: "november",
+      kind: "SEASON" as const,
       sortOrder: 70,
-      parentId: umrahPackagesRoot.id,
+      parentId: umrahDealsRoot.id,
     },
     {
-      name: "Hajj",
-      slug: "hajj",
-      kind: "JOURNEY" as const,
+      name: "December Umrah Package",
+      slug: "december",
+      kind: "SEASON" as const,
       sortOrder: 80,
-      parentId: umrahPackagesRoot.id,
+      parentId: umrahDealsRoot.id,
     },
   ];
 
@@ -290,8 +321,8 @@ async function main() {
         badge: pkg.badge,
         season,
         features: pkg.features,
-        coverImageUrl: pkg.image,
-        coverImageAlt: pkg.title,
+        coverImageUrl: pkg.image || null,
+        coverImageAlt: pkg.image ? pkg.title : null,
         published: true,
         featured: pkg.stars === 5 && season === "ALL",
         sortOrder: index,
@@ -313,8 +344,8 @@ async function main() {
         badge: pkg.badge,
         season,
         features: pkg.features,
-        coverImageUrl: pkg.image,
-        coverImageAlt: pkg.title,
+        coverImageUrl: pkg.image || null,
+        coverImageAlt: pkg.image ? pkg.title : null,
         published: true,
         featured: pkg.stars === 5 && season === "ALL",
         sortOrder: index,
@@ -368,6 +399,17 @@ async function main() {
       });
     }
   }
+
+  const keptSlugs = allSeedPackages.map((pkg) => toSlug(pkg.id));
+  await prisma.package.updateMany({
+    where: { slug: { notIn: keptSlugs }, deletedAt: null },
+    data: { deletedAt: new Date(), published: false },
+  });
+
+  await prisma.category.updateMany({
+    where: { slug: { in: ["hajj", "umrah"] }, deletedAt: null },
+    data: { deletedAt: new Date(), published: false },
+  });
 
   console.log(
     `Seeded admin ${email}, ${allSeedPackages.length} packages, ${hotelsSeed.length} hotels, 2 roots + ${categories.length} child categories.`

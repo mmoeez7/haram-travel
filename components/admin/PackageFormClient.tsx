@@ -70,6 +70,7 @@ export function PackageFormClient({ packageId }: { packageId?: string }) {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState<"draft" | "publish" | null>(null);
+  const [uploadingCover, setUploadingCover] = useState(false);
   const [journeyType, setJourneyType] = useState("UMRAH");
   const [umrahGroup, setUmrahGroup] = useState<UmrahRootSlug>(UMRAH_PACKAGES_ROOT_SLUG);
   const [categoryId, setCategoryId] = useState("");
@@ -157,7 +158,12 @@ export function PackageFormClient({ packageId }: { packageId?: string }) {
     try {
       let coverImageUrl = cover.removed ? "" : (pkg?.coverImageUrl ?? "");
       if (cover.file) {
-        coverImageUrl = await uploadAdminCover(cover.file, "packages");
+        setUploadingCover(true);
+        try {
+          coverImageUrl = await uploadAdminCover(cover.file, "packages");
+        } finally {
+          setUploadingCover(false);
+        }
       }
 
       const title = String(data.get("title") || "");
@@ -478,6 +484,7 @@ export function PackageFormClient({ packageId }: { packageId?: string }) {
               className="md:col-span-2"
               initialUrl={pkg?.coverImageUrl}
               disabled={busy}
+              uploading={uploadingCover}
               onChange={setCover}
               onError={setError}
             />

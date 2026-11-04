@@ -1,7 +1,6 @@
 import Image from "next/image";
 import { ShieldCheck, Footprints, Wallet, Headset } from "lucide-react";
 import { SITE } from "@/lib/constants";
-import { PackageFinder } from "./PackageFinder";
 
 const trustItems = [
   { icon: Footprints, label: "Footsteps From Haram" },
@@ -53,11 +52,7 @@ export function Hero() {
           </div>
         </div>
 
-        <div className="hero-enter hero-enter-delay-4 mt-5 md:mt-8">
-          <PackageFinder />
-        </div>
-
-        <div className="hero-enter hero-enter-delay-5 mt-5 flex flex-wrap items-center justify-center gap-6 border-t border-white/15 pt-4 text-center md:mt-8 md:gap-8 md:pt-6">
+        <div className="hero-enter hero-enter-delay-4 mt-5 flex flex-wrap items-center justify-center gap-6 border-t border-white/15 pt-4 text-center md:mt-8 md:gap-8 md:pt-6">
           <div>
             <p className="font-display text-2xl font-semibold text-gold-soft md:text-3xl">
               {SITE.trustpilotRating}/5

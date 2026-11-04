@@ -60,8 +60,6 @@ export async function PATCH(request: Request, { params }: Params) {
         stars: parsed.data.stars,
         walkingMinutes: parsed.data.walkingMinutes ?? null,
         distanceToHaramM: parsed.data.distanceToHaramM ?? null,
-        address: parsed.data.address || null,
-        shortDescription: parsed.data.shortDescription || null,
         description: parsed.data.description || null,
         amenities: csvToArray(parsed.data.amenities),
         coverImageUrl: synced.coverImageUrl,

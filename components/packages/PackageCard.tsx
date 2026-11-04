@@ -12,14 +12,16 @@ export function PackageCard({ pkg }: { pkg: PackageItem }) {
 
   return (
     <article className="card-lift flex h-full flex-col overflow-hidden rounded-xl border border-border bg-white shadow-sm md:rounded-2xl">
-      <Link href={href} className="relative block h-36 overflow-hidden sm:h-40 md:h-48">
-        <Image
-          src={pkg.image}
-          alt={pkg.title}
-          fill
-          className="object-cover"
-          sizes="(max-width: 768px) 80vw, 33vw"
-        />
+      <Link href={href} className="relative block h-36 overflow-hidden bg-cream sm:h-40 md:h-48">
+        {pkg.image ? (
+          <Image
+            src={pkg.image}
+            alt={pkg.title}
+            fill
+            className="object-cover"
+            sizes="(max-width: 768px) 80vw, 33vw"
+          />
+        ) : null}
         <span className="absolute left-2.5 top-2.5 rounded-md bg-gold px-2 py-0.5 text-[10px] font-semibold text-charcoal md:left-3 md:top-3 md:px-2.5 md:py-1 md:text-xs">
           {pkg.badge}
         </span>
