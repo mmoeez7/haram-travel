@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { wordpressUrlRedirects } from "./lib/package-paths";
 
 const nextConfig: NextConfig = {
   experimental: {
@@ -21,6 +22,9 @@ const nextConfig: NextConfig = {
         hostname: "img.youtube.com",
       },
     ],
+  },
+  async redirects() {
+    return wordpressUrlRedirects();
   },
 };
 

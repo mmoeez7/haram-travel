@@ -1,11 +1,12 @@
 import Image from "next/image";
 import type { PackageDetail } from "@/lib/packages";
+import { categoryListingHref } from "@/lib/package-paths";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 
 export function PackageDetailHero({ pkg }: { pkg: PackageDetail }) {
   const intro = pkg.shortDescription?.trim() || pkg.subtitle;
   const categoryHref = pkg.linkedCategory
-    ? `/categories/${pkg.linkedCategory.slug}`
+    ? categoryListingHref(pkg.linkedCategory.slug)
     : "/umrah-packages";
   const categoryLabel = pkg.linkedCategory?.name ?? "Umrah Packages";
 

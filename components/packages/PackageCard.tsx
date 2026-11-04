@@ -3,12 +3,13 @@ import Link from "next/link";
 import { Check, Phone } from "lucide-react";
 import { FaWhatsapp } from "react-icons/fa";
 import type { PackageItem } from "@/lib/packages";
+import { packageHref } from "@/lib/package-paths";
 import { telUrl, whatsappUrl } from "@/lib/constants";
 import { Button } from "@/components/ui/Button";
 
 export function PackageCard({ pkg }: { pkg: PackageItem }) {
   const waMessage = `Assalamu Alaikum, I'm interested in ${pkg.title} (${pkg.subtitle}) from £${pkg.priceFrom}pp.`;
-  const href = `/packages/${pkg.id}`;
+  const href = packageHref(pkg.id);
 
   return (
     <article className="card-lift flex h-full flex-col overflow-hidden rounded-xl border border-border bg-white shadow-sm md:rounded-2xl">

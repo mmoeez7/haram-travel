@@ -1,6 +1,7 @@
 import { PrismaClient, type JourneyType, type SeasonType } from "@prisma/client";
 import bcrypt from "bcryptjs";
 import { hajjPackages, umrahPackages } from "../lib/packages-seed-data";
+import { legacyPackageSlug } from "../lib/package-paths";
 
 const prisma = new PrismaClient();
 
@@ -305,6 +306,27 @@ async function main() {
     const journeyType: JourneyType = pkg.category === "hajj" ? "HAJJ" : "UMRAH";
     const season = mapSeason(pkg.season);
     const slug = toSlug(pkg.id);
+    const legacySlug = toSlug(
+      legacyPackageSlug({
+        season: pkg.season,
+        stars: pkg.stars,
+        nights: pkg.nights,
+      })
+    );
+    if (legacySlug !== slug) {
+      const legacyRow = await prisma.package.findUnique({
+        where: { slug: legacySlug },
+      });
+      if (legacyRow) {
+        const conflict = await prisma.package.findUnique({ where: { slug } });
+        if (!conflict) {
+          await prisma.package.update({
+            where: { id: legacyRow.id },
+            data: { slug },
+          });
+        }
+      }
+    }
 
     const created = await prisma.package.upsert({
       where: { slug },

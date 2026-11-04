@@ -5,6 +5,7 @@ import {
   UMRAH_PACKAGES_ROOT_SLUG,
   type UmrahRootSlug,
 } from "@/lib/category-roots";
+import { categoryListingHref } from "@/lib/package-paths";
 import { mapPackageToItem, type PackageItem } from "@/lib/packages";
 
 export type PublicCategory = {
@@ -39,7 +40,7 @@ export async function getChildCategoriesForRoot(
   });
 
   return children.map((child) => ({
-    href: `/categories/${child.slug}`,
+    href: categoryListingHref(child.slug),
     label: child.name.trim(),
   }));
 }

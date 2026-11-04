@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { createMetadata } from "@/lib/seo";
 import { getPackageDetailBySlug } from "@/lib/packages";
+import { packageHref } from "@/lib/package-paths";
 import { PackageDetailHero } from "@/components/packages/PackageDetailHero";
 import { PackageDetailBody } from "@/components/packages/PackageDetailBody";
 import { PackageHotelDetails } from "@/components/packages/PackageHotelDetails";
@@ -24,7 +25,7 @@ export async function generateMetadata({ params }: PageProps) {
     description:
       pkg.shortDescription?.trim() ||
       `${pkg.subtitle}. From £${pkg.priceFrom}pp with UK flights and walking-distance hotels.`,
-    path: `/packages/${slug}`,
+    path: packageHref(slug),
   });
 }
 

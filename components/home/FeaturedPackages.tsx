@@ -26,7 +26,7 @@ export function FeaturedPackages({
       description:
         "Reliable economy comfort with flights included, courtyard-friendly hotels, and full visa support for first-time and returning pilgrims.",
       packages: threeStar,
-      seeMoreHref: "/categories/3-star",
+      seeMoreHref: "/3-star-umrah-packages",
     },
     {
       id: undefined as string | undefined,
@@ -34,7 +34,7 @@ export function FeaturedPackages({
       description:
         "Executive hotels closer to the Haram with elevated dining, quieter rooms, and family configurations for 7, 10 or 12 nights.",
       packages: fourStar,
-      seeMoreHref: "/categories/4-star",
+      seeMoreHref: "/4-star-umrah-packages",
     },
     {
       id: "5-star" as string | undefined,
@@ -42,7 +42,7 @@ export function FeaturedPackages({
       description:
         "Clock Tower and courtyard VIP stays for pilgrims who want footsteps-from-Haram luxury with white-glove UK & Saudi support.",
       packages: fiveStar,
-      seeMoreHref: "/categories/5-star",
+      seeMoreHref: "/5-star-umrah-packages",
     },
   ];
 

@@ -8,6 +8,7 @@ import {
   UMRAH_DEALS_ROOT_SLUG,
   UMRAH_PACKAGES_ROOT_SLUG,
 } from "@/lib/category-roots";
+import { categoryListingHref } from "@/lib/package-paths";
 
 type Params = { params: Promise<{ id: string }> };
 
@@ -105,6 +106,7 @@ export async function PATCH(request: Request, { params }: Params) {
 
   revalidatePath("/", "layout");
   revalidatePath(`/categories/${category.slug}`);
+  revalidatePath(categoryListingHref(category.slug));
   return NextResponse.json({ category });
 }
 

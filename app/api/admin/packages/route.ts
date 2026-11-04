@@ -171,6 +171,6 @@ export async function POST(request: Request) {
   revalidatePath("/5-star-umrah-packages");
   revalidatePath("/hajj-packages");
   revalidatePath("/categories", "layout");
-  revalidatePath(`/packages/${pkg.slug}`);
+  revalidatePath(`/${pkg.slug}`);
   return NextResponse.json({ package: pkg }, { status: 201 });
 }

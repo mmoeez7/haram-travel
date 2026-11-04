@@ -14,6 +14,7 @@ import {
   parseAdminPage,
   parseAdminPageSize,
 } from "@/lib/admin-pagination";
+import { categoryListingHref } from "@/lib/package-paths";
 
 export async function GET(request: Request) {
   const { error } = await requireAdminApi();
@@ -135,5 +136,6 @@ export async function POST(request: Request) {
 
   revalidatePath("/", "layout");
   revalidatePath(`/categories/${category.slug}`);
+  revalidatePath(categoryListingHref(category.slug));
   return NextResponse.json({ category }, { status: 201 });
 }

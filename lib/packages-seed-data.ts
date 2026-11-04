@@ -1,3 +1,5 @@
+import { wordpressPackageSlug } from "@/lib/package-paths";
+
 export type SeedSeason =
   | "all"
   | "january"
@@ -61,7 +63,7 @@ function packageItem(
   const stay = stays[nights];
   const month = season === "all" ? "" : monthLabel[season];
   const title = `${month ? `${month} ` : ""}${stars} Star ${nights} Nights Umrah Package`;
-  const slug = `${month ? `${season}-` : ""}${stars}-star-${nights}-nights`;
+  const slug = wordpressPackageSlug({ season, stars, nights });
 
   return {
     id: slug,

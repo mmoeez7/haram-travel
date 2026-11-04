@@ -148,7 +148,7 @@ export async function PATCH(request: Request, { params }: Params) {
   revalidatePath("/5-star-umrah-packages");
   revalidatePath("/hajj-packages");
   revalidatePath("/categories", "layout");
-  revalidatePath(`/packages/${pkg.slug}`);
+  revalidatePath(`/${pkg.slug}`);
   return NextResponse.json({ package: pkg });
 }
 

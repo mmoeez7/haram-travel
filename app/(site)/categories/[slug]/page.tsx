@@ -6,6 +6,7 @@ import {
   getPackagesByCategorySlug,
 } from "@/lib/categories";
 import { UMRAH_DEALS_ROOT_SLUG } from "@/lib/category-roots";
+import { categoryListingHref } from "@/lib/package-paths";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { PackageSection } from "@/components/packages/PackageSection";
 import { CustomQuote } from "@/components/home/CustomQuote";
@@ -20,7 +21,7 @@ export async function generateMetadata({ params }: PageProps) {
     return createMetadata({
       title: "Category",
       description: "Umrah packages by category.",
-      path: `/categories/${slug}`,
+      path: categoryListingHref(slug),
     });
   }
 
@@ -29,7 +30,7 @@ export async function generateMetadata({ params }: PageProps) {
     description:
       category.description?.trim() ||
       `${category.name} packages from Haram Travel — UK departures, ATOL protected.`,
-    path: `/categories/${category.slug}`,
+    path: categoryListingHref(category.slug),
   });
 }
 
