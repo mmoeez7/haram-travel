@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Pencil, Search, Trash2 } from "lucide-react";
+import { Copy, Pencil, Search, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { adminFetch } from "@/lib/admin-fetch";
 import {
@@ -13,6 +13,7 @@ import {
   AdminPageHeader,
   AdminTableSkeleton,
   adminDangerButtonClass,
+  adminDuplicateButtonClass,
   adminEditLinkClass,
   adminPageClass,
   adminStatusDraftClass,
@@ -88,6 +89,19 @@ export function AdminPackagesClient() {
       packages.length === 1 && page > 1 ? page - 1 : page;
     setPage(nextPage);
     await load(q, status, nextPage);
+  }
+
+  async function duplicate(id: string) {
+    try {
+      await adminFetch(`/api/admin/packages/${id}/duplicate`, {
+        method: "POST",
+      });
+      setPage(1);
+      await load(q, status, 1);
+      setError("");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Duplicate failed");
+    }
   }
 
   return (
@@ -193,6 +207,14 @@ export function AdminPackagesClient() {
                             <Pencil className="h-3.5 w-3.5" aria-hidden />
                             Edit
                           </Link>
+                          <AdminAsyncButton
+                            onClick={() => duplicate(pkg.id)}
+                            pendingLabel="Copying…"
+                            idleIcon={<Copy className="h-3.5 w-3.5" />}
+                            className={adminDuplicateButtonClass}
+                          >
+                            Duplicate
+                          </AdminAsyncButton>
                           <AdminAsyncButton
                             onClick={() => remove(pkg.id)}
                             pendingLabel="Deleting…"

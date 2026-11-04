@@ -177,6 +177,9 @@ export const adminDangerButtonClass =
 export const adminEditLinkClass =
   "inline-flex h-8 cursor-pointer items-center justify-center gap-1.5 rounded-xl border border-gold/40 bg-gold/10 px-3 text-xs font-semibold text-gold-dark transition hover:border-gold hover:bg-gold/20";
 
+export const adminDuplicateButtonClass =
+  "inline-flex h-8 cursor-pointer items-center justify-center gap-1.5 rounded-xl border border-border bg-white px-3 text-xs font-semibold text-ink transition hover:border-gold hover:text-gold-dark disabled:cursor-not-allowed disabled:opacity-80";
+
 export const adminStatusPublishedClass =
   "inline-flex rounded-full bg-emerald-100 px-2.5 py-0.5 text-[10px] font-semibold text-emerald-700";
 

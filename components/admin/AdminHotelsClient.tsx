@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Pencil, Trash2 } from "lucide-react";
+import { Copy, Pencil, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { adminFetch } from "@/lib/admin-fetch";
 import {
@@ -9,6 +9,7 @@ import {
   AdminPageHeader,
   AdminTableSkeleton,
   adminDangerButtonClass,
+  adminDuplicateButtonClass,
   adminEditLinkClass,
   adminPageClass,
   adminStatusDraftClass,
@@ -51,6 +52,16 @@ export function AdminHotelsClient() {
     if (!confirm("Delete this hotel?")) return;
     await adminFetch(`/api/admin/hotels/${id}`, { method: "DELETE" });
     await load();
+  }
+
+  async function duplicate(id: string) {
+    try {
+      await adminFetch(`/api/admin/hotels/${id}/duplicate`, { method: "POST" });
+      await load();
+      setError("");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Duplicate failed");
+    }
   }
 
   return (
@@ -110,6 +121,14 @@ export function AdminHotelsClient() {
                           <Pencil className="h-3.5 w-3.5" aria-hidden />
                           Edit
                         </Link>
+                        <AdminAsyncButton
+                          onClick={() => duplicate(hotel.id)}
+                          pendingLabel="Copying…"
+                          idleIcon={<Copy className="h-3.5 w-3.5" />}
+                          className={adminDuplicateButtonClass}
+                        >
+                          Duplicate
+                        </AdminAsyncButton>
                         <AdminAsyncButton
                           onClick={() => remove(hotel.id)}
                           pendingLabel="Deleting…"

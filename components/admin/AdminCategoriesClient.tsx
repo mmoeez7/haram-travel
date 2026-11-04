@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Pencil, Trash2 } from "lucide-react";
+import { Copy, Pencil, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { adminFetch } from "@/lib/admin-fetch";
 import {
@@ -18,6 +18,7 @@ import {
   AdminPageHeader,
   AdminTableSkeleton,
   adminDangerButtonClass,
+  adminDuplicateButtonClass,
   adminEditLinkClass,
   adminPageClass,
   adminSelectClass,
@@ -117,6 +118,19 @@ export function AdminCategoriesClient() {
       await loadChildren(groupFilter, nextPage);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Delete failed");
+    }
+  }
+
+  async function duplicate(id: string) {
+    try {
+      await adminFetch(`/api/admin/categories/${id}/duplicate`, {
+        method: "POST",
+      });
+      setPage(1);
+      await loadChildren(groupFilter, 1);
+      setError("");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Duplicate failed");
     }
   }
 
@@ -227,6 +241,14 @@ export function AdminCategoriesClient() {
                                 <Pencil className="h-3.5 w-3.5" aria-hidden />
                                 Edit
                               </Link>
+                              <AdminAsyncButton
+                                onClick={() => duplicate(category.id)}
+                                pendingLabel="Copying…"
+                                idleIcon={<Copy className="h-3.5 w-3.5" />}
+                                className={adminDuplicateButtonClass}
+                              >
+                                Duplicate
+                              </AdminAsyncButton>
                               <AdminAsyncButton
                                 onClick={() => remove(category.id)}
                                 pendingLabel="Deleting…"
