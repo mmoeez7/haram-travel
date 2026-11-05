@@ -10,6 +10,7 @@
     "db:start": "bash scripts/start-postgres.sh",
     "db:migrate": "prisma migrate dev",
     "db:seed": "tsx prisma/seed.ts",
+    "db:assign-covers": "tsx scripts/assign-package-covers.ts",
     "db:studio": "prisma studio",
     "postinstall": "prisma generate"
   },

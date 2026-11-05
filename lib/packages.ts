@@ -15,10 +15,20 @@ export type PackageItem = {
   deposit: number;
   badge: string;
   features: string[];
-  season?: "all" | "december" | "easter" | "ramadan";
+  season?: DealSeason | "all";
   category: "umrah" | "hajj";
   image: string;
 };
+
+export type DealSeason =
+  | "january"
+  | "february"
+  | "easter"
+  | "ramadan"
+  | "september"
+  | "october"
+  | "november"
+  | "december";
 
 export const packageFilters = [
   { id: "all", label: "All Packages" },
@@ -30,27 +40,45 @@ export const packageFilters = [
 
 function seasonToUi(season: SeasonType): PackageItem["season"] {
   switch (season) {
-    case "DECEMBER":
-      return "december";
+    case "JANUARY":
+      return "january";
+    case "FEBRUARY":
+      return "february";
     case "EASTER":
       return "easter";
     case "RAMADAN":
       return "ramadan";
+    case "SEPTEMBER":
+      return "september";
+    case "OCTOBER":
+      return "october";
+    case "NOVEMBER":
+      return "november";
+    case "DECEMBER":
+      return "december";
     default:
       return "all";
   }
 }
 
-function seasonToDb(
-  season: "december" | "easter" | "ramadan"
-): SeasonType {
+function seasonToDb(season: DealSeason): SeasonType {
   switch (season) {
-    case "december":
-      return "DECEMBER";
+    case "january":
+      return "JANUARY";
+    case "february":
+      return "FEBRUARY";
     case "easter":
       return "EASTER";
     case "ramadan":
       return "RAMADAN";
+    case "september":
+      return "SEPTEMBER";
+    case "october":
+      return "OCTOBER";
+    case "november":
+      return "NOVEMBER";
+    case "december":
+      return "DECEMBER";
   }
 }
 
@@ -94,7 +122,7 @@ export async function getUmrahByStars(stars: 3 | 4 | 5): Promise<PackageItem[]> 
 }
 
 export async function getSeasonalPackages(
-  season: "december" | "easter" | "ramadan"
+  season: DealSeason
 ): Promise<PackageItem[]> {
   noStore();
   const packages = await prisma.package.findMany({
@@ -103,7 +131,7 @@ export async function getSeasonalPackages(
       journeyType: "UMRAH",
       season: seasonToDb(season),
     },
-    orderBy: [{ sortOrder: "asc" }, { priceFrom: "asc" }],
+    orderBy: [{ sortOrder: "asc" }, { priceFrom: "asc" }, { stars: "asc" }],
   });
   return packages.map(mapPackageToItem);
 }

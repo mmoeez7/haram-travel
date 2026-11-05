@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import type { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/db";
 import { requireAdminApi, jsonError } from "@/lib/admin-api-auth";
-import { writeAuditLog, slugify } from "@/lib/admin";
+import { writeAuditLog, slugify, isSlugTaken } from "@/lib/admin";
 import { linesToArray, packageSchema } from "@/lib/admin-schemas";
 import { assertAssignableUmrahCategory } from "@/lib/package-category";
 import {
@@ -35,6 +35,7 @@ export async function GET(request: Request) {
       ? {
           OR: [
             { title: { contains: q, mode: "insensitive" } },
+            { subtitle: { contains: q, mode: "insensitive" } },
             { slug: { contains: q, mode: "insensitive" } },
             { badge: { contains: q, mode: "insensitive" } },
           ],
@@ -78,6 +79,9 @@ export async function POST(request: Request) {
   }
   if (parsed.data.makkahNights + parsed.data.madinahNights > parsed.data.nights) {
     return jsonError("Makkah + Madinah nights cannot exceed total nights.");
+  }
+  if (await isSlugTaken("package", parsed.data.slug)) {
+    return jsonError("Slug is already in use");
   }
 
   const categoryId =

@@ -1,12 +1,19 @@
 import { z } from "zod";
+import { SLUG_PATH_REGEX } from "@/lib/slugify";
+
+const slugField = (max: number) =>
+  z
+    .string()
+    .min(2)
+    .max(max)
+    .regex(
+      SLUG_PATH_REGEX,
+      "Slug must be lowercase kebab-case (optional / path segments allowed)"
+    );
 
 export const categorySchema = z.object({
   name: z.string().min(2).max(120),
-  slug: z
-    .string()
-    .min(2)
-    .max(120)
-    .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "Slug must be lowercase kebab-case"),
+  slug: slugField(160),
   kind: z.enum(["STAR", "SEASON", "JOURNEY", "CUSTOM"]).default("CUSTOM"),
   parentId: z.string().min(1).optional().nullable().or(z.literal("")),
   description: z.string().max(2000).optional().or(z.literal("")),
@@ -18,11 +25,7 @@ export const categorySchema = z.object({
 
 export const hotelSchema = z.object({
   name: z.string().min(2).max(160),
-  slug: z
-    .string()
-    .min(2)
-    .max(160)
-    .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/),
+  slug: slugField(160),
   city: z.enum(["MAKKAH", "MADINAH"]),
   stars: z.coerce.number().int().min(1).max(5),
   walkingMinutes: z.preprocess(
@@ -45,11 +48,7 @@ export const hotelSchema = z.object({
 export const packageSchema = z.object({
   title: z.string().min(2).max(160),
   subtitle: z.string().min(2).max(160),
-  slug: z
-    .string()
-    .min(2)
-    .max(160)
-    .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/),
+  slug: slugField(200),
   journeyType: z.enum(["UMRAH", "HAJJ"]),
   stars: z.coerce.number().int().min(3).max(5),
   nights: z.coerce.number().int().min(1).max(60),

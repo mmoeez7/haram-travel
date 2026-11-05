@@ -9,6 +9,7 @@ import { UMRAH_DEALS_ROOT_SLUG } from "@/lib/category-roots";
 import { categoryListingHref } from "@/lib/package-paths";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { PackageSection } from "@/components/packages/PackageSection";
+import { StarGroupedPackages } from "@/components/packages/StarGroupedPackages";
 import { CustomQuote } from "@/components/home/CustomQuote";
 import { Testimonials } from "@/components/home/Testimonials";
 
@@ -107,12 +108,19 @@ export default async function CategoryPackagesPage({ params }: PageProps) {
       </section>
 
       {packages.length ? (
-        <PackageSection
-          eyebrow={category.parent.name}
-          title={`${category.name} packages`}
-          description={`Browse published packages in ${category.name}.`}
-          packages={packages}
-        />
+        isDeal ? (
+          <StarGroupedPackages
+            packages={packages}
+            eyebrow={category.parent.name}
+          />
+        ) : (
+          <PackageSection
+            eyebrow={category.parent.name}
+            title={`${category.name} packages`}
+            description={`Browse published packages in ${category.name}.`}
+            packages={packages}
+          />
+        )
       ) : (
         <section className="py-16">
           <div className="mx-auto max-w-7xl px-3 lg:px-4">

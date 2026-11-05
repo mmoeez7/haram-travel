@@ -18,6 +18,7 @@ import {
   adminPageClass,
   adminStatusDraftClass,
   adminStatusPublishedClass,
+  adminTitleLinkClass,
 } from "@/components/admin/admin-ui";
 import { AdminLoadingLink } from "@/components/admin/AdminLoadingLink";
 import { AdminAsyncButton } from "@/components/admin/AdminAsyncButton";
@@ -32,6 +33,7 @@ const filterSelectClass =
 type PackageRow = {
   id: string;
   title: string;
+  subtitle: string;
   journeyType: string;
   stars: number;
   priceFrom: string | number;
@@ -168,7 +170,7 @@ export function AdminPackagesClient() {
               <table className="min-w-full text-left text-sm">
                 <thead className="border-b border-border text-[10px] uppercase tracking-wide text-muted">
                   <tr>
-                    <th className="px-2 py-2">Title</th>
+                    <th className="px-2 py-2">Subtitle</th>
                     <th className="px-2 py-2">Type</th>
                     <th className="px-2 py-2">Stars</th>
                     <th className="px-2 py-2">Price</th>
@@ -179,8 +181,13 @@ export function AdminPackagesClient() {
                 <tbody>
                   {packages.map((pkg) => (
                     <tr key={pkg.id} className="border-b border-border/60">
-                      <td className="px-2 py-3 font-medium text-charcoal">
-                        {pkg.title}
+                      <td className="px-2 py-3">
+                        <Link
+                          href={`/admin/packages/${pkg.id}/view`}
+                          className={adminTitleLinkClass}
+                        >
+                          {pkg.subtitle}
+                        </Link>
                       </td>
                       <td className="px-2 py-3">{pkg.journeyType}</td>
                       <td className="px-2 py-3">{pkg.stars}★</td>

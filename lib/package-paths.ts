@@ -29,9 +29,10 @@ export function legacyPackageSlug(input: {
   return `${season ? `${season}-` : ""}${input.stars}-star-${input.nights}-nights`;
 }
 
-/** Public package path matching haramtravel.uk (root slug, no /packages prefix). */
+/** Public package path matching haramtravel.uk (root slug, trailing slash). */
 export function packageHref(slug: string) {
-  return `/${slug.replace(/^\/+/, "")}`;
+  const clean = slug.replace(/^\/+|\/+$/g, "").replace(/\/{2,}/g, "/");
+  return clean ? `/${clean}/` : "/";
 }
 
 /**
@@ -53,11 +54,18 @@ export function wordpressPackageSlug(input: {
   return season ? `${season}-${body}` : body;
 }
 
+function withTrailingSlash(path: string) {
+  if (path === "/") return path;
+  return path.endsWith("/") ? path : `${path}/`;
+}
+
 /** Nav / breadcrumb listing URL for a child category slug. */
 export function categoryListingHref(childSlug: string) {
-  if (STAR_LISTING[childSlug]) return STAR_LISTING[childSlug];
-  if (SEASON_LISTING.has(childSlug)) return `/${childSlug}-umrah-package`;
-  return `/categories/${childSlug}`;
+  if (STAR_LISTING[childSlug]) return withTrailingSlash(STAR_LISTING[childSlug]);
+  if (SEASON_LISTING.has(childSlug)) {
+    return withTrailingSlash(`/${childSlug}-umrah-package`);
+  }
+  return withTrailingSlash(`/categories/${childSlug}`);
 }
 
 /** Permanent redirects from old app paths + legacy package slugs to WordPress URLs. */
@@ -75,7 +83,7 @@ export function wordpressUrlRedirects(): Array<{
   for (const [slug, href] of Object.entries(STAR_LISTING)) {
     redirects.push({
       source: `/categories/${slug}`,
-      destination: href,
+      destination: withTrailingSlash(href),
       permanent: true,
     });
   }
@@ -83,7 +91,7 @@ export function wordpressUrlRedirects(): Array<{
   for (const season of SEASON_LISTING) {
     redirects.push({
       source: `/categories/${season}`,
-      destination: `/${season}-umrah-package`,
+      destination: `/${season}-umrah-package/`,
       permanent: true,
     });
   }
@@ -110,18 +118,18 @@ export function wordpressUrlRedirects(): Array<{
     seen.add(legacy);
     // Specific legacy mappings before the /packages/:slug catch-all
     redirects.push(
-      { source: `/${legacy}`, destination: `/${wp}`, permanent: true },
+      { source: `/${legacy}`, destination: `/${wp}/`, permanent: true },
       {
         source: `/packages/${legacy}`,
-        destination: `/${wp}`,
+        destination: `/${wp}/`,
         permanent: true,
       }
     );
   }
 
   redirects.push({
-    source: "/packages/:slug",
-    destination: "/:slug",
+    source: "/packages/:path*",
+    destination: "/:path*",
     permanent: true,
   });
 

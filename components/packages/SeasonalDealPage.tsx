@@ -1,25 +1,15 @@
-import { getUmrahByStars, getSeasonalPackages, type PackageItem } from "@/lib/packages";
+import { getPackagesByCategorySlug } from "@/lib/categories";
+import { getSeasonalPackages, type DealSeason } from "@/lib/packages";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
-import { PackageSection } from "@/components/packages/PackageSection";
+import { StarGroupedPackages } from "@/components/packages/StarGroupedPackages";
 import { CustomQuote } from "@/components/home/CustomQuote";
-
-type SeasonKey = "december" | "easter" | "ramadan";
 
 type SeasonalDealPageProps = {
   title: string;
   description: string;
   pathLabel: string;
-  season?: SeasonKey;
+  season: DealSeason;
 };
-
-async function packagesForSeason(season?: SeasonKey): Promise<PackageItem[]> {
-  if (season) {
-    const seasonal = await getSeasonalPackages(season);
-    if (seasonal.length) return seasonal;
-  }
-  const [three, four] = await Promise.all([getUmrahByStars(3), getUmrahByStars(4)]);
-  return [...three, ...four].slice(0, 6);
-}
 
 export async function SeasonalDealPage({
   title,
@@ -27,7 +17,10 @@ export async function SeasonalDealPage({
   pathLabel,
   season,
 }: SeasonalDealPageProps) {
-  const packages = await packagesForSeason(season);
+  let packages = await getPackagesByCategorySlug(season);
+  if (!packages.length) {
+    packages = await getSeasonalPackages(season);
+  }
 
   return (
     <>
@@ -46,7 +39,20 @@ export async function SeasonalDealPage({
           <p className="mt-4 max-w-2xl text-muted">{description}</p>
         </div>
       </section>
-      <PackageSection title={title} description={description} packages={packages} />
+
+      {packages.length ? (
+        <StarGroupedPackages packages={packages} eyebrow="Umrah Deals" />
+      ) : (
+        <section className="py-16">
+          <div className="mx-auto max-w-7xl px-3 lg:px-4">
+            <p className="text-muted">
+              No published packages in this deal yet. Please check back soon or contact our
+              advisors for a bespoke quote.
+            </p>
+          </div>
+        </section>
+      )}
+
       <CustomQuote />
     </>
   );

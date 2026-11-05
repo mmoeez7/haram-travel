@@ -2,6 +2,9 @@ import type { Prisma } from "@prisma/client";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/db";
 import { redirect } from "next/navigation";
+import { slugify } from "@/lib/slugify";
+
+export { slugify };
 
 export async function requireAdmin() {
   const session = await auth();
@@ -31,10 +34,33 @@ export async function writeAuditLog(input: {
   });
 }
 
-export function slugify(input: string) {
-  return input
-    .toLowerCase()
-    .trim()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/(^-|-$)/g, "");
+/** True if slug is already owned by another row (includes soft-deleted). */
+export async function isSlugTaken(
+  entity: "package" | "hotel" | "category",
+  slug: string,
+  excludeId?: string
+) {
+  const notSelf = excludeId ? { id: { not: excludeId } } : {};
+  if (entity === "package") {
+    return Boolean(
+      await prisma.package.findFirst({
+        where: { slug, ...notSelf },
+        select: { id: true },
+      })
+    );
+  }
+  if (entity === "hotel") {
+    return Boolean(
+      await prisma.hotel.findFirst({
+        where: { slug, ...notSelf },
+        select: { id: true },
+      })
+    );
+  }
+  return Boolean(
+    await prisma.category.findFirst({
+      where: { slug, ...notSelf },
+      select: { id: true },
+    })
+  );
 }

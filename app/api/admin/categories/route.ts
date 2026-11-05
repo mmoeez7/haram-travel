@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/db";
 import { requireAdminApi, jsonError } from "@/lib/admin-api-auth";
-import { writeAuditLog, slugify } from "@/lib/admin";
+import { writeAuditLog, slugify, isSlugTaken } from "@/lib/admin";
 import { categorySchema } from "@/lib/admin-schemas";
 import {
   UMRAH_DEALS_ROOT_SLUG,
@@ -24,6 +24,7 @@ export async function GET(request: Request) {
   const parentId = searchParams.get("parentId");
   const root = searchParams.get("root");
   const rootsOnly = searchParams.get("rootsOnly") === "1";
+  const q = searchParams.get("q")?.trim();
   const page = parseAdminPage(searchParams);
   const pageSize = parseAdminPageSize(searchParams);
 
@@ -45,6 +46,14 @@ export async function GET(request: Request) {
     deletedAt: null,
     ...(rootsOnly ? { parentId: null } : {}),
     ...(resolvedParentId ? { parentId: resolvedParentId } : {}),
+    ...(q
+      ? {
+          OR: [
+            { name: { contains: q, mode: "insensitive" as const } },
+            { slug: { contains: q, mode: "insensitive" as const } },
+          ],
+        }
+      : {}),
   };
 
   const include = {
@@ -110,6 +119,9 @@ export async function POST(request: Request) {
     parsed.data.slug === UMRAH_DEALS_ROOT_SLUG
   ) {
     return jsonError("That slug is reserved for a root category.");
+  }
+  if (await isSlugTaken("category", parsed.data.slug)) {
+    return jsonError("Slug is already in use");
   }
 
   const category = await prisma.category.create({

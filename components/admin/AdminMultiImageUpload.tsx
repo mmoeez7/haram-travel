@@ -94,7 +94,7 @@ export function AdminMultiImageUpload({
     if (!fileList?.length) return;
     const next: PendingFile[] = [];
     for (const file of Array.from(fileList)) {
-      if (!isAllowedImageType(file.type)) {
+      if (!isAllowedImageType(file.type, file.name)) {
         onError?.("Only JPEG, PNG, WebP, or GIF images are allowed.");
         continue;
       }

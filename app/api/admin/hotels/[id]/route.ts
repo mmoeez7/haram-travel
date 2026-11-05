@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { requireAdminApi, jsonError } from "@/lib/admin-api-auth";
-import { writeAuditLog } from "@/lib/admin";
+import { writeAuditLog, isSlugTaken } from "@/lib/admin";
 import { csvToArray, hotelSchema } from "@/lib/admin-schemas";
 import { syncHotelImages } from "@/lib/hotel-images";
 
@@ -41,6 +41,9 @@ export async function PATCH(request: Request, { params }: Params) {
   });
   if (!parsed.success) {
     return jsonError(parsed.error.issues[0]?.message ?? "Invalid hotel");
+  }
+  if (await isSlugTaken("hotel", parsed.data.slug, id)) {
+    return jsonError("Slug is already in use");
   }
 
   const hotel = await prisma.$transaction(async (tx) => {

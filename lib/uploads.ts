@@ -1,7 +1,8 @@
 import sharp from "sharp";
 import {
-  ALLOWED_IMAGE_TYPES,
   MAX_IMAGE_BYTES,
+  isAllowedImageType,
+  resolveImageType,
 } from "@/lib/image-upload-limits";
 import { getStorageProvider, type StorageFolder } from "@/lib/storage";
 
@@ -9,7 +10,7 @@ export async function uploadImageFile(
   file: File,
   folder: StorageFolder
 ) {
-  if (!ALLOWED_IMAGE_TYPES.has(file.type)) {
+  if (!isAllowedImageType(file.type, file.name)) {
     throw new Error("Only JPEG, PNG, WebP, or GIF images are allowed.");
   }
   if (file.size > MAX_IMAGE_BYTES) {
@@ -17,9 +18,15 @@ export async function uploadImageFile(
   }
 
   const input = Buffer.from(await file.arrayBuffer());
+  const sourceType = resolveImageType(file.type, file.name);
+
   let webp: Buffer;
   try {
-    webp = await sharp(input)
+    webp = await sharp(input, {
+      // Keep animated WebP/GIF readable instead of rejecting them.
+      animated: sourceType === "image/webp" || sourceType === "image/gif",
+      failOn: "none",
+    })
       .rotate()
       .resize({
         width: 2400,
@@ -30,7 +37,12 @@ export async function uploadImageFile(
       .webp({ quality: 80 })
       .toBuffer();
   } catch {
-    throw new Error("Could not convert image to WebP. Please try another file.");
+    // Already-WebP files can fail re-encode on some builds — store the original.
+    if (sourceType === "image/webp") {
+      webp = input;
+    } else {
+      throw new Error("Could not convert image to WebP. Please try another file.");
+    }
   }
 
   const storage = getStorageProvider();

@@ -24,6 +24,9 @@ import {
   uploadAdminCover,
   type CoverUploadState,
 } from "@/components/admin/AdminCoverUpload";
+import { AdminSlugField } from "@/components/admin/AdminSlugField";
+import { SITE } from "@/lib/constants";
+import { categoryListingHref } from "@/lib/package-paths";
 
 type Category = {
   id: string;
@@ -52,6 +55,8 @@ export function CategoryFormClient({ category }: { category?: Category }) {
     previewUrl: category?.coverImageUrl ?? null,
     removed: false,
   });
+  const [name, setName] = useState(category?.name ?? "");
+  const [slug, setSlug] = useState(category?.slug ?? "");
 
   const isRoot =
     Boolean(category) &&
@@ -86,11 +91,11 @@ export function CategoryFormClient({ category }: { category?: Category }) {
     setError("");
 
     const data = new FormData(form);
-    const name = String(data.get("name") || "").trim();
+    const nextName = String(data.get("name") || name || "").trim();
     const description = String(data.get("description") || "");
     const parentId = String(data.get("parentId") || "");
 
-    if (name.length < 2) {
+    if (nextName.length < 2) {
       setError("Name must be at least 2 characters.");
       setSaving(null);
       return;
@@ -98,6 +103,12 @@ export function CategoryFormClient({ category }: { category?: Category }) {
 
     if (!isRoot && !parentId) {
       setError("Select a parent group.");
+      setSaving(null);
+      return;
+    }
+
+    if (!isRoot && !slug.trim()) {
+      setError("URL slug is required.");
       setSaving(null);
       return;
     }
@@ -114,12 +125,13 @@ export function CategoryFormClient({ category }: { category?: Category }) {
       }
 
       const payload = {
-        name,
+        name: nextName,
+        slug: isRoot ? category!.slug : slug.trim(),
         kind: category?.kind ?? "CUSTOM",
         parentId: isRoot ? null : parentId,
         description,
         coverImageUrl,
-        coverImageAlt: name,
+        coverImageAlt: nextName,
         sortOrder: category?.sortOrder ?? 0,
         published,
       };
@@ -192,10 +204,31 @@ export function CategoryFormClient({ category }: { category?: Category }) {
             <input
               name="name"
               required
-              defaultValue={category?.name}
+              value={name}
+              onChange={(event) => setName(event.target.value)}
               className={adminInputClass}
             />
           </label>
+
+          <AdminSlugField
+            value={slug}
+            source={name}
+            disabled={busy}
+            readOnly={isRoot}
+            initiallyLocked={Boolean(category)}
+            resetLabel="Reset from name"
+            previewPath={(value) => {
+              const path = value.replace(/^\/+/, "").replace(/\/+$/, "");
+              const href = categoryListingHref(path);
+              return `${SITE.url}${href.replace(/\/+$/, "")}/`;
+            }}
+            hint={
+              isRoot
+                ? "Root group slugs are fixed and cannot be changed."
+                : "Lowercase letters, numbers, hyphens, and / for path segments."
+            }
+            onChange={setSlug}
+          />
 
           <label className={adminLabelClass}>
             Description

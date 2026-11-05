@@ -11,12 +11,17 @@ import { CustomQuote } from "@/components/home/CustomQuote";
 import { Testimonials } from "@/components/home/Testimonials";
 
 type PageProps = {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ slug: string[] }>;
 };
+
+function pathFromParams(slug: string[]) {
+  return slug.map((part) => decodeURIComponent(part)).join("/");
+}
 
 export async function generateMetadata({ params }: PageProps) {
   const { slug } = await params;
-  const pkg = await getPackageDetailBySlug(slug);
+  const pathSlug = pathFromParams(slug);
+  const pkg = await getPackageDetailBySlug(pathSlug);
   if (!pkg) {
     return { title: "Package not found" };
   }
@@ -25,13 +30,14 @@ export async function generateMetadata({ params }: PageProps) {
     description:
       pkg.shortDescription?.trim() ||
       `${pkg.subtitle}. From £${pkg.priceFrom}pp with UK flights and walking-distance hotels.`,
-    path: packageHref(slug),
+    path: packageHref(pathSlug),
   });
 }
 
 export default async function PackageDetailPage({ params }: PageProps) {
   const { slug } = await params;
-  const pkg = await getPackageDetailBySlug(slug);
+  const pathSlug = pathFromParams(slug);
+  const pkg = await getPackageDetailBySlug(pathSlug);
   if (!pkg) notFound();
 
   return (

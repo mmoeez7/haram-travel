@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/db";
 import { requireAdminApi, jsonError } from "@/lib/admin-api-auth";
-import { writeAuditLog } from "@/lib/admin";
+import { writeAuditLog, isSlugTaken } from "@/lib/admin";
 import { linesToArray, packageSchema } from "@/lib/admin-schemas";
 import { assertAssignableUmrahCategory } from "@/lib/package-category";
 
@@ -48,6 +48,9 @@ export async function PATCH(request: Request, { params }: Params) {
   }
   if (parsed.data.makkahNights + parsed.data.madinahNights > parsed.data.nights) {
     return jsonError("Makkah + Madinah nights cannot exceed total nights.");
+  }
+  if (await isSlugTaken("package", parsed.data.slug, id)) {
+    return jsonError("Slug is already in use");
   }
 
   const categoryId =

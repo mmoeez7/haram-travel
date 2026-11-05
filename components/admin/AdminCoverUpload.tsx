@@ -79,7 +79,7 @@ export function AdminCoverUpload({
 
   function onCoverChange(nextFile: File | null) {
     if (!nextFile) return;
-    if (!isAllowedImageType(nextFile.type)) {
+    if (!isAllowedImageType(nextFile.type, nextFile.name)) {
       onError?.("Only JPEG, PNG, WebP, or GIF images are allowed.");
       return;
     }

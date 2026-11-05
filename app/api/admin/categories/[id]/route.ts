@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/db";
 import { requireAdminApi, jsonError } from "@/lib/admin-api-auth";
-import { writeAuditLog } from "@/lib/admin";
+import { writeAuditLog, isSlugTaken } from "@/lib/admin";
 import { categorySchema } from "@/lib/admin-schemas";
 import {
   UMRAH_DEALS_ROOT_SLUG,
@@ -79,6 +79,12 @@ export async function PATCH(request: Request, { params }: Params) {
       parsed.data.slug === UMRAH_DEALS_ROOT_SLUG)
   ) {
     return jsonError("That slug is reserved for a root category.");
+  }
+  if (
+    !isRoot &&
+    (await isSlugTaken("category", parsed.data.slug, id))
+  ) {
+    return jsonError("Slug is already in use");
   }
 
   const category = await prisma.category.update({

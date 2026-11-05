@@ -22,7 +22,7 @@ export function PackageSection({
     <section className="py-12 md:py-16">
       <div className="mx-auto max-w-7xl px-3 lg:px-4">
         <SectionHeading eyebrow={eyebrow} title={title} description={description} />
-        <CardRail>
+        <CardRail cols="md:grid-cols-2 xl:grid-cols-4">
           {packages.map((pkg) => (
             <PackageCard key={pkg.id} pkg={pkg} />
           ))}

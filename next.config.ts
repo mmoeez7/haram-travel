@@ -2,6 +2,8 @@ import type { NextConfig } from "next";
 import { wordpressUrlRedirects } from "./lib/package-paths";
 
 const nextConfig: NextConfig = {
+  // Match WordPress public URLs (e.g. /05-star-7-nights-umrah-package/)
+  trailingSlash: true,
   experimental: {
     serverActions: {
       bodySizeLimit: "6mb",

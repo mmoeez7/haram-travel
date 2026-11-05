@@ -14,6 +14,7 @@ export default function Page() {
       title="September Umrah Package"
       pathLabel="September"
       description="Handcrafted September Umrah itineraries for UK pilgrims — flights included and ATOL protected."
+      season="september"
     />
   );
 }

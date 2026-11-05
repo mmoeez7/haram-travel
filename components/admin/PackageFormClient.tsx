@@ -27,7 +27,8 @@ import {
   type CoverUploadState,
 } from "@/components/admin/AdminCoverUpload";
 import { AdminIncludesInput } from "@/components/admin/AdminIncludesInput";
-
+import { AdminSlugField } from "@/components/admin/AdminSlugField";
+import { SITE } from "@/lib/constants";
 type Category = {
   id: string;
   name: string;
@@ -75,6 +76,8 @@ export function PackageFormClient({ packageId }: { packageId?: string }) {
   const [umrahGroup, setUmrahGroup] = useState<UmrahRootSlug>(UMRAH_PACKAGES_ROOT_SLUG);
   const [categoryId, setCategoryId] = useState("");
   const [includes, setIncludes] = useState<string[]>([]);
+  const [title, setTitle] = useState("");
+  const [slug, setSlug] = useState("");
   const [cover, setCover] = useState<CoverUploadState>({
     file: null,
     previewUrl: null,
@@ -97,6 +100,8 @@ export function PackageFormClient({ packageId }: { packageId?: string }) {
           setPkg(detail.package);
           setJourneyType(detail.package.journeyType);
           setIncludes(detail.package.features ?? []);
+          setTitle(detail.package.title);
+          setSlug(detail.package.slug);
           setCover({
             file: null,
             previewUrl: detail.package.coverImageUrl,
@@ -166,10 +171,16 @@ export function PackageFormClient({ packageId }: { packageId?: string }) {
         }
       }
 
-      const title = String(data.get("title") || "");
+      const nextTitle = String(data.get("title") || title || "");
+      if (!slug.trim()) {
+        setError("URL slug is required.");
+        setSaving(null);
+        return;
+      }
       const payload = {
-        title,
+        title: nextTitle,
         subtitle: String(data.get("subtitle") || ""),
+        slug: slug.trim(),
         journeyType,
         stars: Number(data.get("stars") || 3),
         nights: Number(data.get("nights") || 7),
@@ -183,7 +194,7 @@ export function PackageFormClient({ packageId }: { packageId?: string }) {
         shortDescription: String(data.get("shortDescription") || ""),
         description: String(data.get("description") || ""),
         coverImageUrl,
-        coverImageAlt: String(data.get("coverImageAlt") || title),
+        coverImageAlt: String(data.get("coverImageAlt") || nextTitle),
         featured: data.get("featured") === "on",
         published,
         sortOrder: Number(data.get("sortOrder") || 0),
@@ -239,7 +250,13 @@ export function PackageFormClient({ packageId }: { packageId?: string }) {
           >
             <label className={adminLabelClass}>
               Title
-              <input name="title" required defaultValue={pkg?.title} className={adminInputClass} />
+              <input
+                name="title"
+                required
+                value={title}
+                onChange={(event) => setTitle(event.target.value)}
+                className={adminInputClass}
+              />
             </label>
             <label className={adminLabelClass}>
               Subtitle
@@ -250,6 +267,20 @@ export function PackageFormClient({ packageId }: { packageId?: string }) {
                 className={adminInputClass}
               />
             </label>
+            <div className="md:col-span-2">
+              <AdminSlugField
+                value={slug}
+                source={title}
+                disabled={busy}
+                initiallyLocked={Boolean(packageId)}
+                previewPath={(value) => {
+                  // Keep every "/" from the slug; always show WP-style trailing "/"
+                  const path = value.replace(/^\/+/, "").replace(/\/+$/, "");
+                  return path ? `${SITE.url}/${path}/` : `${SITE.url}/`;
+                }}
+                onChange={setSlug}
+              />
+            </div>
             <label className={adminLabelClass}>
               Journey type
               <select

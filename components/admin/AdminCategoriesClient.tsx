@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Copy, Pencil, Trash2 } from "lucide-react";
+import { Copy, Pencil, Search, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { adminFetch } from "@/lib/admin-fetch";
 import {
@@ -24,10 +24,14 @@ import {
   adminSelectClass,
   adminStatusDraftClass,
   adminStatusPublishedClass,
+  adminTitleLinkClass,
 } from "@/components/admin/admin-ui";
 import { AdminLoadingLink } from "@/components/admin/AdminLoadingLink";
 import { AdminAsyncButton } from "@/components/admin/AdminAsyncButton";
 import { AdminPagination } from "@/components/admin/AdminPagination";
+
+const filterControlClass =
+  "h-10 w-full rounded-xl border border-border bg-white px-3.5 text-sm text-ink outline-none ring-gold transition focus:ring-2";
 
 type Category = {
   id: string;
@@ -54,6 +58,7 @@ export function AdminCategoriesClient() {
   const [groupFilter, setGroupFilter] = useState<UmrahRootSlug>(
     UMRAH_PACKAGES_ROOT_SLUG
   );
+  const [q, setQ] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
 
@@ -72,13 +77,18 @@ export function AdminCategoriesClient() {
     );
   }
 
-  async function loadChildren(nextRoot = groupFilter, nextPage = page) {
+  async function loadChildren(
+    nextRoot = groupFilter,
+    nextPage = page,
+    nextQ = q
+  ) {
     setLoading(true);
     try {
       const params = new URLSearchParams();
       params.set("root", nextRoot);
       params.set("page", String(nextPage));
       params.set("limit", String(ADMIN_PAGE_SIZE));
+      if (nextQ.trim()) params.set("q", nextQ.trim());
       const data = await adminFetch<{
         categories: Category[];
         pagination: AdminPaginationMeta;
@@ -98,7 +108,7 @@ export function AdminCategoriesClient() {
     async function boot() {
       try {
         await loadRoots();
-        await loadChildren(UMRAH_PACKAGES_ROOT_SLUG, 1);
+        await loadChildren(UMRAH_PACKAGES_ROOT_SLUG, 1, "");
       } catch (err) {
         setError(err instanceof Error ? err.message : "Failed to load");
         setLoading(false);
@@ -115,7 +125,7 @@ export function AdminCategoriesClient() {
       const nextPage =
         children.length === 1 && page > 1 ? page - 1 : page;
       setPage(nextPage);
-      await loadChildren(groupFilter, nextPage);
+      await loadChildren(groupFilter, nextPage, q);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Delete failed");
     }
@@ -127,7 +137,7 @@ export function AdminCategoriesClient() {
         method: "POST",
       });
       setPage(1);
-      await loadChildren(groupFilter, 1);
+      await loadChildren(groupFilter, 1, q);
       setError("");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Duplicate failed");
@@ -147,27 +157,47 @@ export function AdminCategoriesClient() {
         </p>
       ) : null}
 
-      <div className="admin-enter admin-enter-delay-1 mb-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <label className="flex min-w-[220px] max-w-xs flex-1 flex-col gap-1 text-xs font-semibold uppercase tracking-wide text-muted">
-          Group
-          <select
-            value={groupFilter}
-            onChange={(event) => {
-              const next = event.target.value as UmrahRootSlug;
-              setGroupFilter(next);
-              setPage(1);
-              void loadChildren(next, 1);
-            }}
-            className={adminSelectClass}
-          >
-            <option value={UMRAH_PACKAGES_ROOT_SLUG}>Umrah Packages</option>
-            <option value={UMRAH_DEALS_ROOT_SLUG}>Umrah Deals</option>
-          </select>
+      <form
+        className="admin-enter admin-enter-delay-1 mb-3 flex flex-wrap items-center gap-2"
+        onSubmit={(event) => {
+          event.preventDefault();
+          setPage(1);
+          void loadChildren(groupFilter, 1, q);
+        }}
+      >
+        <label className="relative block min-w-[220px] max-w-xs flex-1">
+          <Search
+            className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted"
+            aria-hidden
+          />
+          <input
+            value={q}
+            onChange={(event) => setQ(event.target.value)}
+            placeholder="Search categories"
+            className={`${filterControlClass} pl-9`}
+            aria-label="Search categories"
+          />
         </label>
-        <AdminLoadingLink href="/admin/categories/new" pendingLabel="Opening…">
-          Add category
-        </AdminLoadingLink>
-      </div>
+        <select
+          value={groupFilter}
+          onChange={(event) => {
+            const next = event.target.value as UmrahRootSlug;
+            setGroupFilter(next);
+            setPage(1);
+            void loadChildren(next, 1, q);
+          }}
+          className={`${adminSelectClass} max-w-[220px]`}
+          aria-label="Filter by group"
+        >
+          <option value={UMRAH_PACKAGES_ROOT_SLUG}>Umrah Packages</option>
+          <option value={UMRAH_DEALS_ROOT_SLUG}>Umrah Deals</option>
+        </select>
+        <div className="ml-auto">
+          <AdminLoadingLink href="/admin/categories/new" pendingLabel="Opening…">
+            Add category
+          </AdminLoadingLink>
+        </div>
+      </form>
 
       <AdminCard className="admin-enter admin-enter-delay-2">
         {loading ? (
@@ -179,7 +209,12 @@ export function AdminCategoriesClient() {
             <div className="mb-3 flex flex-wrap items-center justify-between gap-2 border-b border-border pb-2">
               <div>
                 <h2 className="text-sm font-semibold text-charcoal">
-                  {activeRoot.name}
+                  <Link
+                    href={`/admin/categories/${activeRoot.id}/view`}
+                    className={adminTitleLinkClass}
+                  >
+                    {activeRoot.name}
+                  </Link>
                 </h2>
                 <p className="text-xs text-muted">
                   Root group · {activeRoot.slug}
@@ -212,8 +247,13 @@ export function AdminCategoriesClient() {
                     <tbody>
                       {children.map((category) => (
                         <tr key={category.id} className="border-b border-border/60">
-                          <td className="px-2 py-3 font-medium text-charcoal">
-                            {category.name}
+                          <td className="px-2 py-3">
+                            <Link
+                              href={`/admin/categories/${category.id}/view`}
+                              className={adminTitleLinkClass}
+                            >
+                              {category.name}
+                            </Link>
                           </td>
                           <td className="px-2 py-3 text-muted">{category.slug}</td>
                           <td className="px-2 py-3">
@@ -269,7 +309,7 @@ export function AdminCategoriesClient() {
                   disabled={loading}
                   onPageChange={(nextPage) => {
                     setPage(nextPage);
-                    void loadChildren(groupFilter, nextPage);
+                    void loadChildren(groupFilter, nextPage, q);
                   }}
                 />
               </>

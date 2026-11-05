@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { requireAdminApi, jsonError } from "@/lib/admin-api-auth";
-import { writeAuditLog, slugify } from "@/lib/admin";
+import { writeAuditLog, slugify, isSlugTaken } from "@/lib/admin";
 import { csvToArray, hotelSchema } from "@/lib/admin-schemas";
 import { syncHotelImages } from "@/lib/hotel-images";
 
@@ -14,7 +14,7 @@ export async function GET() {
     include: {
       images: { orderBy: { sortOrder: "asc" }, select: { id: true, url: true } },
     },
-    orderBy: [{ city: "asc" }, { sortOrder: "asc" }, { name: "asc" }],
+    orderBy: [{ stars: "asc" }, { city: "asc" }, { sortOrder: "asc" }, { name: "asc" }],
   });
   return NextResponse.json({ hotels });
 }
@@ -34,6 +34,9 @@ export async function POST(request: Request) {
   });
   if (!parsed.success) {
     return jsonError(parsed.error.issues[0]?.message ?? "Invalid hotel");
+  }
+  if (await isSlugTaken("hotel", parsed.data.slug)) {
+    return jsonError("Slug is already in use");
   }
 
   const hotel = await prisma.$transaction(async (tx) => {

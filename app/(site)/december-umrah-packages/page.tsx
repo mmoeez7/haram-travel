@@ -2,7 +2,7 @@ import { createMetadata } from "@/lib/seo";
 import { getSeasonalPackages } from "@/lib/packages";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { CategoryFilters } from "@/components/packages/CategoryFilters";
-import { PackageSection } from "@/components/packages/PackageSection";
+import { StarGroupedPackages } from "@/components/packages/StarGroupedPackages";
 import { CustomQuote } from "@/components/home/CustomQuote";
 
 export const metadata = createMetadata({
@@ -37,11 +37,7 @@ export default async function DecemberUmrahPackagesPage() {
           </div>
         </div>
       </section>
-      <PackageSection
-        title="December Special Offers"
-        description="Budget to elite options for winter Umrah departures from major UK airports."
-        packages={packages}
-      />
+      <StarGroupedPackages packages={packages} eyebrow="Umrah Deals" />
       <CustomQuote />
     </>
   );

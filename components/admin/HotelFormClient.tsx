@@ -20,6 +20,7 @@ import {
   type ExistingHotelImage,
   type MultiImageUploadHandle,
 } from "@/components/admin/AdminMultiImageUpload";
+import { AdminSlugField } from "@/components/admin/AdminSlugField";
 
 type Hotel = {
   id: string;
@@ -53,6 +54,8 @@ export function HotelFormClient({ hotel }: { hotel?: Hotel }) {
   const imagesRef = useRef<MultiImageUploadHandle | null>(null);
   const [error, setError] = useState("");
   const [saving, setSaving] = useState<"draft" | "publish" | null>(null);
+  const [name, setName] = useState(hotel?.name ?? "");
+  const [slug, setSlug] = useState(hotel?.slug ?? "");
 
   async function save(published: boolean) {
     const form = formRef.current;
@@ -65,9 +68,15 @@ export function HotelFormClient({ hotel }: { hotel?: Hotel }) {
 
     try {
       const imageUrls = (await imagesRef.current?.collectUrls()) ?? [];
-      const name = String(data.get("name") || "");
+      const nextName = String(data.get("name") || name || "");
+      if (!slug.trim()) {
+        setError("URL slug is required.");
+        setSaving(null);
+        return;
+      }
       const payload = {
-        name,
+        name: nextName,
+        slug: slug.trim(),
         city: String(data.get("city") || "MAKKAH"),
         stars: Number(data.get("stars") || 4),
         walkingMinutes: data.get("walkingMinutes") || undefined,
@@ -120,7 +129,13 @@ export function HotelFormClient({ hotel }: { hotel?: Hotel }) {
         >
           <label className={adminLabelClass}>
             Name
-            <input name="name" required defaultValue={hotel?.name} className={adminInputClass} />
+            <input
+              name="name"
+              required
+              value={name}
+              onChange={(event) => setName(event.target.value)}
+              className={adminInputClass}
+            />
           </label>
           <label className={adminLabelClass}>
             City
@@ -129,6 +144,18 @@ export function HotelFormClient({ hotel }: { hotel?: Hotel }) {
               <option value="MADINAH">Madinah</option>
             </select>
           </label>
+          <div className="sm:col-span-2 xl:col-span-3">
+            <AdminSlugField
+              value={slug}
+              source={name}
+              disabled={busy}
+              initiallyLocked={Boolean(hotel)}
+              resetLabel="Reset from name"
+              previewPath={(value) => `URL slug: ${value}`}
+              hint="Lowercase letters, numbers, hyphens, and / for path segments."
+              onChange={setSlug}
+            />
+          </div>
           <label className={adminLabelClass}>
             Stars
             <input

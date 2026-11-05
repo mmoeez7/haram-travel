@@ -1,6 +1,7 @@
 import { PrismaClient, type JourneyType, type SeasonType } from "@prisma/client";
 import bcrypt from "bcryptjs";
 import { hajjPackages, umrahPackages } from "../lib/packages-seed-data";
+import { pickPackageCover } from "../lib/package-cover-images";
 import { legacyPackageSlug } from "../lib/package-paths";
 
 const prisma = new PrismaClient();
@@ -328,6 +329,10 @@ async function main() {
       }
     }
 
+    const cover = pkg.image
+      ? { url: pkg.image, alt: pkg.title }
+      : pickPackageCover(slug);
+
     const created = await prisma.package.upsert({
       where: { slug },
       update: {
@@ -343,8 +348,8 @@ async function main() {
         badge: pkg.badge,
         season,
         features: pkg.features,
-        coverImageUrl: pkg.image || null,
-        coverImageAlt: pkg.image ? pkg.title : null,
+        coverImageUrl: cover.url,
+        coverImageAlt: cover.alt,
         published: true,
         featured: pkg.stars === 5 && season === "ALL",
         sortOrder: index,
@@ -366,14 +371,27 @@ async function main() {
         badge: pkg.badge,
         season,
         features: pkg.features,
-        coverImageUrl: pkg.image || null,
-        coverImageAlt: pkg.image ? pkg.title : null,
+        coverImageUrl: cover.url,
+        coverImageAlt: cover.alt,
         published: true,
         featured: pkg.stars === 5 && season === "ALL",
         sortOrder: index,
         publishedAt: new Date(),
         createdById: admin.id,
         updatedById: admin.id,
+      },
+    });
+
+    await prisma.packageImage.deleteMany({
+      where: { packageId: created.id, isCover: true },
+    });
+    await prisma.packageImage.create({
+      data: {
+        packageId: created.id,
+        url: cover.url,
+        alt: cover.alt,
+        isCover: true,
+        sortOrder: 0,
       },
     });
 

@@ -2,7 +2,7 @@ import { createMetadata } from "@/lib/seo";
 import { getSeasonalPackages } from "@/lib/packages";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { CategoryFilters } from "@/components/packages/CategoryFilters";
-import { PackageSection } from "@/components/packages/PackageSection";
+import { StarGroupedPackages } from "@/components/packages/StarGroupedPackages";
 import { CustomQuote } from "@/components/home/CustomQuote";
 
 export const metadata = createMetadata({
@@ -37,11 +37,7 @@ export default async function RamadanUmrahPackagesPage() {
           </div>
         </div>
       </section>
-      <PackageSection
-        title="Ramadan Sacred Stays"
-        description="Premium itineraries focused on worship in Makkah during the blessed month."
-        packages={packages}
-      />
+      <StarGroupedPackages packages={packages} eyebrow="Umrah Deals" />
       <CustomQuote />
     </>
   );
