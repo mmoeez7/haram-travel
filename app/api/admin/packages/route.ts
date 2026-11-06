@@ -43,9 +43,25 @@ export async function GET(request: Request) {
       : {}),
   };
 
+  const packageListInclude = {
+    categories: {
+      include: {
+        category: {
+          select: {
+            id: true,
+            name: true,
+            slug: true,
+            parent: { select: { id: true, name: true, slug: true } },
+          },
+        },
+      },
+    },
+  } as const;
+
   if (page === null) {
     const packages = await prisma.package.findMany({
       where,
+      include: packageListInclude,
       orderBy: [{ sortOrder: "asc" }, { updatedAt: "desc" }],
     });
     return NextResponse.json({ packages });
@@ -55,6 +71,7 @@ export async function GET(request: Request) {
   const pagination = buildPaginationMeta(total, page, pageSize);
   const packages = await prisma.package.findMany({
     where,
+    include: packageListInclude,
     orderBy: [{ sortOrder: "asc" }, { updatedAt: "desc" }],
     skip: (pagination.page - 1) * pagination.pageSize,
     take: pagination.pageSize,

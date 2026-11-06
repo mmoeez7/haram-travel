@@ -38,7 +38,23 @@ type PackageRow = {
   stars: number;
   priceFrom: string | number;
   published: boolean;
+  categories?: Array<{
+    category: {
+      id: string;
+      name: string;
+      slug: string;
+      parent: { id: string; name: string; slug: string } | null;
+    };
+  }>;
 };
+
+function packageCategoryLabel(pkg: PackageRow) {
+  const linked = pkg.categories?.[0]?.category;
+  if (!linked) return "—";
+  return linked.parent?.name
+    ? `${linked.parent.name} › ${linked.name}`
+    : linked.name;
+}
 
 const emptyMeta: AdminPaginationMeta = {
   page: 1,
@@ -163,7 +179,7 @@ export function AdminPackagesClient() {
 
       <AdminCard className="admin-enter admin-enter-delay-2">
         {loading ? (
-          <AdminTableSkeleton rows={7} cols={6} />
+          <AdminTableSkeleton rows={7} cols={7} />
         ) : (
           <>
             <div className="overflow-x-auto">
@@ -171,6 +187,7 @@ export function AdminPackagesClient() {
                 <thead className="border-b border-border text-[10px] uppercase tracking-wide text-muted">
                   <tr>
                     <th className="px-2 py-2">Subtitle</th>
+                    <th className="px-2 py-2">Category</th>
                     <th className="px-2 py-2">Type</th>
                     <th className="px-2 py-2">Stars</th>
                     <th className="px-2 py-2">Price</th>
@@ -188,6 +205,9 @@ export function AdminPackagesClient() {
                         >
                           {pkg.subtitle}
                         </Link>
+                      </td>
+                      <td className="px-2 py-3 text-muted">
+                        {packageCategoryLabel(pkg)}
                       </td>
                       <td className="px-2 py-3">{pkg.journeyType}</td>
                       <td className="px-2 py-3">{pkg.stars}★</td>
