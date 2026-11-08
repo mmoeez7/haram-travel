@@ -16,7 +16,7 @@ export function ContactHero() {
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,253,248,0.9)_0%,rgba(253,251,247,0.55)_45%,rgba(250,246,239,0.2)_100%)]" />
       </div>
 
-      <div className="relative z-10 mx-auto max-w-4xl px-3 text-center lg:px-4">
+      <div className="relative z-10 mx-auto max-w-4xl px-5 text-center sm:px-6 lg:px-8">
         <nav aria-label="Breadcrumb" className="mb-5 text-sm">
           <ol className="flex flex-wrap items-center justify-center gap-2">
             <li>

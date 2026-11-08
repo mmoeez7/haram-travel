@@ -1,5 +1,6 @@
 "use client";
 
+import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -68,7 +69,6 @@ export function PackageFormClient({ packageId }: { packageId?: string }) {
   const [categories, setCategories] = useState<Category[]>([]);
   const [hotels, setHotels] = useState<Hotel[]>([]);
   const [pkg, setPkg] = useState<PackageDetail | null>(null);
-  const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState<"draft" | "publish" | null>(null);
   const [uploadingCover, setUploadingCover] = useState(false);
@@ -120,7 +120,7 @@ export function PackageFormClient({ packageId }: { packageId?: string }) {
           }
         }
       } catch (err) {
-        setError(err instanceof Error ? err.message : "Failed to load form");
+        toast.error(err instanceof Error ? err.message : "Failed to load form");
       } finally {
         setLoading(false);
       }
@@ -152,12 +152,11 @@ export function PackageFormClient({ packageId }: { packageId?: string }) {
     if (!form.reportValidity()) return;
 
     if (journeyType === "UMRAH" && !categoryId) {
-      setError("Select a category for this Umrah package.");
+      toast.error("Select a category for this Umrah package.");
       return;
     }
 
     setSaving(published ? "publish" : "draft");
-    setError("");
     const data = new FormData(form);
 
     try {
@@ -173,7 +172,7 @@ export function PackageFormClient({ packageId }: { packageId?: string }) {
 
       const nextTitle = String(data.get("title") || title || "");
       if (!slug.trim()) {
-        setError("URL slug is required.");
+        toast.error("URL slug is required.");
         setSaving(null);
         return;
       }
@@ -214,10 +213,11 @@ export function PackageFormClient({ packageId }: { packageId?: string }) {
           body: JSON.stringify(payload),
         });
       }
+      toast.success(published ? "Package published" : "Package saved as draft");
       router.push("/admin/packages");
       router.refresh();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Save failed");
+      toast.error(err instanceof Error ? err.message : "Save failed");
       setSaving(null);
     }
   }
@@ -237,11 +237,6 @@ export function PackageFormClient({ packageId }: { packageId?: string }) {
       />
       <AdminCard>
         {loading ? <AdminFormSkeleton fields={8} /> : null}
-        {error ? (
-          <p className="mb-4 rounded-xl border border-call-border/30 bg-call px-3 py-2 text-sm text-call-border">
-            {error}
-          </p>
-        ) : null}
         {!loading ? (
           <form
             ref={formRef}
@@ -517,7 +512,7 @@ export function PackageFormClient({ packageId }: { packageId?: string }) {
               disabled={busy}
               uploading={uploadingCover}
               onChange={setCover}
-              onError={setError}
+              onError={(msg) => toast.error(msg)}
             />
             <label className={`${adminLabelClass} md:col-span-2`}>
               Cover alt text

@@ -29,7 +29,7 @@ export default function HotelWalkingGuidePage() {
   return (
     <>
       <section className="bg-cream py-12 md:py-16">
-        <div className="mx-auto max-w-7xl px-3 lg:px-4">
+        <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
           <Breadcrumbs
             items={[{ label: "Home", href: "/" }, { label: "Hotel Walking Guide" }]}
           />

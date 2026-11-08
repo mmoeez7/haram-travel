@@ -23,6 +23,14 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "img.youtube.com",
       },
+      {
+        protocol: "https",
+        hostname: "haramtravel.uk",
+      },
+      {
+        protocol: "https",
+        hostname: "www.haramtravel.uk",
+      },
     ],
   },
   async redirects() {

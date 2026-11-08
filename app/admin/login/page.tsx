@@ -4,6 +4,7 @@ import { AuthError } from "next-auth";
 import { auth, signIn } from "@/auth";
 import { LoginSubmitButton } from "@/components/admin/LoginSubmitButton";
 import { AdminPasswordInput } from "@/components/admin/AdminPasswordInput";
+import { AdminLoginErrorToast } from "@/components/admin/AdminLoginErrorToast";
 
 export default async function AdminLoginPage({
   searchParams,
@@ -94,11 +95,7 @@ export default async function AdminLoginPage({
             </p>
           </div>
 
-          {params.error ? (
-            <p className="mt-5 rounded-xl border border-call-border/30 bg-call px-3 py-2 text-center text-sm text-call-border">
-              Invalid email or password.
-            </p>
-          ) : null}
+          <AdminLoginErrorToast show={Boolean(params.error)} />
 
           <form action={loginAction} className="mt-8 space-y-4">
             <input

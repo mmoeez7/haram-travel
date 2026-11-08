@@ -1,5 +1,6 @@
 "use client";
 
+import toast from "react-hot-toast";
 import Link from "next/link";
 import { Copy, Pencil, Search, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -59,7 +60,6 @@ export function AdminCategoriesClient() {
     UMRAH_PACKAGES_ROOT_SLUG
   );
   const [q, setQ] = useState("");
-  const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
 
   const activeRoot =
@@ -96,9 +96,8 @@ export function AdminCategoriesClient() {
       setChildren(data.categories);
       setPagination(data.pagination ?? emptyMeta);
       setPage(data.pagination?.page ?? nextPage);
-      setError("");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to load");
+      toast.error(err instanceof Error ? err.message : "Failed to load");
     } finally {
       setLoading(false);
     }
@@ -110,7 +109,7 @@ export function AdminCategoriesClient() {
         await loadRoots();
         await loadChildren(UMRAH_PACKAGES_ROOT_SLUG, 1, "");
       } catch (err) {
-        setError(err instanceof Error ? err.message : "Failed to load");
+        toast.error(err instanceof Error ? err.message : "Failed to load");
         setLoading(false);
       }
     }
@@ -122,12 +121,13 @@ export function AdminCategoriesClient() {
     if (!confirm("Delete this category?")) return;
     try {
       await adminFetch(`/api/admin/categories/${id}`, { method: "DELETE" });
+      toast.success("Category deleted");
       const nextPage =
         children.length === 1 && page > 1 ? page - 1 : page;
       setPage(nextPage);
       await loadChildren(groupFilter, nextPage, q);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Delete failed");
+      toast.error(err instanceof Error ? err.message : "Delete failed");
     }
   }
 
@@ -136,11 +136,11 @@ export function AdminCategoriesClient() {
       await adminFetch(`/api/admin/categories/${id}/duplicate`, {
         method: "POST",
       });
+      toast.success("Category duplicated");
       setPage(1);
       await loadChildren(groupFilter, 1, q);
-      setError("");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Duplicate failed");
+      toast.error(err instanceof Error ? err.message : "Duplicate failed");
     }
   }
 
@@ -150,12 +150,6 @@ export function AdminCategoriesClient() {
         title="Categories"
         description="Subcategories under Umrah Packages and Umrah Deals."
       />
-
-      {error ? (
-        <p className="mb-4 rounded-xl border border-call-border/30 bg-call px-3 py-2 text-sm text-call-border">
-          {error}
-        </p>
-      ) : null}
 
       <form
         className="admin-enter admin-enter-delay-1 mb-3 flex flex-wrap items-center gap-2"

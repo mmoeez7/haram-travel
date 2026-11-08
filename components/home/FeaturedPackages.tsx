@@ -48,7 +48,7 @@ export function FeaturedPackages({
 
   return (
     <section id="packages" className="bg-cream py-12 md:py-20">
-      <div className="mx-auto max-w-7xl px-3 lg:px-4">
+      <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
         <SectionHeading
           eyebrow="Handcrafted Itineraries"
           title="Featured Umrah Packages 2026/27"

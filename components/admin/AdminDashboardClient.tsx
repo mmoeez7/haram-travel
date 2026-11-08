@@ -1,5 +1,6 @@
 "use client";
 
+import toast from "react-hot-toast";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { adminFetch } from "@/lib/admin-fetch";
@@ -20,12 +21,11 @@ type DashboardStats = {
 
 export function AdminDashboardClient() {
   const [stats, setStats] = useState<DashboardStats | null>(null);
-  const [error, setError] = useState("");
 
   useEffect(() => {
     adminFetch<DashboardStats>("/api/admin/dashboard")
       .then(setStats)
-      .catch((err) => setError(err.message));
+      .catch((err) => toast.error(err.message));
   }, []);
 
   const featureLinks = [
@@ -58,42 +58,36 @@ export function AdminDashboardClient() {
         }
       />
 
-      {error ? (
-        <p className="admin-enter admin-enter-delay-1 rounded-xl border border-call-border/30 bg-call px-3 py-2 text-sm text-call-border">
-          {error}
-        </p>
-      ) : null}
-
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
         <AdminStatCard
           className="admin-enter admin-enter-delay-1"
           label="Packages"
           value={stats?.packages ?? "—"}
-          loading={!stats && !error}
+          loading={!stats}
         />
         <AdminStatCard
           className="admin-enter admin-enter-delay-2"
           label="Published"
           value={stats?.published ?? "—"}
-          loading={!stats && !error}
+          loading={!stats}
         />
         <AdminStatCard
           className="admin-enter admin-enter-delay-3"
           label="Drafts"
           value={stats?.drafts ?? "—"}
-          loading={!stats && !error}
+          loading={!stats}
         />
         <AdminStatCard
           className="admin-enter admin-enter-delay-4"
           label="Hotels"
           value={stats?.hotels ?? "—"}
-          loading={!stats && !error}
+          loading={!stats}
         />
         <AdminStatCard
           className="admin-enter admin-enter-delay-5"
           label="Categories"
           value={stats?.categories ?? "—"}
-          loading={!stats && !error}
+          loading={!stats}
         />
       </div>
 

@@ -7,7 +7,7 @@ import { Logo } from "@/components/layout/Logo";
 export function Footer() {
   return (
     <footer className="border-t border-border bg-[#faf6ef]">
-      <div className="mx-auto grid max-w-7xl gap-10 px-3 py-14 md:grid-cols-2 lg:grid-cols-4 lg:px-4">
+      <div className="mx-auto grid max-w-7xl gap-10 px-5 py-14 sm:px-6 md:grid-cols-2 lg:grid-cols-4 lg:px-8">
         <div>
           <div className="mb-4">
             <Logo />
@@ -92,7 +92,7 @@ export function Footer() {
       </div>
 
       <div className="border-t border-border">
-        <div className="mx-auto flex max-w-7xl flex-col gap-4 px-3 py-6 lg:flex-row lg:items-start lg:justify-between lg:px-4">
+        <div className="mx-auto flex max-w-7xl flex-col gap-4 px-5 py-6 sm:px-6 lg:flex-row lg:items-start lg:justify-between lg:px-8">
           <div className="max-w-3xl space-y-2 text-xs leading-relaxed text-muted">
             <p>
               © {new Date().getFullYear()} Haram Travel Ltd. All Rights Reserved. Company Registered

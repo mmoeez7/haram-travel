@@ -1,5 +1,6 @@
 "use client";
 
+import toast from "react-hot-toast";
 import Link from "next/link";
 import { Copy, Pencil, Search, Trash2 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
@@ -39,7 +40,6 @@ export function AdminHotelsClient() {
   const [hotels, setHotels] = useState<Hotel[]>([]);
   const [q, setQ] = useState("");
   const [cityFilter, setCityFilter] = useState<CityFilter>("");
-  const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
 
   async function load() {
@@ -47,9 +47,8 @@ export function AdminHotelsClient() {
     try {
       const data = await adminFetch<{ hotels: Hotel[] }>("/api/admin/hotels");
       setHotels(data.hotels);
-      setError("");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to load");
+      toast.error(err instanceof Error ? err.message : "Failed to load");
     } finally {
       setLoading(false);
     }
@@ -71,16 +70,17 @@ export function AdminHotelsClient() {
   async function remove(id: string) {
     if (!confirm("Delete this hotel?")) return;
     await adminFetch(`/api/admin/hotels/${id}`, { method: "DELETE" });
+    toast.success("Hotel deleted");
     await load();
   }
 
   async function duplicate(id: string) {
     try {
       await adminFetch(`/api/admin/hotels/${id}/duplicate`, { method: "POST" });
+      toast.success("Hotel duplicated");
       await load();
-      setError("");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Duplicate failed");
+      toast.error(err instanceof Error ? err.message : "Duplicate failed");
     }
   }
 
@@ -90,11 +90,6 @@ export function AdminHotelsClient() {
         title="Hotels"
         description="Makkah and Madinah properties linked to packages."
       />
-      {error ? (
-        <p className="mb-4 rounded-xl border border-call-border/30 bg-call px-3 py-2 text-sm text-call-border">
-          {error}
-        </p>
-      ) : null}
       <div className="admin-enter admin-enter-delay-1 mb-3 flex flex-wrap items-center gap-2">
         <label className="relative block min-w-[220px] max-w-xs flex-1">
           <Search

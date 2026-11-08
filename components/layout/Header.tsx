@@ -74,7 +74,7 @@ export function Header({ navItems }: { navItems: NavItem[] }) {
 
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-cream/95 backdrop-blur-sm transition-shadow duration-300 supports-[backdrop-filter]:bg-cream/90">
-      <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-3 py-3 lg:px-4">
+      <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-3 sm:px-6 lg:px-8">
         <Logo priority />
 
         <nav className="hidden items-center gap-5 xl:flex">
@@ -110,7 +110,7 @@ export function Header({ navItems }: { navItems: NavItem[] }) {
       </div>
 
       {open ? (
-        <div className="border-t border-border bg-cream px-3 py-4 xl:hidden">
+        <div className="border-t border-border bg-cream px-5 py-4 sm:px-6 xl:hidden">
           <nav className="flex flex-col">
             {navItems.map((item) => {
               const hasChildren = Boolean(item.children?.length);

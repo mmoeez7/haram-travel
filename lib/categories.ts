@@ -13,6 +13,7 @@ export type PublicCategory = {
   name: string;
   slug: string;
   description: string | null;
+  seoContent: string | null;
   coverImageUrl: string | null;
   coverImageAlt: string | null;
   parent: { id: string; name: string; slug: string };
@@ -73,10 +74,23 @@ export async function getCategoryBySlug(slug: string): Promise<PublicCategory | 
     name: category.name,
     slug: category.slug,
     description: category.description,
+    seoContent: category.seoContent,
     coverImageUrl: category.coverImageUrl,
     coverImageAlt: category.coverImageAlt,
     parent: category.parent,
   };
+}
+
+export async function getCategorySeoContent(slug: string): Promise<string | null> {
+  noStore();
+
+  const category = await prisma.category.findFirst({
+    where: { slug, deletedAt: null, published: true },
+    select: { seoContent: true },
+  });
+
+  const content = category?.seoContent?.trim();
+  return content || null;
 }
 
 export async function getPackagesByCategorySlug(slug: string): Promise<PackageItem[]> {

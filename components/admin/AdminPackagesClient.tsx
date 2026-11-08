@@ -1,5 +1,6 @@
 "use client";
 
+import toast from "react-hot-toast";
 import Link from "next/link";
 import { Copy, Pencil, Search, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -69,7 +70,6 @@ export function AdminPackagesClient() {
   const [page, setPage] = useState(1);
   const [q, setQ] = useState("");
   const [status, setStatus] = useState("");
-  const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
 
   async function load(nextQ = q, nextStatus = status, nextPage = page) {
@@ -87,9 +87,8 @@ export function AdminPackagesClient() {
       setPackages(data.packages);
       setPagination(data.pagination ?? emptyMeta);
       setPage(data.pagination?.page ?? nextPage);
-      setError("");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to load");
+      toast.error(err instanceof Error ? err.message : "Failed to load");
     } finally {
       setLoading(false);
     }
@@ -103,6 +102,7 @@ export function AdminPackagesClient() {
   async function remove(id: string) {
     if (!confirm("Delete this package?")) return;
     await adminFetch(`/api/admin/packages/${id}`, { method: "DELETE" });
+    toast.success("Package deleted");
     const nextPage =
       packages.length === 1 && page > 1 ? page - 1 : page;
     setPage(nextPage);
@@ -114,11 +114,11 @@ export function AdminPackagesClient() {
       await adminFetch(`/api/admin/packages/${id}/duplicate`, {
         method: "POST",
       });
+      toast.success("Package duplicated");
       setPage(1);
       await load(q, status, 1);
-      setError("");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Duplicate failed");
+      toast.error(err instanceof Error ? err.message : "Duplicate failed");
     }
   }
 
@@ -170,12 +170,6 @@ export function AdminPackagesClient() {
           </AdminLoadingLink>
         </div>
       </form>
-
-      {error ? (
-        <p className="mb-4 rounded-xl border border-call-border/30 bg-call px-3 py-2 text-sm text-call-border">
-          {error}
-        </p>
-      ) : null}
 
       <AdminCard className="admin-enter admin-enter-delay-2">
         {loading ? (

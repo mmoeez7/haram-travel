@@ -14,7 +14,12 @@ export async function POST(request: Request) {
   if (!(file instanceof File) || file.size === 0) {
     return jsonError("Image file is required");
   }
-  if (folder !== "packages" && folder !== "hotels" && folder !== "categories") {
+  if (
+    folder !== "packages" &&
+    folder !== "hotels" &&
+    folder !== "categories" &&
+    folder !== "blogs"
+  ) {
     return jsonError("Invalid upload folder");
   }
 

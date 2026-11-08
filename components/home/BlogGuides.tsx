@@ -3,69 +3,66 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { CardRail } from "@/components/ui/CardRail";
+import { getPublishedPosts } from "@/lib/blogs";
 
-const guides = [
-  {
-    title: "First-Time Umrah Packing Checklist",
-    excerpt: "Essentials, ihram guidance, and practical tips for British pilgrims.",
-    image:
-      "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=800&q=80",
-  },
-  {
-    title: "Walking Distance Hotels Explained",
-    excerpt: "How we verify courtyard proximity so elderly parents walk with ease.",
-    image:
-      "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&q=80",
-  },
-  {
-    title: "Visa & Nusuk Timeline Guide",
-    excerpt: "What documents you need and when to submit them before departure.",
-    image:
-      "https://images.unsplash.com/photo-1542816417-0983c9c9ad53?w=800&q=80",
-  },
-];
+export async function BlogGuides() {
+  const posts = await getPublishedPosts(3);
 
-export function BlogGuides() {
+  if (!posts.length) return null;
+
   return (
     <section id="guides" className="bg-cream py-12 md:py-20">
-      <div className="mx-auto max-w-7xl px-3 lg:px-4">
+      <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
         <SectionHeading
           eyebrow="Sacred Knowledge Hub"
           title="The British Pilgrim's Journal & Practical Guides"
           description="Clear, verified Sunnah guidance, packing checklists, and insider tips curated by our experienced UK Umrah directors."
         />
         <CardRail cols="md:grid-cols-3">
-          {guides.map((guide) => (
+          {posts.map((post) => (
             <article
-              key={guide.title}
+              key={post.id}
               className="card-lift overflow-hidden rounded-xl border border-border bg-white hover:border-gold/50 md:rounded-2xl"
             >
-              <div className="relative h-32 overflow-hidden sm:h-36 md:h-44">
-                <Image
-                  src={guide.image}
-                  alt={guide.title}
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 768px) 80vw, 33vw"
-                />
-              </div>
-              <div className="p-4 md:p-6">
-                <h3 className="font-display text-base font-semibold text-charcoal md:text-xl">
-                  {guide.title}
-                </h3>
-                <p className="mt-2 text-xs leading-relaxed text-muted md:mt-3 md:text-sm">
-                  {guide.excerpt}
-                </p>
-                <Link
-                  href="/about-us"
-                  className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-gold-dark hover:text-gold md:mt-5"
-                >
-                  Read guide <ArrowRight className="h-4 w-4" />
-                </Link>
-              </div>
+              <Link href={`/blogs/${post.slug}`} className="block">
+                <div className="relative h-32 overflow-hidden bg-ivory sm:h-36 md:h-44">
+                  {post.coverImageUrl ? (
+                    <Image
+                      src={post.coverImageUrl}
+                      alt={post.coverImageAlt || post.title}
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 768px) 80vw, 33vw"
+                    />
+                  ) : null}
+                </div>
+                <div className="p-4 md:p-6">
+                  <h3 className="font-display text-base font-semibold text-charcoal md:text-xl">
+                    {post.title}
+                  </h3>
+                  {post.excerpt ? (
+                    <p className="mt-2 line-clamp-3 text-xs leading-relaxed text-muted md:mt-3 md:text-sm">
+                      {post.excerpt}
+                    </p>
+                  ) : null}
+                  <span className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-gold-dark md:mt-4">
+                    Read more
+                    <ArrowRight className="h-4 w-4" aria-hidden />
+                  </span>
+                </div>
+              </Link>
             </article>
           ))}
         </CardRail>
+        <div className="mt-8 text-center">
+          <Link
+            href="/blogs"
+            className="inline-flex items-center gap-1 text-sm font-semibold text-gold-dark hover:underline"
+          >
+            View all blogs
+            <ArrowRight className="h-4 w-4" aria-hidden />
+          </Link>
+        </div>
       </div>
     </section>
   );

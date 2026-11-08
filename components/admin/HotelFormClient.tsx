@@ -1,5 +1,6 @@
 "use client";
 
+import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import { useRef, useState } from "react";
@@ -52,7 +53,6 @@ export function HotelFormClient({ hotel }: { hotel?: Hotel }) {
   const router = useRouter();
   const formRef = useRef<HTMLFormElement>(null);
   const imagesRef = useRef<MultiImageUploadHandle | null>(null);
-  const [error, setError] = useState("");
   const [saving, setSaving] = useState<"draft" | "publish" | null>(null);
   const [name, setName] = useState(hotel?.name ?? "");
   const [slug, setSlug] = useState(hotel?.slug ?? "");
@@ -63,14 +63,13 @@ export function HotelFormClient({ hotel }: { hotel?: Hotel }) {
     if (!form.reportValidity()) return;
 
     setSaving(published ? "publish" : "draft");
-    setError("");
     const data = new FormData(form);
 
     try {
       const imageUrls = (await imagesRef.current?.collectUrls()) ?? [];
       const nextName = String(data.get("name") || name || "");
       if (!slug.trim()) {
-        setError("URL slug is required.");
+        toast.error("URL slug is required.");
         setSaving(null);
         return;
       }
@@ -99,10 +98,11 @@ export function HotelFormClient({ hotel }: { hotel?: Hotel }) {
           body: JSON.stringify(payload),
         });
       }
+      toast.success(published ? "Hotel published" : "Hotel saved as draft");
       router.push("/admin/hotels");
       router.refresh();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Save failed");
+      toast.error(err instanceof Error ? err.message : "Save failed");
       setSaving(null);
     }
   }
@@ -117,11 +117,6 @@ export function HotelFormClient({ hotel }: { hotel?: Hotel }) {
         showBack
       />
       <AdminCard>
-        {error ? (
-          <p className="mb-4 rounded-xl border border-call-border/30 bg-call px-3 py-2 text-sm text-call-border">
-            {error}
-          </p>
-        ) : null}
         <form
           ref={formRef}
           onSubmit={(event) => event.preventDefault()}
@@ -219,7 +214,7 @@ export function HotelFormClient({ hotel }: { hotel?: Hotel }) {
             className="sm:col-span-2 xl:col-span-3"
             initialImages={initialHotelImages(hotel)}
             disabled={busy}
-            onError={setError}
+            onError={(msg) => toast.error(msg)}
             uploadRef={imagesRef}
           />
 

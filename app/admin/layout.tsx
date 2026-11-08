@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { auth } from "@/auth";
 import { AdminShell } from "@/components/admin/AdminShell";
+import { AdminToaster } from "@/components/admin/AdminToaster";
 
 export const metadata: Metadata = {
   title: "Admin",
@@ -17,11 +18,17 @@ export default async function AdminLayout({
   const session = await auth();
 
   if (!session?.user) {
-    return <div className="min-h-screen bg-cream text-ink">{children}</div>;
+    return (
+      <div className="min-h-screen bg-cream text-ink">
+        <AdminToaster />
+        {children}
+      </div>
+    );
   }
 
   return (
     <AdminShell user={{ name: session.user.name, email: session.user.email }}>
+      <AdminToaster />
       {children}
     </AdminShell>
   );

@@ -10,7 +10,7 @@ const stats = [
 export function AboutHero() {
   return (
     <section className="bg-cream py-14 md:py-16">
-      <div className="mx-auto max-w-7xl px-3 lg:px-4">
+      <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
         <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "About Haram Travel" }]} />
         <span className="mb-4 inline-block rounded-full bg-gold-soft/60 px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-gold-dark">
           Official UK Licensed Umrah Specialist

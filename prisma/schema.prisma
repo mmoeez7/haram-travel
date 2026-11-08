@@ -73,6 +73,7 @@ model Category {
   slug          String
   kind          CategoryKind @default(CUSTOM)
   description   String?
+  seoContent    String?      @map("seo_content") @db.Text
   coverImageUrl String?      @map("cover_image_url")
   coverImageAlt String?      @map("cover_image_alt")
   sortOrder     Int          @default(0) @map("sort_order")
@@ -224,6 +225,47 @@ model PackageHotel {
   @@unique([packageId, role])
   @@index([hotelId])
   @@map("package_hotels")
+}
+
+model BlogPost {
+  id              String    @id @default(cuid())
+  title           String
+  slug            String
+  excerpt         String?
+  content         String?   @db.Text
+  coverImageUrl   String?   @map("cover_image_url")
+  coverImageAlt   String?   @map("cover_image_alt")
+  metaTitle       String?   @map("meta_title")
+  metaDescription String?   @map("meta_description")
+  published       Boolean   @default(false)
+  publishedAt     DateTime? @map("published_at")
+  sortOrder       Int       @default(0) @map("sort_order")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+  deletedAt       DateTime? @map("deleted_at")
+
+  @@unique([slug])
+  @@index([published, publishedAt])
+  @@index([deletedAt, sortOrder])
+  @@map("blog_posts")
+}
+
+model VideoReview {
+  id          String    @id @default(cuid())
+  videoUrl    String    @map("video_url")
+  youtubeId   String    @map("youtube_id")
+  title       String    @default("Customer Umrah Experience")
+  description String
+  cta         String    @default("Watch Story")
+  sortOrder   Int       @default(0) @map("sort_order")
+  published   Boolean   @default(false)
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+  deletedAt   DateTime? @map("deleted_at")
+
+  @@index([published, sortOrder])
+  @@index([deletedAt, sortOrder])
+  @@map("video_reviews")
 }
 
 model AdminAuditLog {

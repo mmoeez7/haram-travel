@@ -43,8 +43,8 @@
   --color-border: var(--border);
   --font-display: var(--font-ubuntu);
   --font-sans: var(--font-ubuntu);
-  /* Site content width — slightly wider than default 7xl (80rem) */
-  --container-7xl: 90rem;
+  /* Site content width — matches Tailwind 7xl; pair with px-5/sm:px-6/lg:px-8 gutters */
+  --container-7xl: 80rem;
 }
 
 html {

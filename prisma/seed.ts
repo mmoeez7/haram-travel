@@ -451,8 +451,44 @@ async function main() {
     data: { deletedAt: new Date(), published: false },
   });
 
+  const videoReviews = [
+    {
+      youtubeId: "T5TI-APFLsc",
+      videoUrl: "https://www.youtube.com/watch?v=T5TI-APFLsc",
+      title: "Customer Umrah Experience",
+      description: "Recorded Live in Madinah Munawwarah — British Pilgrim Review",
+      cta: "Watch Story",
+      sortOrder: 0,
+    },
+    {
+      youtubeId: "KB2xbX5nvxU",
+      videoUrl: "https://www.youtube.com/watch?v=KB2xbX5nvxU",
+      title: "Customer Review of Umrah (Series)",
+      description: "Family Reviews & Sacred Journey Highlights — #umrah #islam",
+      cta: "Watch Playlist",
+      sortOrder: 1,
+    },
+  ];
+
+  for (const item of videoReviews) {
+    const existing = await prisma.videoReview.findFirst({
+      where: { youtubeId: item.youtubeId, deletedAt: null },
+      select: { id: true },
+    });
+    if (existing) {
+      await prisma.videoReview.update({
+        where: { id: existing.id },
+        data: { ...item, published: true },
+      });
+    } else {
+      await prisma.videoReview.create({
+        data: { ...item, published: true },
+      });
+    }
+  }
+
   console.log(
-    `Seeded admin ${email}, ${allSeedPackages.length} packages, ${hotelsSeed.length} hotels, 2 roots + ${categories.length} child categories.`
+    `Seeded admin ${email}, ${allSeedPackages.length} packages, ${hotelsSeed.length} hotels, 2 roots + ${categories.length} child categories, ${videoReviews.length} video reviews.`
   );
 }
 

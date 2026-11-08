@@ -12,6 +12,7 @@ import { PackageSection } from "@/components/packages/PackageSection";
 import { StarGroupedPackages } from "@/components/packages/StarGroupedPackages";
 import { CustomQuote } from "@/components/home/CustomQuote";
 import { Testimonials } from "@/components/home/Testimonials";
+import { SeoContent } from "@/components/content/SeoContent";
 
 type PageProps = { params: Promise<{ slug: string }> };
 
@@ -70,7 +71,7 @@ export default async function CategoryPackagesPage({ params }: PageProps) {
         ) : null}
 
         <div
-          className={`relative z-10 mx-auto flex max-w-7xl flex-col items-center justify-center px-3 text-center lg:px-4 ${
+          className={`relative z-10 mx-auto flex max-w-7xl flex-col items-center justify-center px-5 text-center sm:px-6 lg:px-8 ${
             hasCover ? "min-h-[360px] py-16 md:min-h-[460px] md:py-24" : "pt-12 pb-6"
           }`}
         >
@@ -123,7 +124,7 @@ export default async function CategoryPackagesPage({ params }: PageProps) {
         )
       ) : (
         <section className="py-16">
-          <div className="mx-auto max-w-7xl px-3 lg:px-4">
+          <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
             <p className="text-muted">
               No published packages in this category yet. Please check back soon or contact our
               advisors for a bespoke quote.
@@ -132,6 +133,7 @@ export default async function CategoryPackagesPage({ params }: PageProps) {
         </section>
       )}
 
+      <SeoContent html={category.seoContent} />
       <CustomQuote />
       <Testimonials />
     </>

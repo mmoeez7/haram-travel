@@ -9,6 +9,7 @@ import {
   UMRAH_PACKAGES_ROOT_SLUG,
 } from "@/lib/category-roots";
 import { categoryListingHref } from "@/lib/package-paths";
+import { sanitizeSeoHtml } from "@/lib/sanitize-html";
 
 type Params = { params: Promise<{ id: string }> };
 
@@ -87,6 +88,8 @@ export async function PATCH(request: Request, { params }: Params) {
     return jsonError("Slug is already in use");
   }
 
+  const seoContent = sanitizeSeoHtml(parsed.data.seoContent) || null;
+
   const category = await prisma.category.update({
     where: { id },
     data: {
@@ -95,6 +98,7 @@ export async function PATCH(request: Request, { params }: Params) {
       kind: parsed.data.kind,
       parentId: isRoot ? null : parentId,
       description: parsed.data.description || null,
+      seoContent,
       coverImageUrl: parsed.data.coverImageUrl || null,
       coverImageAlt: parsed.data.coverImageAlt || parsed.data.name,
       sortOrder: parsed.data.sortOrder,

@@ -31,7 +31,7 @@ const cards = [
 export function Credentials() {
   return (
     <section className="bg-charcoal py-12 text-white md:py-16">
-      <div className="mx-auto max-w-7xl px-3 lg:px-4">
+      <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-3xl text-center">
           <h2 className="font-display text-2xl font-semibold uppercase tracking-wide md:text-4xl">
             Perform Umrah with Total Peace of Mind

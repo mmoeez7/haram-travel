@@ -32,7 +32,7 @@ const points = [
 export function WhyUs() {
   return (
     <section id="why-us" className="bg-ivory py-12 md:py-20">
-      <div className="mx-auto max-w-7xl px-3 lg:px-4">
+      <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
         <SectionHeading
           eyebrow="The Haram Travel Difference"
           title="Why UK Pilgrims Choose Us"

@@ -17,7 +17,7 @@ export default function ContactUsPage() {
       <ContactHero />
 
       <section className="bg-cream pb-12 md:pb-16">
-        <div className="mx-auto max-w-7xl px-3 lg:px-4">
+        <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
           <ContactCards />
 
           <div className="mt-12 grid gap-8 lg:grid-cols-[1.35fr_0.95fr] lg:items-start">

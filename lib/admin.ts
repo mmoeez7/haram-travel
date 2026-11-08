@@ -36,7 +36,7 @@ export async function writeAuditLog(input: {
 
 /** True if slug is already owned by another row (includes soft-deleted). */
 export async function isSlugTaken(
-  entity: "package" | "hotel" | "category",
+  entity: "package" | "hotel" | "category" | "blog",
   slug: string,
   excludeId?: string
 ) {
@@ -52,6 +52,14 @@ export async function isSlugTaken(
   if (entity === "hotel") {
     return Boolean(
       await prisma.hotel.findFirst({
+        where: { slug, ...notSelf },
+        select: { id: true },
+      })
+    );
+  }
+  if (entity === "blog") {
+    return Boolean(
+      await prisma.blogPost.findFirst({
         where: { slug, ...notSelf },
         select: { id: true },
       })

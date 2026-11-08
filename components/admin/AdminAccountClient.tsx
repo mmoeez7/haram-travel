@@ -1,5 +1,6 @@
 "use client";
 
+import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
@@ -28,19 +29,13 @@ export function AdminAccountClient({
   const router = useRouter();
   const [user, setUser] = useState(initialUser);
 
-  const [emailError, setEmailError] = useState("");
-  const [emailSuccess, setEmailSuccess] = useState("");
   const [emailSaving, setEmailSaving] = useState(false);
 
-  const [passwordError, setPasswordError] = useState("");
-  const [passwordSuccess, setPasswordSuccess] = useState("");
   const [passwordSaving, setPasswordSaving] = useState(false);
 
   async function onChangeEmail(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setEmailSaving(true);
-    setEmailError("");
-    setEmailSuccess("");
     const form = new FormData(event.currentTarget);
 
     try {
@@ -60,7 +55,7 @@ export function AdminAccountClient({
       if (result.user?.email) {
         setUser((prev) => ({ ...prev, email: result.user!.email }));
       }
-      setEmailSuccess(result.message || "Email updated.");
+      toast.success(result.message || "Email updated.");
       event.currentTarget.reset();
 
       if (result.reauthRequired) {
@@ -69,7 +64,7 @@ export function AdminAccountClient({
         router.refresh();
       }
     } catch (err) {
-      setEmailError(err instanceof Error ? err.message : "Failed to update email");
+      toast.error(err instanceof Error ? err.message : "Failed to update email");
     } finally {
       setEmailSaving(false);
     }
@@ -78,8 +73,6 @@ export function AdminAccountClient({
   async function onChangePassword(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setPasswordSaving(true);
-    setPasswordError("");
-    setPasswordSuccess("");
     const form = new FormData(event.currentTarget);
 
     try {
@@ -94,10 +87,10 @@ export function AdminAccountClient({
           }),
         }
       );
-      setPasswordSuccess(result.message || "Password updated.");
+      toast.success(result.message || "Password updated.");
       event.currentTarget.reset();
     } catch (err) {
-      setPasswordError(
+      toast.error(
         err instanceof Error ? err.message : "Failed to update password"
       );
     } finally {
@@ -130,16 +123,6 @@ export function AdminAccountClient({
           <p className="mt-1 text-sm text-muted">
             You will need to sign in again after changing email.
           </p>
-          {emailError ? (
-            <p className="mt-3 rounded-xl border border-call-border/30 bg-call px-3 py-2 text-sm text-call-border">
-              {emailError}
-            </p>
-          ) : null}
-          {emailSuccess ? (
-            <p className="mt-3 rounded-xl border border-forest/20 bg-forest/10 px-3 py-2 text-sm text-forest">
-              {emailSuccess}
-            </p>
-          ) : null}
           <form onSubmit={onChangeEmail} className="mt-4 space-y-4">
             <div className="grid gap-4 sm:grid-cols-2">
               <label className={adminLabelClass}>
@@ -186,16 +169,6 @@ export function AdminAccountClient({
           <p className="mt-1 text-sm text-muted">
             Use at least 8 characters for your new password.
           </p>
-          {passwordError ? (
-            <p className="mt-3 rounded-xl border border-call-border/30 bg-call px-3 py-2 text-sm text-call-border">
-              {passwordError}
-            </p>
-          ) : null}
-          {passwordSuccess ? (
-            <p className="mt-3 rounded-xl border border-forest/20 bg-forest/10 px-3 py-2 text-sm text-forest">
-              {passwordSuccess}
-            </p>
-          ) : null}
           <form onSubmit={onChangePassword} className="mt-4 space-y-4">
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               <label className={adminLabelClass}>

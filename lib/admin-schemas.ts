@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { SLUG_PATH_REGEX } from "@/lib/slugify";
+import { extractYoutubeId } from "@/lib/youtube";
 
 const slugField = (max: number) =>
   z
@@ -11,12 +12,45 @@ const slugField = (max: number) =>
       "Slug must be lowercase kebab-case (optional / path segments allowed)"
     );
 
+export const blogPostSchema = z.object({
+  title: z.string().min(2).max(200),
+  slug: slugField(220),
+  excerpt: z.string().max(500).optional().or(z.literal("")),
+  content: z.string().max(200_000).optional().or(z.literal("")),
+  coverImageUrl: z.string().optional().or(z.literal("")),
+  coverImageAlt: z.string().max(200).optional().or(z.literal("")),
+  metaTitle: z.string().max(160).optional().or(z.literal("")),
+  metaDescription: z.string().max(320).optional().or(z.literal("")),
+  sortOrder: z.coerce.number().int().min(0).default(0),
+  published: z.coerce.boolean().default(false),
+});
+
+export const videoReviewSchema = z
+  .object({
+    videoUrl: z.string().min(5).max(500),
+    description: z.string().min(2).max(500),
+    title: z.string().max(160).optional().or(z.literal("")),
+    cta: z.string().max(40).optional().or(z.literal("")),
+    sortOrder: z.coerce.number().int().min(0).default(0),
+    published: z.coerce.boolean().default(false),
+  })
+  .superRefine((data, ctx) => {
+    if (!extractYoutubeId(data.videoUrl)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Enter a valid YouTube video link",
+        path: ["videoUrl"],
+      });
+    }
+  });
+
 export const categorySchema = z.object({
   name: z.string().min(2).max(120),
   slug: slugField(160),
   kind: z.enum(["STAR", "SEASON", "JOURNEY", "CUSTOM"]).default("CUSTOM"),
   parentId: z.string().min(1).optional().nullable().or(z.literal("")),
   description: z.string().max(2000).optional().or(z.literal("")),
+  seoContent: z.string().max(200_000).optional().or(z.literal("")),
   coverImageUrl: z.string().optional().or(z.literal("")),
   coverImageAlt: z.string().max(200).optional().or(z.literal("")),
   sortOrder: z.coerce.number().int().min(0).default(0),

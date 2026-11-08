@@ -1,5 +1,6 @@
 "use client";
 
+import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
@@ -25,6 +26,7 @@ import {
   type CoverUploadState,
 } from "@/components/admin/AdminCoverUpload";
 import { AdminSlugField } from "@/components/admin/AdminSlugField";
+import { AdminRichTextEditor } from "@/components/admin/AdminRichTextEditor";
 import { SITE } from "@/lib/constants";
 import { categoryListingHref } from "@/lib/package-paths";
 
@@ -35,6 +37,7 @@ type Category = {
   kind: string;
   parentId: string | null;
   description: string | null;
+  seoContent: string | null;
   coverImageUrl: string | null;
   coverImageAlt: string | null;
   sortOrder: number;
@@ -46,7 +49,6 @@ type RootOption = { id: string; name: string; slug: string };
 export function CategoryFormClient({ category }: { category?: Category }) {
   const router = useRouter();
   const formRef = useRef<HTMLFormElement>(null);
-  const [error, setError] = useState("");
   const [saving, setSaving] = useState<"draft" | "publish" | null>(null);
   const [uploadingCover, setUploadingCover] = useState(false);
   const [roots, setRoots] = useState<RootOption[]>([]);
@@ -57,6 +59,7 @@ export function CategoryFormClient({ category }: { category?: Category }) {
   });
   const [name, setName] = useState(category?.name ?? "");
   const [slug, setSlug] = useState(category?.slug ?? "");
+  const [seoContent, setSeoContent] = useState(category?.seoContent ?? "");
 
   const isRoot =
     Boolean(category) &&
@@ -77,7 +80,7 @@ export function CategoryFormClient({ category }: { category?: Category }) {
           )
         );
       } catch (err) {
-        setError(err instanceof Error ? err.message : "Failed to load parent groups");
+        toast.error(err instanceof Error ? err.message : "Failed to load parent groups");
       }
     }
     if (!isRoot) void loadRoots();
@@ -88,7 +91,6 @@ export function CategoryFormClient({ category }: { category?: Category }) {
     if (!form) return;
 
     setSaving(published ? "publish" : "draft");
-    setError("");
 
     const data = new FormData(form);
     const nextName = String(data.get("name") || name || "").trim();
@@ -96,19 +98,19 @@ export function CategoryFormClient({ category }: { category?: Category }) {
     const parentId = String(data.get("parentId") || "");
 
     if (nextName.length < 2) {
-      setError("Name must be at least 2 characters.");
+      toast.error("Name must be at least 2 characters.");
       setSaving(null);
       return;
     }
 
     if (!isRoot && !parentId) {
-      setError("Select a parent group.");
+      toast.error("Select a parent group.");
       setSaving(null);
       return;
     }
 
     if (!isRoot && !slug.trim()) {
-      setError("URL slug is required.");
+      toast.error("URL slug is required.");
       setSaving(null);
       return;
     }
@@ -130,6 +132,7 @@ export function CategoryFormClient({ category }: { category?: Category }) {
         kind: category?.kind ?? "CUSTOM",
         parentId: isRoot ? null : parentId,
         description,
+        seoContent,
         coverImageUrl,
         coverImageAlt: nextName,
         sortOrder: category?.sortOrder ?? 0,
@@ -147,10 +150,11 @@ export function CategoryFormClient({ category }: { category?: Category }) {
           body: JSON.stringify(payload),
         });
       }
+      toast.success(published ? "Category published" : "Category saved as draft");
       router.push("/admin/categories");
       router.refresh();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Save failed");
+      toast.error(err instanceof Error ? err.message : "Save failed");
       setSaving(null);
     }
   }
@@ -164,12 +168,7 @@ export function CategoryFormClient({ category }: { category?: Category }) {
         description="Subcategories sit under Umrah Packages or Umrah Deals."
         showBack
       />
-      <AdminCard className="max-w-2xl">
-        {error ? (
-          <p className="mb-4 rounded-xl border border-call-border/30 bg-call px-3 py-2 text-sm text-call-border">
-            {error}
-          </p>
-        ) : null}
+      <AdminCard className="max-w-4xl">
 
         <form
           ref={formRef}
@@ -245,8 +244,23 @@ export function CategoryFormClient({ category }: { category?: Category }) {
             disabled={busy}
             uploading={uploadingCover}
             onChange={setCover}
-            onError={setError}
+            onError={(msg) => toast.error(msg)}
           />
+
+          <div className="space-y-2">
+            <div>
+              <p className={adminLabelClass}>SEO Content</p>
+              <p className="mt-1 text-xs text-muted">
+                Long-form page copy shown below packages. Use headings, bold,
+                colors, and lists like a Word document.
+              </p>
+            </div>
+            <AdminRichTextEditor
+              value={seoContent}
+              onChange={setSeoContent}
+              disabled={busy}
+            />
+          </div>
 
           <div className="flex flex-wrap gap-2 pt-1">
             <button

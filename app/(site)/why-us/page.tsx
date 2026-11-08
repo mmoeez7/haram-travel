@@ -15,7 +15,7 @@ export default function WhyUsPage() {
   return (
     <>
       <section className="bg-cream pt-12 pb-4">
-        <div className="mx-auto max-w-7xl px-3 lg:px-4">
+        <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
           <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Why Us" }]} />
           <h1 className="font-display text-4xl font-semibold uppercase tracking-wide text-charcoal md:text-5xl">
             Why UK Pilgrims Choose Us

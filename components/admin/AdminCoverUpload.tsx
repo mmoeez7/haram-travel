@@ -38,7 +38,10 @@ export function ImageUploadStatus({ label }: { label: string }) {
   );
 }
 
-export async function uploadAdminCover(file: File, folder: "packages" | "hotels" | "categories") {
+export async function uploadAdminCover(
+  file: File,
+  folder: "packages" | "hotels" | "categories" | "blogs"
+) {
   const form = new FormData();
   form.set("file", file);
   form.set("folder", folder);

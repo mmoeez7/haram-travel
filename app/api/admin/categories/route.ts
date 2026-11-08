@@ -15,6 +15,7 @@ import {
   parseAdminPageSize,
 } from "@/lib/admin-pagination";
 import { categoryListingHref } from "@/lib/package-paths";
+import { sanitizeSeoHtml } from "@/lib/sanitize-html";
 
 export async function GET(request: Request) {
   const { error } = await requireAdminApi();
@@ -124,6 +125,8 @@ export async function POST(request: Request) {
     return jsonError("Slug is already in use");
   }
 
+  const seoContent = sanitizeSeoHtml(parsed.data.seoContent) || null;
+
   const category = await prisma.category.create({
     data: {
       name: parsed.data.name,
@@ -131,6 +134,7 @@ export async function POST(request: Request) {
       kind: parsed.data.kind,
       parentId: parent.id,
       description: parsed.data.description || null,
+      seoContent,
       coverImageUrl: parsed.data.coverImageUrl || null,
       coverImageAlt: parsed.data.coverImageAlt || parsed.data.name,
       sortOrder: parsed.data.sortOrder,

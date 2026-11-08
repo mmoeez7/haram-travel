@@ -61,7 +61,7 @@ const steps = [
 export function Steps() {
   return (
     <section id="hotel-guide" className="bg-cream py-12 md:py-20">
-      <div className="mx-auto max-w-7xl px-3 lg:px-4">
+      <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
         <SectionHeading
           eyebrow="The Sacred Road to Makkah"
           title="From London Doorstep to the Mataf in 4 Steps"

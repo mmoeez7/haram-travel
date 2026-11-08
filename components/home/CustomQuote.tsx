@@ -9,7 +9,7 @@ import { Reveal } from "@/components/ui/Reveal";
 export function CustomQuote() {
   return (
     <section className="bg-cream-dark py-10 md:py-14">
-      <div className="mx-auto max-w-4xl px-3 text-center lg:px-4">
+      <div className="mx-auto max-w-4xl px-5 text-center sm:px-6 lg:px-8">
         <Reveal>
           <h2 className="font-display text-2xl font-semibold uppercase tracking-wide text-charcoal md:text-4xl">
             Need Custom Dates, Itinerary or Family Quote?

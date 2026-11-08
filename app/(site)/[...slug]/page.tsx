@@ -43,7 +43,7 @@ export default async function PackageDetailPage({ params }: PageProps) {
   return (
     <>
       <section className="bg-cream pt-10 pb-12 md:pt-12 md:pb-16">
-        <div className="mx-auto max-w-7xl px-3 lg:px-4">
+        <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
           <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-start lg:gap-10">
             <div className="space-y-10 md:space-y-12">
               <PackageDetailHero pkg={pkg} />

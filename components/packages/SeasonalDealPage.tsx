@@ -1,8 +1,12 @@
-import { getPackagesByCategorySlug } from "@/lib/categories";
+import {
+  getCategorySeoContent,
+  getPackagesByCategorySlug,
+} from "@/lib/categories";
 import { getSeasonalPackages, type DealSeason } from "@/lib/packages";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { StarGroupedPackages } from "@/components/packages/StarGroupedPackages";
 import { CustomQuote } from "@/components/home/CustomQuote";
+import { SeoContent } from "@/components/content/SeoContent";
 
 type SeasonalDealPageProps = {
   title: string;
@@ -17,6 +21,7 @@ export async function SeasonalDealPage({
   pathLabel,
   season,
 }: SeasonalDealPageProps) {
+  const seoContent = await getCategorySeoContent(season);
   let packages = await getPackagesByCategorySlug(season);
   if (!packages.length) {
     packages = await getSeasonalPackages(season);
@@ -25,7 +30,7 @@ export async function SeasonalDealPage({
   return (
     <>
       <section className="bg-cream pt-12 pb-6">
-        <div className="mx-auto max-w-7xl px-3 lg:px-4">
+        <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
           <Breadcrumbs
             items={[
               { label: "Home", href: "/" },
@@ -44,7 +49,7 @@ export async function SeasonalDealPage({
         <StarGroupedPackages packages={packages} eyebrow="Umrah Deals" />
       ) : (
         <section className="py-16">
-          <div className="mx-auto max-w-7xl px-3 lg:px-4">
+          <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
             <p className="text-muted">
               No published packages in this deal yet. Please check back soon or contact our
               advisors for a bespoke quote.
@@ -53,6 +58,7 @@ export async function SeasonalDealPage({
         </section>
       )}
 
+      <SeoContent html={seoContent} />
       <CustomQuote />
     </>
   );

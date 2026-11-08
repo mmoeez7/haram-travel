@@ -1,9 +1,12 @@
 import { createMetadata } from "@/lib/seo";
 import { getUmrahByStars } from "@/lib/packages";
+import { getCategorySeoContent } from "@/lib/categories";
+import { UMRAH_PACKAGES_ROOT_SLUG } from "@/lib/category-roots";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { CategoryFilters } from "@/components/packages/CategoryFilters";
 import { PackageSection } from "@/components/packages/PackageSection";
 import { CustomQuote } from "@/components/home/CustomQuote";
+import { SeoContent } from "@/components/content/SeoContent";
 
 export const metadata = createMetadata({
   title: "Umrah Packages from UK",
@@ -13,16 +16,17 @@ export const metadata = createMetadata({
 });
 
 export default async function UmrahPackagesPage() {
-  const [threeStar, fourStar, fiveStar] = await Promise.all([
+  const [threeStar, fourStar, fiveStar, seoContent] = await Promise.all([
     getUmrahByStars(3),
     getUmrahByStars(4),
     getUmrahByStars(5),
+    getCategorySeoContent(UMRAH_PACKAGES_ROOT_SLUG),
   ]);
 
   return (
     <>
       <section className="bg-cream pt-12 pb-6">
-        <div className="mx-auto max-w-7xl px-3 lg:px-4">
+        <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
           <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Umrah Packages" }]} />
           <h1 className="font-display text-4xl font-semibold uppercase tracking-wide text-charcoal md:text-5xl">
             Umrah Packages from the UK
@@ -56,6 +60,7 @@ export default async function UmrahPackagesPage() {
           packages={fiveStar}
         />
       </div>
+      <SeoContent html={seoContent} />
       <CustomQuote />
     </>
   );

@@ -26,7 +26,7 @@ const reviews = [
 export function Testimonials() {
   return (
     <section id="reviews" className="bg-[#faf6ef] py-12 md:py-20">
-      <div className="mx-auto max-w-7xl px-3 lg:px-4">
+      <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
         <SectionHeading
           eyebrow="Real British Muslim Stories"
           title="What Customers Say About Us!"
