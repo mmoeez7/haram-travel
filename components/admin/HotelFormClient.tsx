@@ -83,7 +83,7 @@ export function HotelFormClient({ hotel }: { hotel?: Hotel }) {
         description: String(data.get("description") || ""),
         amenities: String(data.get("amenities") || ""),
         imageUrls,
-        sortOrder: Number(data.get("sortOrder") || 0),
+        sortOrder: hotel?.sortOrder ?? 0,
         published,
       };
 
@@ -180,15 +180,6 @@ export function HotelFormClient({ hotel }: { hotel?: Hotel }) {
               type="number"
               min={0}
               defaultValue={hotel?.distanceToHaramM ?? ""}
-              className={adminInputClass}
-            />
-          </label>
-          <label className={adminLabelClass}>
-            Sort order
-            <input
-              name="sortOrder"
-              type="number"
-              defaultValue={hotel?.sortOrder ?? 0}
               className={adminInputClass}
             />
           </label>

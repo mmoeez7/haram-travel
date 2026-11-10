@@ -8,10 +8,10 @@ import {
   LayoutDashboard,
   LogOut,
   Menu,
-  Newspaper,
+  // Newspaper,
   Package,
   ShieldCheck,
-  Star,
+  // Star,
   Tags,
   X,
 } from "lucide-react";
@@ -28,8 +28,8 @@ const navItems = [
   { label: "Categories", href: "/admin/categories", icon: Tags, match: "prefix" as const },
   { label: "Hotels", href: "/admin/hotels", icon: Building2, match: "prefix" as const },
   { label: "Packages", href: "/admin/packages", icon: Package, match: "prefix" as const },
-  { label: "Blogs", href: "/admin/blogs", icon: Newspaper, match: "prefix" as const },
-  { label: "Reviews", href: "/admin/reviews", icon: Star, match: "prefix" as const },
+  // { label: "Blogs", href: "/admin/blogs", icon: Newspaper, match: "prefix" as const },
+  // { label: "Reviews", href: "/admin/reviews", icon: Star, match: "prefix" as const },
 ];
 
 function isActive(pathname: string, href: string, match: "exact" | "prefix") {

@@ -196,7 +196,7 @@ export function PackageFormClient({ packageId }: { packageId?: string }) {
         coverImageAlt: String(data.get("coverImageAlt") || nextTitle),
         featured: data.get("featured") === "on",
         published,
-        sortOrder: Number(data.get("sortOrder") || 0),
+        sortOrder: pkg?.sortOrder ?? 0,
         categoryId: journeyType === "UMRAH" ? categoryId : "",
         makkahHotelId: String(data.get("makkahHotelId") || ""),
         madinahHotelId: String(data.get("madinahHotelId") || ""),
@@ -383,15 +383,6 @@ export function PackageFormClient({ packageId }: { packageId?: string }) {
             <label className={adminLabelClass}>
               Badge
               <input name="badge" defaultValue={pkg?.badge ?? ""} className={adminInputClass} />
-            </label>
-            <label className={adminLabelClass}>
-              Sort order
-              <input
-                name="sortOrder"
-                type="number"
-                defaultValue={pkg?.sortOrder ?? 0}
-                className={adminInputClass}
-              />
             </label>
             <AdminIncludesInput
               className="md:col-span-2"

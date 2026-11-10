@@ -63,10 +63,6 @@ export default async function ViewHotelPage({
             <p className="text-xs uppercase tracking-wide text-muted">Slug</p>
             <p className="mt-1 text-sm font-medium text-charcoal">{hotel.slug}</p>
           </div>
-          <div>
-            <p className="text-xs uppercase tracking-wide text-muted">Sort order</p>
-            <p className="mt-1 text-sm font-medium text-charcoal">{hotel.sortOrder}</p>
-          </div>
         </aside>
       </div>
 

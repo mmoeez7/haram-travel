@@ -50,9 +50,6 @@ export default async function ViewCategoryPage({
               <span className="rounded-full bg-cream px-2.5 py-1 font-medium text-ink">
                 {category.slug}
               </span>
-              <span className="rounded-full bg-cream px-2.5 py-1 font-medium text-ink">
-                Sort {category.sortOrder}
-              </span>
             </div>
           }
         />
