@@ -2,11 +2,15 @@
   "name": "haram-travel",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": "22.x"
+  },
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "prisma generate && next build",
     "start": "next start",
     "lint": "next lint",
+    "generate": "prisma generate",
     "db:start": "bash scripts/start-postgres.sh",
     "db:migrate": "prisma migrate dev",
     "db:seed": "tsx prisma/seed.ts",

@@ -22,6 +22,8 @@
 .DS_Store
 *.pem
 .pdf-preview
+next-build-upload.zip
+src.zip
 
 # debug
 npm-debug.log*
