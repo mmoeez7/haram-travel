@@ -1,4 +1,5 @@
-import { unstable_noStore as noStore } from "next/cache";
+import "server-only";
+
 import { prisma } from "@/lib/db";
 import {
   UMRAH_DEALS_ROOT_SLUG,
@@ -22,8 +23,6 @@ export type PublicCategory = {
 export async function getChildCategoriesForRoot(
   rootSlug: UmrahRootSlug
 ): Promise<{ href: string; label: string }[]> {
-  noStore();
-
   const root = await prisma.category.findFirst({
     where: { slug: rootSlug, deletedAt: null, parentId: null, published: true },
     select: { id: true },
@@ -47,8 +46,6 @@ export async function getChildCategoriesForRoot(
 }
 
 export async function getCategoryBySlug(slug: string): Promise<PublicCategory | null> {
-  noStore();
-
   const category = await prisma.category.findFirst({
     where: {
       slug,
@@ -82,8 +79,6 @@ export async function getCategoryBySlug(slug: string): Promise<PublicCategory | 
 }
 
 export async function getCategorySeoContent(slug: string): Promise<string | null> {
-  noStore();
-
   const category = await prisma.category.findFirst({
     where: { slug, deletedAt: null, published: true },
     select: { seoContent: true },
@@ -94,8 +89,6 @@ export async function getCategorySeoContent(slug: string): Promise<string | null
 }
 
 export async function getPackagesByCategorySlug(slug: string): Promise<PackageItem[]> {
-  noStore();
-
   const category = await getCategoryBySlug(slug);
   if (!category) return [];
 

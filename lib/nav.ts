@@ -1,4 +1,5 @@
-import { unstable_noStore as noStore } from "next/cache";
+import "server-only";
+
 import type { NavItem } from "@/lib/constants";
 import {
   UMRAH_DEALS_ROOT_SLUG,
@@ -8,8 +9,6 @@ import { getChildCategoriesForRoot } from "@/lib/categories";
 
 /** Build public navbar from Umrah category roots. */
 export async function getSiteNavItems(): Promise<NavItem[]> {
-  noStore();
-
   const [umrahPackagesChildren, umrahDealsChildren] = await Promise.all([
     getChildCategoriesForRoot(UMRAH_PACKAGES_ROOT_SLUG),
     getChildCategoriesForRoot(UMRAH_DEALS_ROOT_SLUG),

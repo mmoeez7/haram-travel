@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { packageFilters } from "@/lib/packages";
+import { packageFilters } from "@/lib/package-filters";
 
 const filterHrefs: Record<string, string> = {
   all: "/umrah-packages",

@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
-const MIN_VISIBLE_MS = 900;
+const MIN_VISIBLE_MS = 200;
 const FADE_MS = 450;
 
 /**

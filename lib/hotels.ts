@@ -1,37 +1,13 @@
-import { unstable_noStore as noStore } from "next/cache";
+import "server-only";
+
 import { prisma } from "@/lib/db";
+import type { PublicHotel } from "@/lib/public-hotel";
 
-export type PublicHotelImage = {
-  id: string;
-  url: string;
-  alt: string | null;
-  sortOrder: number;
-};
-
-export function makkahFirstRank(city: "MAKKAH" | "MADINAH") {
-  return city === "MADINAH" ? 1 : 0;
-}
-
-export type PublicHotel = {
-  id: string;
-  name: string;
-  slug: string;
-  city: "MAKKAH" | "MADINAH";
-  stars: number;
-  walkingMinutes: number | null;
-  distanceToHaramM: number | null;
-  shortDescription: string | null;
-  description: string | null;
-  coverImageUrl: string | null;
-  coverImageAlt: string | null;
-  amenities: string[];
-  images: PublicHotelImage[];
-};
+export type { PublicHotel, PublicHotelImage } from "@/lib/public-hotel";
 
 export async function getPublishedHotelById(
   id: string
 ): Promise<PublicHotel | null> {
-  noStore();
   const hotel = await prisma.hotel.findFirst({
     where: {
       id,

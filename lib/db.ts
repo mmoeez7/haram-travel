@@ -1,3 +1,5 @@
+import "server-only";
+
 import { PrismaNeonHTTP } from "@prisma/adapter-neon";
 import { PrismaClient } from "@prisma/client";
 

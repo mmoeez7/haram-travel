@@ -1,7 +1,8 @@
-import { unstable_noStore as noStore } from "next/cache";
+import "server-only";
+
 import type { Package as DbPackage, SeasonType } from "@prisma/client";
 import { prisma } from "@/lib/db";
-import { makkahFirstRank } from "@/lib/hotels";
+import { makkahFirstRank } from "@/lib/hotel-rank";
 
 export type PackageItem = {
   id: string;
@@ -29,14 +30,6 @@ export type DealSeason =
   | "october"
   | "november"
   | "december";
-
-export const packageFilters = [
-  { id: "all", label: "All Packages" },
-  { id: "december", label: "December Packages" },
-  { id: "easter", label: "February Half-Term" },
-  { id: "ramadan", label: "Ramadan Packages" },
-  { id: "luxury", label: "5-Star Luxury VIP" },
-] as const;
 
 function seasonToUi(season: SeasonType): PackageItem["season"] {
   switch (season) {
@@ -108,7 +101,6 @@ const publicWhere = {
 } as const;
 
 export async function getUmrahByStars(stars: 3 | 4 | 5): Promise<PackageItem[]> {
-  noStore();
   const packages = await prisma.package.findMany({
     where: {
       ...publicWhere,
@@ -124,7 +116,6 @@ export async function getUmrahByStars(stars: 3 | 4 | 5): Promise<PackageItem[]> 
 export async function getSeasonalPackages(
   season: DealSeason
 ): Promise<PackageItem[]> {
-  noStore();
   const packages = await prisma.package.findMany({
     where: {
       ...publicWhere,
@@ -137,7 +128,6 @@ export async function getSeasonalPackages(
 }
 
 export async function getHajjPackages(): Promise<PackageItem[]> {
-  noStore();
   const packages = await prisma.package.findMany({
     where: {
       ...publicWhere,
@@ -149,7 +139,6 @@ export async function getHajjPackages(): Promise<PackageItem[]> {
 }
 
 export async function getPackageBySlug(slug: string): Promise<PackageItem | null> {
-  noStore();
   const pkg = await prisma.package.findFirst({
     where: {
       ...publicWhere,
@@ -187,7 +176,6 @@ export type PackageDetail = PackageItem & {
 export async function getPackageDetailBySlug(
   slug: string
 ): Promise<PackageDetail | null> {
-  noStore();
   const pkg = await prisma.package.findFirst({
     where: {
       ...publicWhere,

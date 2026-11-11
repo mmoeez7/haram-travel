@@ -1,4 +1,5 @@
-import { unstable_noStore as noStore } from "next/cache";
+import "server-only";
+
 import { prisma } from "@/lib/db";
 
 export type PublicBlogPost = {
@@ -25,8 +26,6 @@ export type PublicBlogCard = {
 };
 
 export async function getPublishedPosts(limit?: number): Promise<PublicBlogCard[]> {
-  noStore();
-
   const posts = await prisma.blogPost.findMany({
     where: { deletedAt: null, published: true },
     orderBy: [
@@ -50,8 +49,6 @@ export async function getPublishedPosts(limit?: number): Promise<PublicBlogCard[
 }
 
 export async function getPostBySlug(slug: string): Promise<PublicBlogPost | null> {
-  noStore();
-
   const post = await prisma.blogPost.findFirst({
     where: { slug, deletedAt: null, published: true },
     select: {

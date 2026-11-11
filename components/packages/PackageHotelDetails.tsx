@@ -4,7 +4,8 @@ import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
 import { ChevronLeft, ChevronRight, Loader2, MapPin, Star } from "lucide-react";
 import type { PackageHotelRef } from "@/lib/packages";
-import { makkahFirstRank, type PublicHotel } from "@/lib/hotels";
+import type { PublicHotel } from "@/lib/public-hotel";
+import { makkahFirstRank } from "@/lib/hotel-rank";
 
 type HotelCardData = PublicHotel & {
   nights: number | null;

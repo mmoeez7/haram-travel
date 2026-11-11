@@ -1,4 +1,5 @@
-import { unstable_noStore as noStore } from "next/cache";
+import "server-only";
+
 import { prisma } from "@/lib/db";
 
 export type PublicVideoReview = {
@@ -10,8 +11,6 @@ export type PublicVideoReview = {
 };
 
 export async function getPublishedVideoReviews(): Promise<PublicVideoReview[]> {
-  noStore();
-
   return prisma.videoReview.findMany({
     where: { deletedAt: null, published: true },
     orderBy: [{ sortOrder: "asc" }, { createdAt: "desc" }],

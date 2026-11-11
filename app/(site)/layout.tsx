@@ -4,6 +4,8 @@ import { FloatingWidgets } from "@/components/layout/FloatingWidgets";
 import { SiteLoader } from "@/components/layout/SiteLoader";
 import { getSiteNavItems } from "@/lib/nav";
 
+export const revalidate = 60;
+
 export default async function SiteLayout({
   children,
 }: Readonly<{
