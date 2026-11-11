@@ -4,15 +4,17 @@ type DbClient =
   | Prisma.TransactionClient
   | {
       packageImage: {
-        deleteMany: (args: { where: { packageId: string } }) => Promise<unknown>;
-        createMany: (args: {
-          data: Array<{
+        deleteMany: (args: {
+          where: { packageId: string };
+        }) => Promise<unknown>;
+        create: (args: {
+          data: {
             packageId: string;
             url: string;
             alt: string | null;
             isCover: boolean;
             sortOrder: number;
-          }>;
+          };
         }) => Promise<unknown>;
       };
     };
@@ -26,15 +28,16 @@ export async function syncPackageImages(
 ) {
   const urls = imageUrls.map((url) => url.trim()).filter(Boolean);
   await db.packageImage.deleteMany({ where: { packageId } });
-  if (urls.length) {
-    await db.packageImage.createMany({
-      data: urls.map((url, index) => ({
+  // Neon HTTP adapter does not support createMany (uses transactions).
+  for (let index = 0; index < urls.length; index += 1) {
+    await db.packageImage.create({
+      data: {
         packageId,
-        url,
+        url: urls[index],
         alt: altName,
         isCover: index === 0,
         sortOrder: index,
-      })),
+      },
     });
   }
   return {

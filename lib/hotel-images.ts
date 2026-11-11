@@ -5,14 +5,14 @@ type DbClient =
   | {
       hotelImage: {
         deleteMany: (args: { where: { hotelId: string } }) => Promise<unknown>;
-        createMany: (args: {
-          data: Array<{
+        create: (args: {
+          data: {
             hotelId: string;
             url: string;
             alt: string | null;
             isCover: boolean;
             sortOrder: number;
-          }>;
+          };
         }) => Promise<unknown>;
       };
     };
@@ -26,15 +26,16 @@ export async function syncHotelImages(
 ) {
   const urls = imageUrls.map((url) => url.trim()).filter(Boolean);
   await db.hotelImage.deleteMany({ where: { hotelId } });
-  if (urls.length) {
-    await db.hotelImage.createMany({
-      data: urls.map((url, index) => ({
+  // Neon HTTP adapter does not support createMany (uses transactions).
+  for (let index = 0; index < urls.length; index += 1) {
+    await db.hotelImage.create({
+      data: {
         hotelId,
-        url,
+        url: urls[index],
         alt: altName,
         isCover: index === 0,
         sortOrder: index,
-      })),
+      },
     });
   }
   return {

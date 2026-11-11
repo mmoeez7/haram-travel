@@ -65,12 +65,16 @@ export async function POST(request: Request) {
     parsed.data.name
   );
 
-  const hotel = await prisma.hotel.update({
+  await prisma.hotel.update({
     where: { id: created.id },
     data: {
       coverImageUrl: synced.coverImageUrl,
       coverImageAlt: synced.coverImageAlt,
     },
+  });
+
+  const hotel = await prisma.hotel.findFirstOrThrow({
+    where: { id: created.id },
     include: { images: { orderBy: { sortOrder: "asc" } } },
   });
 

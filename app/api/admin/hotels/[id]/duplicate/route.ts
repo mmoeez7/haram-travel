@@ -39,15 +39,15 @@ export async function POST(_request: Request, { params }: Params) {
       },
     });
 
-    if (source.images.length) {
-      await prisma.hotelImage.createMany({
-        data: source.images.map((image) => ({
+    for (const image of source.images) {
+      await prisma.hotelImage.create({
+        data: {
           hotelId: created.id,
           url: image.url,
           alt: image.alt,
           sortOrder: image.sortOrder,
           isCover: image.isCover,
-        })),
+        },
       });
     }
 

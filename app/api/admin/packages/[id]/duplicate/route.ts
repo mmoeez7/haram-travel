@@ -52,36 +52,36 @@ export async function POST(_request: Request, { params }: Params) {
       },
     });
 
-    if (source.categories.length) {
-      await prisma.packageCategory.createMany({
-        data: source.categories.map((link) => ({
+    for (const link of source.categories) {
+      await prisma.packageCategory.create({
+        data: {
           packageId: copy.id,
           categoryId: link.categoryId,
-        })),
+        },
       });
     }
 
-    if (source.hotels.length) {
-      await prisma.packageHotel.createMany({
-        data: source.hotels.map((link) => ({
+    for (const link of source.hotels) {
+      await prisma.packageHotel.create({
+        data: {
           packageId: copy.id,
           hotelId: link.hotelId,
           role: link.role,
           nights: link.nights,
           notes: link.notes,
-        })),
+        },
       });
     }
 
-    if (source.images.length) {
-      await prisma.packageImage.createMany({
-        data: source.images.map((image) => ({
+    for (const image of source.images) {
+      await prisma.packageImage.create({
+        data: {
           packageId: copy.id,
           url: image.url,
           alt: image.alt,
           sortOrder: image.sortOrder,
           isCover: image.isCover,
-        })),
+        },
       });
     }
 

@@ -53,43 +53,56 @@ export async function PATCH(request: Request, { params }: Params) {
     existing.coverImageUrl ?? "",
   ].filter(Boolean);
 
-  const synced = await syncHotelImages(
-    prisma,
-    id,
-    parsed.data.imageUrls,
-    parsed.data.name
-  );
+  try {
+    const synced = await syncHotelImages(
+      prisma,
+      id,
+      parsed.data.imageUrls,
+      parsed.data.name
+    );
 
-  const hotel = await prisma.hotel.update({
-    where: { id },
-    data: {
-      name: parsed.data.name,
-      slug: parsed.data.slug,
-      city: parsed.data.city,
-      stars: parsed.data.stars,
-      walkingMinutes: parsed.data.walkingMinutes ?? null,
-      distanceToHaramM: parsed.data.distanceToHaramM ?? null,
-      description: parsed.data.description || null,
-      amenities: csvToArray(parsed.data.amenities),
-      coverImageUrl: synced.coverImageUrl,
-      coverImageAlt: synced.coverImageAlt,
-      sortOrder: parsed.data.sortOrder,
-      published: parsed.data.published,
-    },
-    include: { images: { orderBy: { sortOrder: "asc" } } },
-  });
+    // Neon HTTP adapter: update+include uses transactions — split the read.
+    await prisma.hotel.update({
+      where: { id },
+      data: {
+        name: parsed.data.name,
+        slug: parsed.data.slug,
+        city: parsed.data.city,
+        stars: parsed.data.stars,
+        walkingMinutes: parsed.data.walkingMinutes ?? null,
+        distanceToHaramM: parsed.data.distanceToHaramM ?? null,
+        description: parsed.data.description || null,
+        amenities: csvToArray(parsed.data.amenities),
+        coverImageUrl: synced.coverImageUrl,
+        coverImageAlt: synced.coverImageAlt,
+        sortOrder: parsed.data.sortOrder,
+        published: parsed.data.published,
+      },
+    });
 
-  await cleanupRemovedBlobUrls(previousUrls, parsed.data.imageUrls);
+    const hotel = await prisma.hotel.findFirstOrThrow({
+      where: { id },
+      include: { images: { orderBy: { sortOrder: "asc" } } },
+    });
 
-  await writeAuditLog({
-    adminUserId: session.user.id,
-    action: "HOTEL_UPDATE",
-    entityType: "hotel",
-    entityId: hotel.id,
-    metadata: { slug: hotel.slug, imageCount: hotel.images.length },
-  });
+    await cleanupRemovedBlobUrls(previousUrls, parsed.data.imageUrls);
 
-  return NextResponse.json({ hotel });
+    await writeAuditLog({
+      adminUserId: session.user.id,
+      action: "HOTEL_UPDATE",
+      entityType: "hotel",
+      entityId: hotel.id,
+      metadata: { slug: hotel.slug, imageCount: hotel.images.length },
+    });
+
+    return NextResponse.json({ hotel });
+  } catch (err) {
+    console.error("HOTEL_UPDATE failed", err);
+    return jsonError(
+      err instanceof Error ? err.message : "Could not update hotel",
+      500
+    );
+  }
 }
 
 export async function DELETE(_request: Request, { params }: Params) {
