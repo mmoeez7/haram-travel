@@ -13,8 +13,11 @@ function createPrismaClient() {
     throw new Error("Missing DATABASE_URL environment variable.");
   }
 
-  // HTTP adapter avoids the `ws` WebSocket stack on Vercel. Interactive
-  // `$transaction(async tx => …)` is unsupported — use sequential queries.
+  // Neon HTTP adapter (Vercel-safe). Unsupported patterns that throw at runtime:
+  // - prisma.$transaction(...)
+  // - createMany(...)
+  // - update({ include: ... }) / create({ include: ... })
+  // Use sequential create/update + a separate findFirst for includes.
   const adapter = new PrismaNeonHTTP(connectionString, {});
 
   return new PrismaClient({

@@ -112,57 +112,65 @@ export async function PATCH(request: Request, { params }: Params) {
     updatedById: session.user.id,
   };
 
-  // Sequential writes (Neon HTTP adapter — no interactive transactions / ws).
-  const pkg = await prisma.package.update({ where: { id }, data });
+  try {
+    // Sequential writes (Neon HTTP adapter — no interactive transactions / ws).
+    const pkg = await prisma.package.update({ where: { id }, data });
 
-  await prisma.packageCategory.deleteMany({ where: { packageId: pkg.id } });
-  if (categoryId) {
-    await prisma.packageCategory.create({
-      data: { packageId: pkg.id, categoryId },
+    await prisma.packageCategory.deleteMany({ where: { packageId: pkg.id } });
+    if (categoryId) {
+      await prisma.packageCategory.create({
+        data: { packageId: pkg.id, categoryId },
+      });
+    }
+
+    await prisma.packageHotel.deleteMany({ where: { packageId: pkg.id } });
+    if (parsed.data.makkahHotelId) {
+      await prisma.packageHotel.create({
+        data: {
+          packageId: pkg.id,
+          hotelId: parsed.data.makkahHotelId,
+          role: "MAKKAH",
+          nights: parsed.data.makkahNights,
+        },
+      });
+    }
+    if (parsed.data.madinahHotelId) {
+      await prisma.packageHotel.create({
+        data: {
+          packageId: pkg.id,
+          hotelId: parsed.data.madinahHotelId,
+          role: "MADINAH",
+          nights: parsed.data.madinahNights,
+        },
+      });
+    }
+
+    await cleanupRemovedBlobUrls(previousUrls, imageUrls);
+
+    await writeAuditLog({
+      adminUserId: session.user.id,
+      action: "PACKAGE_UPDATE",
+      entityType: "package",
+      entityId: pkg.id,
+      metadata: { slug: pkg.slug, published: pkg.published },
     });
+
+    revalidatePath("/", "layout");
+    revalidatePath("/umrah-packages");
+    revalidatePath("/3-star-umrah-packages");
+    revalidatePath("/4-star-umrah-packages");
+    revalidatePath("/5-star-umrah-packages");
+    revalidatePath("/hajj-packages");
+    revalidatePath("/categories", "layout");
+    revalidatePath(`/${pkg.slug}`);
+    return NextResponse.json({ package: pkg });
+  } catch (err) {
+    console.error("PACKAGE_UPDATE failed", err);
+    return jsonError(
+      err instanceof Error ? err.message : "Could not update package",
+      500
+    );
   }
-
-  await prisma.packageHotel.deleteMany({ where: { packageId: pkg.id } });
-  if (parsed.data.makkahHotelId) {
-    await prisma.packageHotel.create({
-      data: {
-        packageId: pkg.id,
-        hotelId: parsed.data.makkahHotelId,
-        role: "MAKKAH",
-        nights: parsed.data.makkahNights,
-      },
-    });
-  }
-  if (parsed.data.madinahHotelId) {
-    await prisma.packageHotel.create({
-      data: {
-        packageId: pkg.id,
-        hotelId: parsed.data.madinahHotelId,
-        role: "MADINAH",
-        nights: parsed.data.madinahNights,
-      },
-    });
-  }
-
-  await cleanupRemovedBlobUrls(previousUrls, imageUrls);
-
-  await writeAuditLog({
-    adminUserId: session.user.id,
-    action: "PACKAGE_UPDATE",
-    entityType: "package",
-    entityId: pkg.id,
-    metadata: { slug: pkg.slug, published: pkg.published },
-  });
-
-  revalidatePath("/", "layout");
-  revalidatePath("/umrah-packages");
-  revalidatePath("/3-star-umrah-packages");
-  revalidatePath("/4-star-umrah-packages");
-  revalidatePath("/5-star-umrah-packages");
-  revalidatePath("/hajj-packages");
-  revalidatePath("/categories", "layout");
-  revalidatePath(`/${pkg.slug}`);
-  return NextResponse.json({ package: pkg });
 }
 
 export async function DELETE(_request: Request, { params }: Params) {
