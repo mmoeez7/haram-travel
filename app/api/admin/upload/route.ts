@@ -27,6 +27,13 @@ export async function POST(request: Request) {
     const uploaded = await uploadImageFile(file, folder);
     return NextResponse.json(uploaded);
   } catch (err) {
-    return jsonError(err instanceof Error ? err.message : "Upload failed", 400);
+    const message = err instanceof Error ? err.message : "Upload failed";
+    console.error("[admin/upload]", message);
+    const status =
+      message.includes("BLOB_READ_WRITE_TOKEN") ||
+      message.includes("Vercel Blob")
+        ? 503
+        : 400;
+    return jsonError(message, status);
   }
 }

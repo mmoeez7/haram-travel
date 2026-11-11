@@ -24,6 +24,13 @@ function parseFolder(clientPayload: string | null): StorageFolder {
 }
 
 export async function POST(request: Request): Promise<NextResponse> {
+  if (!process.env.BLOB_READ_WRITE_TOKEN?.trim()) {
+    return jsonError(
+      "Vercel Blob is not configured. Add BLOB_READ_WRITE_TOKEN (and STORAGE_PROVIDER=vercel-blob) in Vercel Environment Variables, then redeploy.",
+      503
+    );
+  }
+
   const body = (await request.json()) as HandleUploadBody;
 
   try {
@@ -42,20 +49,21 @@ export async function POST(request: Request): Promise<NextResponse> {
           maximumSizeInBytes: MAX_IMAGE_BYTES,
           addRandomSuffix: true,
           tokenPayload: JSON.stringify({ folder }),
-          // Force pathname under the folder so keys stay organized.
-          // Client still passes a filename; suffix keeps uniqueness.
           allowOverwrite: false,
         };
-      },
-      onUploadCompleted: async () => {
-        // DB updates happen on form save (after Prisma succeeds), not here.
       },
     });
 
     return NextResponse.json(jsonResponse);
   } catch (error) {
     const message = error instanceof Error ? error.message : "Upload failed";
-    const status = message === "Unauthorized" ? 401 : 400;
+    console.error("[blob/upload]", message);
+    const status =
+      message === "Unauthorized"
+        ? 401
+        : message.toLowerCase().includes("token")
+          ? 503
+          : 400;
     return jsonError(message, status);
   }
 }
