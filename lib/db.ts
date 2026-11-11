@@ -8,6 +8,8 @@ const globalForPrisma = globalThis as unknown as {
 };
 
 neonConfig.webSocketConstructor = ws;
+// Prefer HTTP for pooled queries on serverless; keep WebSockets for transactions.
+neonConfig.poolQueryViaFetch = true;
 
 function createPrismaClient() {
   const connectionString = process.env.DATABASE_URL;
@@ -18,6 +20,7 @@ function createPrismaClient() {
   const adapter = new PrismaNeon({
     connectionString,
     connectionTimeoutMillis: 30_000,
+    max: 10,
   });
 
   return new PrismaClient({
