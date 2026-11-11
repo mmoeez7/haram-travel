@@ -29,6 +29,7 @@ export default async function AdminLoginPage({
         redirectTo: callbackUrl.startsWith("/admin") ? callbackUrl : "/admin",
       });
     } catch (error) {
+      // NEXT_REDIRECT from successful signIn must rethrow.
       if (error instanceof AuthError) {
         redirect("/admin/login?error=CredentialsSignin");
       }
