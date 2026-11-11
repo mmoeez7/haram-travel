@@ -1,4 +1,4 @@
-import DOMPurify from "isomorphic-dompurify";
+import sanitizeHtml from "sanitize-html";
 
 const ALLOWED_TAGS = [
   "p",
@@ -24,13 +24,29 @@ const ALLOWED_TAGS = [
   "blockquote",
 ];
 
-const ALLOWED_ATTR = ["href", "target", "rel", "style", "class"];
-
 export function sanitizeSeoHtml(html: string | null | undefined): string {
   if (!html?.trim()) return "";
-  return DOMPurify.sanitize(html, {
-    ALLOWED_TAGS,
-    ALLOWED_ATTR,
-    ALLOW_DATA_ATTR: false,
+
+  return sanitizeHtml(html, {
+    allowedTags: ALLOWED_TAGS,
+    allowedAttributes: {
+      a: ["href", "target", "rel", "class", "style"],
+      span: ["class", "style"],
+      div: ["class", "style"],
+      p: ["class", "style"],
+      h1: ["class", "style"],
+      h2: ["class", "style"],
+      h3: ["class", "style"],
+      h4: ["class", "style"],
+      h5: ["class", "style"],
+      h6: ["class", "style"],
+      li: ["class", "style"],
+      ul: ["class", "style"],
+      ol: ["class", "style"],
+      blockquote: ["class", "style"],
+    },
+    allowedSchemes: ["http", "https", "mailto", "tel"],
+    allowProtocolRelative: false,
+    disallowedTagsMode: "discard",
   }).trim();
 }
