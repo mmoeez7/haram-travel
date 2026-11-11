@@ -70,6 +70,10 @@ export const vercelBlobStorageProvider: StorageProvider = {
 };
 
 export async function deleteVercelBlobUrls(urls: string[]) {
+  // Deleting requires the write token — skip quietly if Blob is not configured yet
+  // so hotel/package text edits still save.
+  if (!process.env.BLOB_READ_WRITE_TOKEN?.trim()) return;
+
   const blobUrls = [...new Set(urls.filter(isVercelBlobUrl))];
   await Promise.all(
     blobUrls.map(async (url) => {
