@@ -10,6 +10,7 @@ import {
   parseAdminPage,
   parseAdminPageSize,
 } from "@/lib/admin-pagination";
+import { syncPackageImages } from "@/lib/package-images";
 import { revalidatePath } from "next/cache";
 
 function normalizeFeatures(value: unknown) {
@@ -108,7 +109,13 @@ export async function POST(request: Request) {
     if (!check.ok) return jsonError(check.message);
   }
 
-  const coverImageUrl = parsed.data.coverImageUrl || null;
+  const imageUrls =
+    (parsed.data.imageUrls?.length ?? 0) > 0
+      ? parsed.data.imageUrls
+      : parsed.data.coverImageUrl
+        ? [parsed.data.coverImageUrl]
+        : [];
+
   const data = {
     title: parsed.data.title,
     subtitle: parsed.data.subtitle,
@@ -125,7 +132,7 @@ export async function POST(request: Request) {
     features: linesToArray(parsed.data.features),
     shortDescription: parsed.data.shortDescription || null,
     description: parsed.data.description || null,
-    coverImageUrl,
+    coverImageUrl: imageUrls[0] ?? null,
     coverImageAlt: parsed.data.coverImageAlt || parsed.data.title,
     featured: parsed.data.featured,
     published: parsed.data.published,
@@ -162,14 +169,19 @@ export async function POST(request: Request) {
       },
     });
   }
-  if (coverImageUrl) {
-    await prisma.packageImage.create({
+
+  const synced = await syncPackageImages(
+    prisma,
+    pkg.id,
+    imageUrls,
+    data.coverImageAlt
+  );
+  if (synced.coverImageUrl !== data.coverImageUrl) {
+    await prisma.package.update({
+      where: { id: pkg.id },
       data: {
-        packageId: pkg.id,
-        url: coverImageUrl,
-        alt: data.coverImageAlt,
-        isCover: true,
-        sortOrder: 0,
+        coverImageUrl: synced.coverImageUrl,
+        coverImageAlt: synced.coverImageAlt,
       },
     });
   }

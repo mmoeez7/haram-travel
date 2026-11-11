@@ -4,12 +4,14 @@ import {
   isAllowedImageType,
   resolveImageType,
 } from "@/lib/image-upload-limits";
-import { getStorageProvider, type StorageFolder } from "@/lib/storage";
+import {
+  deleteVercelBlobUrls,
+  getStorageProvider,
+  isVercelBlobUrl,
+  type StorageFolder,
+} from "@/lib/storage";
 
-export async function uploadImageFile(
-  file: File,
-  folder: StorageFolder
-) {
+export async function uploadImageFile(file: File, folder: StorageFolder) {
   if (!isAllowedImageType(file.type, file.name)) {
     throw new Error("Only JPEG, PNG, WebP, or GIF images are allowed.");
   }
@@ -23,7 +25,6 @@ export async function uploadImageFile(
   let webp: Buffer;
   try {
     webp = await sharp(input, {
-      // Keep animated WebP/GIF readable instead of rejecting them.
       animated: sourceType === "image/webp" || sourceType === "image/gif",
       failOn: "none",
     })
@@ -37,7 +38,6 @@ export async function uploadImageFile(
       .webp({ quality: 80 })
       .toBuffer();
   } catch {
-    // Already-WebP files can fail re-encode on some builds — store the original.
     if (sourceType === "image/webp") {
       webp = input;
     } else {
@@ -54,10 +54,31 @@ export async function uploadImageFile(
 }
 
 export async function deleteStoredObject(urlOrKey: string) {
+  if (!urlOrKey) return;
+
+  if (isVercelBlobUrl(urlOrKey)) {
+    await deleteVercelBlobUrls([urlOrKey]);
+    return;
+  }
+
   if (!urlOrKey.startsWith("/uploads/")) {
     return;
   }
   const key = urlOrKey.replace(/^\/uploads\//, "");
   const storage = getStorageProvider();
   await storage.delete(key);
+}
+
+/** After a successful DB save, remove Blob URLs that are no longer referenced. */
+export async function cleanupRemovedBlobUrls(
+  previousUrls: string[],
+  nextUrls: string[]
+) {
+  const next = new Set(nextUrls.filter(Boolean));
+  const removed = previousUrls.filter(
+    (url) => url && !next.has(url) && isVercelBlobUrl(url)
+  );
+  if (removed.length) {
+    await deleteVercelBlobUrls(removed);
+  }
 }

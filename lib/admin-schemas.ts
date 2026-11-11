@@ -107,6 +107,7 @@ export const packageSchema = z.object({
   description: z.string().max(20000).optional().or(z.literal("")),
   coverImageUrl: z.string().optional().or(z.literal("")),
   coverImageAlt: z.string().max(200).optional().or(z.literal("")),
+  imageUrls: z.array(z.string().min(1)).optional().default([]),
   featured: z.coerce.boolean().default(false),
   published: z.coerce.boolean().default(false),
   sortOrder: z.coerce.number().int().min(0).default(0),

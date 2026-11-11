@@ -3,12 +3,14 @@
 import Image from "next/image";
 import { ImageIcon, Loader2 } from "lucide-react";
 import { useRef, useState } from "react";
+import { uploadAdminImage } from "@/lib/admin-blob-upload";
 import { adminLabelClass } from "@/components/admin/admin-ui";
 import {
   ALLOWED_IMAGE_ACCEPT,
   isAllowedImageType,
   MAX_IMAGE_BYTES,
 } from "@/lib/image-upload-limits";
+import type { StorageFolder } from "@/lib/storage/types";
 
 export type CoverUploadState = {
   file: File | null;
@@ -40,25 +42,17 @@ export function ImageUploadStatus({ label }: { label: string }) {
 
 export async function uploadAdminCover(
   file: File,
-  folder: "packages" | "hotels" | "categories" | "blogs"
+  folder: StorageFolder,
+  onProgress?: (percentage: number) => void
 ) {
-  const form = new FormData();
-  form.set("file", file);
-  form.set("folder", folder);
-  const response = await fetch("/api/admin/upload", {
-    method: "POST",
-    body: form,
-  });
-  const payload = await response.json();
-  if (!response.ok) throw new Error(payload.error || "Upload failed");
-  return payload.url as string;
+  return uploadAdminImage(file, folder, (p) => onProgress?.(p.percentage));
 }
 
 export function resolveCoverImageUrl(
   state: CoverUploadState,
   existingUrl?: string | null
 ) {
-  if (state.file) return null; // caller must upload
+  if (state.file) return null;
   if (state.removed) return "";
   return existingUrl ?? "";
 }
@@ -73,8 +67,6 @@ export function AdminCoverUpload({
 }: AdminCoverUploadProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(initialUrl);
-  const [file, setFile] = useState<File | null>(null);
-  const [removed, setRemoved] = useState(false);
 
   function emit(next: CoverUploadState) {
     onChange?.(next);
@@ -91,16 +83,12 @@ export function AdminCoverUpload({
       return;
     }
     const nextPreview = URL.createObjectURL(nextFile);
-    setFile(nextFile);
     setPreviewUrl(nextPreview);
-    setRemoved(false);
     emit({ file: nextFile, previewUrl: nextPreview, removed: false });
   }
 
   function clearCover() {
-    setFile(null);
     setPreviewUrl(null);
-    setRemoved(true);
     if (fileInputRef.current) fileInputRef.current.value = "";
     emit({ file: null, previewUrl: null, removed: true });
   }
@@ -144,7 +132,7 @@ export function AdminCoverUpload({
         onChange={(event) => onCoverChange(event.target.files?.[0] ?? null)}
       />
       <p className="mt-2 text-xs text-muted">
-        JPEG, PNG, WebP, or GIF under 5MB. Drag and drop or click to upload.
+        JPEG, PNG, WebP, or GIF under 5MB. Saved as WebP to Vercel Blob in production.
       </p>
       {previewUrl ? (
         <button

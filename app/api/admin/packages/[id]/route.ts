@@ -5,6 +5,8 @@ import { requireAdminApi, jsonError } from "@/lib/admin-api-auth";
 import { writeAuditLog, isSlugTaken } from "@/lib/admin";
 import { linesToArray, packageSchema } from "@/lib/admin-schemas";
 import { assertAssignableUmrahCategory } from "@/lib/package-category";
+import { syncPackageImages } from "@/lib/package-images";
+import { cleanupRemovedBlobUrls } from "@/lib/uploads";
 
 type Params = { params: Promise<{ id: string }> };
 
@@ -20,7 +22,11 @@ export async function GET(_request: Request, { params }: Params) {
 
   const pkg = await prisma.package.findFirst({
     where: { id, deletedAt: null },
-    include: { categories: true, hotels: true, images: true },
+    include: {
+      categories: true,
+      hotels: true,
+      images: { orderBy: { sortOrder: "asc" } },
+    },
   });
   if (!pkg) return jsonError("Package not found", 404);
   return NextResponse.json({ package: pkg });
@@ -34,6 +40,7 @@ export async function PATCH(request: Request, { params }: Params) {
 
   const existing = await prisma.package.findFirst({
     where: { id, deletedAt: null },
+    include: { images: { select: { url: true }, orderBy: { sortOrder: "asc" } } },
   });
   if (!existing) return jsonError("Package not found", 404);
 
@@ -42,6 +49,7 @@ export async function PATCH(request: Request, { params }: Params) {
     slug: body.slug || existing.slug,
     features: normalizeFeatures(body.features),
     categoryId: body.categoryId ?? "",
+    imageUrls: body.imageUrls ?? [],
   });
   if (!parsed.success) {
     return jsonError(parsed.error.issues[0]?.message ?? "Invalid package");
@@ -60,7 +68,25 @@ export async function PATCH(request: Request, { params }: Params) {
     if (!check.ok) return jsonError(check.message);
   }
 
-  const coverImageUrl = parsed.data.coverImageUrl || null;
+  const imageUrls =
+    parsed.data.imageUrls.length > 0
+      ? parsed.data.imageUrls
+      : parsed.data.coverImageUrl
+        ? [parsed.data.coverImageUrl]
+        : [];
+
+  const previousUrls = [
+    ...existing.images.map((img) => img.url),
+    existing.coverImageUrl ?? "",
+  ].filter(Boolean);
+
+  const synced = await syncPackageImages(
+    prisma,
+    id,
+    imageUrls,
+    parsed.data.coverImageAlt || parsed.data.title
+  );
+
   const data = {
     title: parsed.data.title,
     subtitle: parsed.data.subtitle,
@@ -77,8 +103,8 @@ export async function PATCH(request: Request, { params }: Params) {
     features: linesToArray(parsed.data.features),
     shortDescription: parsed.data.shortDescription || null,
     description: parsed.data.description || null,
-    coverImageUrl,
-    coverImageAlt: parsed.data.coverImageAlt || parsed.data.title,
+    coverImageUrl: synced.coverImageUrl,
+    coverImageAlt: synced.coverImageAlt || parsed.data.title,
     featured: parsed.data.featured,
     published: parsed.data.published,
     sortOrder: parsed.data.sortOrder,
@@ -118,20 +144,7 @@ export async function PATCH(request: Request, { params }: Params) {
     });
   }
 
-  if (coverImageUrl) {
-    await prisma.packageImage.deleteMany({
-      where: { packageId: pkg.id, isCover: true },
-    });
-    await prisma.packageImage.create({
-      data: {
-        packageId: pkg.id,
-        url: coverImageUrl,
-        alt: data.coverImageAlt,
-        isCover: true,
-        sortOrder: 0,
-      },
-    });
-  }
+  await cleanupRemovedBlobUrls(previousUrls, imageUrls);
 
   await writeAuditLog({
     adminUserId: session.user.id,

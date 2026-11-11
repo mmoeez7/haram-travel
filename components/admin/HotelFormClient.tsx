@@ -203,6 +203,8 @@ export function HotelFormClient({ hotel }: { hotel?: Hotel }) {
 
           <AdminMultiImageUpload
             className="sm:col-span-2 xl:col-span-3"
+            folder="hotels"
+            label="Hotel images"
             initialImages={initialHotelImages(hotel)}
             disabled={busy}
             onError={(msg) => toast.error(msg)}

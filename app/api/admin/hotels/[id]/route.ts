@@ -4,6 +4,7 @@ import { requireAdminApi, jsonError } from "@/lib/admin-api-auth";
 import { writeAuditLog, isSlugTaken } from "@/lib/admin";
 import { csvToArray, hotelSchema } from "@/lib/admin-schemas";
 import { syncHotelImages } from "@/lib/hotel-images";
+import { cleanupRemovedBlobUrls } from "@/lib/uploads";
 
 type Params = { params: Promise<{ id: string }> };
 
@@ -28,6 +29,7 @@ export async function PATCH(request: Request, { params }: Params) {
 
   const existing = await prisma.hotel.findFirst({
     where: { id, deletedAt: null },
+    include: { images: { select: { url: true } } },
   });
   if (!existing) return jsonError("Hotel not found", 404);
 
@@ -45,6 +47,11 @@ export async function PATCH(request: Request, { params }: Params) {
   if (await isSlugTaken("hotel", parsed.data.slug, id)) {
     return jsonError("Slug is already in use");
   }
+
+  const previousUrls = [
+    ...existing.images.map((img) => img.url),
+    existing.coverImageUrl ?? "",
+  ].filter(Boolean);
 
   const synced = await syncHotelImages(
     prisma,
@@ -71,6 +78,8 @@ export async function PATCH(request: Request, { params }: Params) {
     },
     include: { images: { orderBy: { sortOrder: "asc" } } },
   });
+
+  await cleanupRemovedBlobUrls(previousUrls, parsed.data.imageUrls);
 
   await writeAuditLog({
     adminUserId: session.user.id,

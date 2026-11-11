@@ -23,10 +23,10 @@ import {
   adminSecondaryButtonClass,
 } from "@/components/admin/admin-ui";
 import {
-  AdminCoverUpload,
-  uploadAdminCover,
-  type CoverUploadState,
-} from "@/components/admin/AdminCoverUpload";
+  AdminMultiImageUpload,
+  type ExistingGalleryImage,
+  type MultiImageUploadHandle,
+} from "@/components/admin/AdminMultiImageUpload";
 import { AdminIncludesInput } from "@/components/admin/AdminIncludesInput";
 import { AdminSlugField } from "@/components/admin/AdminSlugField";
 import { SITE } from "@/lib/constants";
@@ -61,28 +61,46 @@ type PackageDetail = {
   sortOrder: number;
   categories: { categoryId: string }[];
   hotels: { hotelId: string; role: string }[];
+  images?: Array<{
+    id?: string;
+    url: string;
+    alt?: string | null;
+    sortOrder?: number;
+    isCover?: boolean;
+  }>;
 };
+
+function initialPackageImages(pkg: PackageDetail | null): ExistingGalleryImage[] {
+  if (!pkg) return [];
+  if (pkg.images?.length) {
+    return pkg.images.map((img) => ({
+      id: img.id,
+      url: img.url,
+      alt: img.alt,
+    }));
+  }
+  if (pkg.coverImageUrl) {
+    return [{ url: pkg.coverImageUrl, alt: pkg.coverImageAlt }];
+  }
+  return [];
+}
 
 export function PackageFormClient({ packageId }: { packageId?: string }) {
   const router = useRouter();
   const formRef = useRef<HTMLFormElement>(null);
+  const imagesRef = useRef<MultiImageUploadHandle | null>(null);
   const [categories, setCategories] = useState<Category[]>([]);
   const [hotels, setHotels] = useState<Hotel[]>([]);
   const [pkg, setPkg] = useState<PackageDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState<"draft" | "publish" | null>(null);
-  const [uploadingCover, setUploadingCover] = useState(false);
   const [journeyType, setJourneyType] = useState("UMRAH");
   const [umrahGroup, setUmrahGroup] = useState<UmrahRootSlug>(UMRAH_PACKAGES_ROOT_SLUG);
   const [categoryId, setCategoryId] = useState("");
   const [includes, setIncludes] = useState<string[]>([]);
   const [title, setTitle] = useState("");
   const [slug, setSlug] = useState("");
-  const [cover, setCover] = useState<CoverUploadState>({
-    file: null,
-    previewUrl: null,
-    removed: false,
-  });
+  const [galleryKey, setGalleryKey] = useState("new-package");
 
   useEffect(() => {
     async function load() {
@@ -102,11 +120,7 @@ export function PackageFormClient({ packageId }: { packageId?: string }) {
           setIncludes(detail.package.features ?? []);
           setTitle(detail.package.title);
           setSlug(detail.package.slug);
-          setCover({
-            file: null,
-            previewUrl: detail.package.coverImageUrl,
-            removed: false,
-          });
+          setGalleryKey(detail.package.id);
 
           const linkedId = detail.package.categories[0]?.categoryId ?? "";
           if (linkedId) {
@@ -160,15 +174,8 @@ export function PackageFormClient({ packageId }: { packageId?: string }) {
     const data = new FormData(form);
 
     try {
-      let coverImageUrl = cover.removed ? "" : (pkg?.coverImageUrl ?? "");
-      if (cover.file) {
-        setUploadingCover(true);
-        try {
-          coverImageUrl = await uploadAdminCover(cover.file, "packages");
-        } finally {
-          setUploadingCover(false);
-        }
-      }
+      const imageUrls = (await imagesRef.current?.collectUrls()) ?? [];
+      const coverImageUrl = imageUrls[0] ?? "";
 
       const nextTitle = String(data.get("title") || title || "");
       if (!slug.trim()) {
@@ -194,6 +201,7 @@ export function PackageFormClient({ packageId }: { packageId?: string }) {
         description: String(data.get("description") || ""),
         coverImageUrl,
         coverImageAlt: String(data.get("coverImageAlt") || nextTitle),
+        imageUrls,
         featured: data.get("featured") === "on",
         published,
         sortOrder: pkg?.sortOrder ?? 0,
@@ -496,13 +504,14 @@ export function PackageFormClient({ packageId }: { packageId?: string }) {
               </select>
             </label>
 
-            <AdminCoverUpload
-              key={pkg?.id ?? "new-package"}
+            <AdminMultiImageUpload
+              key={galleryKey}
               className="md:col-span-2"
-              initialUrl={pkg?.coverImageUrl}
+              folder="packages"
+              label="Package images"
+              initialImages={initialPackageImages(pkg)}
               disabled={busy}
-              uploading={uploadingCover}
-              onChange={setCover}
+              uploadRef={imagesRef}
               onError={(msg) => toast.error(msg)}
             />
             <label className={`${adminLabelClass} md:col-span-2`}>
