@@ -1,15 +1,9 @@
-import { PrismaNeon } from "@prisma/adapter-neon";
-import { neonConfig } from "@neondatabase/serverless";
+import { PrismaNeonHTTP } from "@prisma/adapter-neon";
 import { PrismaClient } from "@prisma/client";
-import ws from "ws";
 
 const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined;
 };
-
-neonConfig.webSocketConstructor = ws;
-// Prefer HTTP for pooled queries on serverless; keep WebSockets for transactions.
-neonConfig.poolQueryViaFetch = true;
 
 function createPrismaClient() {
   const connectionString = process.env.DATABASE_URL;
@@ -17,11 +11,9 @@ function createPrismaClient() {
     throw new Error("Missing DATABASE_URL environment variable.");
   }
 
-  const adapter = new PrismaNeon({
-    connectionString,
-    connectionTimeoutMillis: 30_000,
-    max: 10,
-  });
+  // HTTP adapter avoids the `ws` WebSocket stack on Vercel. Interactive
+  // `$transaction(async tx => …)` is unsupported — use sequential queries.
+  const adapter = new PrismaNeonHTTP(connectionString, {});
 
   return new PrismaClient({
     adapter,

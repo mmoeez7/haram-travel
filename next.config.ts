@@ -4,6 +4,11 @@ import { wordpressUrlRedirects } from "./lib/package-paths";
 const nextConfig: NextConfig = {
   // Match WordPress public URLs (e.g. /05-star-7-nights-umrah-package/)
   trailingSlash: true,
+  serverExternalPackages: [
+    "@neondatabase/serverless",
+    "@prisma/adapter-neon",
+    "@prisma/client",
+  ],
   experimental: {
     serverActions: {
       bodySizeLimit: "6mb",

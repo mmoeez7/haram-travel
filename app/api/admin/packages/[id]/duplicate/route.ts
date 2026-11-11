@@ -24,70 +24,66 @@ export async function POST(_request: Request, { params }: Params) {
   const slug = duplicateSlug(source.slug);
 
   try {
-    const copy = await prisma.$transaction(async (tx) => {
-      const created = await tx.package.create({
-        data: {
-          title: `${source.title} (Copy)`,
-          subtitle: source.subtitle,
-          slug,
-          journeyType: source.journeyType,
-          stars: source.stars,
-          nights: source.nights,
-          makkahNights: source.makkahNights,
-          madinahNights: source.madinahNights,
-          priceFrom: source.priceFrom,
-          deposit: source.deposit,
-          badge: source.badge,
-          season: source.season,
-          features: source.features,
-          shortDescription: source.shortDescription,
-          description: source.description,
-          coverImageUrl: source.coverImageUrl,
-          coverImageAlt: source.coverImageAlt,
-          featured: false,
-          published: false,
-          sortOrder: source.sortOrder,
-          publishedAt: null,
-          createdById: session.user.id,
-          updatedById: session.user.id,
-        },
-      });
-
-      if (source.categories.length) {
-        await tx.packageCategory.createMany({
-          data: source.categories.map((link) => ({
-            packageId: created.id,
-            categoryId: link.categoryId,
-          })),
-        });
-      }
-
-      if (source.hotels.length) {
-        await tx.packageHotel.createMany({
-          data: source.hotels.map((link) => ({
-            packageId: created.id,
-            hotelId: link.hotelId,
-            role: link.role,
-            nights: link.nights,
-            notes: link.notes,
-          })),
-        });
-      }
-
-      if (source.images.length) {
-        await tx.packageImage.createMany({
-          data: source.images.map((image) => ({
-            packageId: created.id,
-            url: image.url,
-            alt: image.alt,
-            sortOrder: image.sortOrder,
-            isCover: image.isCover,
-          })),
-        });
-      }
-
-      return created;
+    const copy = await prisma.package.create({
+      data: {
+        title: `${source.title} (Copy)`,
+        subtitle: source.subtitle,
+        slug,
+        journeyType: source.journeyType,
+        stars: source.stars,
+        nights: source.nights,
+        makkahNights: source.makkahNights,
+        madinahNights: source.madinahNights,
+        priceFrom: source.priceFrom,
+        deposit: source.deposit,
+        badge: source.badge,
+        season: source.season,
+        features: source.features,
+        shortDescription: source.shortDescription,
+        description: source.description,
+        coverImageUrl: source.coverImageUrl,
+        coverImageAlt: source.coverImageAlt,
+        featured: false,
+        published: false,
+        sortOrder: source.sortOrder,
+        publishedAt: null,
+        createdById: session.user.id,
+        updatedById: session.user.id,
+      },
     });
+
+    if (source.categories.length) {
+      await prisma.packageCategory.createMany({
+        data: source.categories.map((link) => ({
+          packageId: copy.id,
+          categoryId: link.categoryId,
+        })),
+      });
+    }
+
+    if (source.hotels.length) {
+      await prisma.packageHotel.createMany({
+        data: source.hotels.map((link) => ({
+          packageId: copy.id,
+          hotelId: link.hotelId,
+          role: link.role,
+          nights: link.nights,
+          notes: link.notes,
+        })),
+      });
+    }
+
+    if (source.images.length) {
+      await prisma.packageImage.createMany({
+        data: source.images.map((image) => ({
+          packageId: copy.id,
+          url: image.url,
+          alt: image.alt,
+          sortOrder: image.sortOrder,
+          isCover: image.isCover,
+        })),
+      });
+    }
 
     await writeAuditLog({
       adminUserId: session.user.id,

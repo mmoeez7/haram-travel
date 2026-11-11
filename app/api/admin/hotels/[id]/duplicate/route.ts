@@ -20,42 +20,40 @@ export async function POST(_request: Request, { params }: Params) {
   const slug = duplicateSlug(source.slug);
 
   try {
-    const copy = await prisma.$transaction(async (tx) => {
-      const created = await tx.hotel.create({
-        data: {
-          name: `${source.name} (Copy)`,
-          slug,
-          city: source.city,
-          stars: source.stars,
-          walkingMinutes: source.walkingMinutes,
-          distanceToHaramM: source.distanceToHaramM,
-          address: source.address,
-          shortDescription: source.shortDescription,
-          description: source.description,
-          coverImageUrl: source.coverImageUrl,
-          coverImageAlt: source.coverImageAlt,
-          amenities: source.amenities,
-          published: false,
-          sortOrder: source.sortOrder,
-        },
-      });
+    const created = await prisma.hotel.create({
+      data: {
+        name: `${source.name} (Copy)`,
+        slug,
+        city: source.city,
+        stars: source.stars,
+        walkingMinutes: source.walkingMinutes,
+        distanceToHaramM: source.distanceToHaramM,
+        address: source.address,
+        shortDescription: source.shortDescription,
+        description: source.description,
+        coverImageUrl: source.coverImageUrl,
+        coverImageAlt: source.coverImageAlt,
+        amenities: source.amenities,
+        published: false,
+        sortOrder: source.sortOrder,
+      },
+    });
 
-      if (source.images.length) {
-        await tx.hotelImage.createMany({
-          data: source.images.map((image) => ({
-            hotelId: created.id,
-            url: image.url,
-            alt: image.alt,
-            sortOrder: image.sortOrder,
-            isCover: image.isCover,
-          })),
-        });
-      }
-
-      return tx.hotel.findFirstOrThrow({
-        where: { id: created.id },
-        include: { images: { orderBy: { sortOrder: "asc" } } },
+    if (source.images.length) {
+      await prisma.hotelImage.createMany({
+        data: source.images.map((image) => ({
+          hotelId: created.id,
+          url: image.url,
+          alt: image.alt,
+          sortOrder: image.sortOrder,
+          isCover: image.isCover,
+        })),
       });
+    }
+
+    const copy = await prisma.hotel.findFirstOrThrow({
+      where: { id: created.id },
+      include: { images: { orderBy: { sortOrder: "asc" } } },
     });
 
     await writeAuditLog({

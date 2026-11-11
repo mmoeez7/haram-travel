@@ -46,32 +46,30 @@ export async function PATCH(request: Request, { params }: Params) {
     return jsonError("Slug is already in use");
   }
 
-  const hotel = await prisma.$transaction(async (tx) => {
-    const synced = await syncHotelImages(
-      tx,
-      id,
-      parsed.data.imageUrls,
-      parsed.data.name
-    );
+  const synced = await syncHotelImages(
+    prisma,
+    id,
+    parsed.data.imageUrls,
+    parsed.data.name
+  );
 
-    return tx.hotel.update({
-      where: { id },
-      data: {
-        name: parsed.data.name,
-        slug: parsed.data.slug,
-        city: parsed.data.city,
-        stars: parsed.data.stars,
-        walkingMinutes: parsed.data.walkingMinutes ?? null,
-        distanceToHaramM: parsed.data.distanceToHaramM ?? null,
-        description: parsed.data.description || null,
-        amenities: csvToArray(parsed.data.amenities),
-        coverImageUrl: synced.coverImageUrl,
-        coverImageAlt: synced.coverImageAlt,
-        sortOrder: parsed.data.sortOrder,
-        published: parsed.data.published,
-      },
-      include: { images: { orderBy: { sortOrder: "asc" } } },
-    });
+  const hotel = await prisma.hotel.update({
+    where: { id },
+    data: {
+      name: parsed.data.name,
+      slug: parsed.data.slug,
+      city: parsed.data.city,
+      stars: parsed.data.stars,
+      walkingMinutes: parsed.data.walkingMinutes ?? null,
+      distanceToHaramM: parsed.data.distanceToHaramM ?? null,
+      description: parsed.data.description || null,
+      amenities: csvToArray(parsed.data.amenities),
+      coverImageUrl: synced.coverImageUrl,
+      coverImageAlt: synced.coverImageAlt,
+      sortOrder: parsed.data.sortOrder,
+      published: parsed.data.published,
+    },
+    include: { images: { orderBy: { sortOrder: "asc" } } },
   });
 
   await writeAuditLog({

@@ -135,47 +135,44 @@ export async function POST(request: Request) {
     updatedById: session.user.id,
   };
 
-  const pkg = await prisma.$transaction(async (tx) => {
-    const saved = await tx.package.create({ data });
+  const pkg = await prisma.package.create({ data });
 
-    if (categoryId) {
-      await tx.packageCategory.create({
-        data: { packageId: saved.id, categoryId },
-      });
-    }
-    if (parsed.data.makkahHotelId) {
-      await tx.packageHotel.create({
-        data: {
-          packageId: saved.id,
-          hotelId: parsed.data.makkahHotelId,
-          role: "MAKKAH",
-          nights: parsed.data.makkahNights,
-        },
-      });
-    }
-    if (parsed.data.madinahHotelId) {
-      await tx.packageHotel.create({
-        data: {
-          packageId: saved.id,
-          hotelId: parsed.data.madinahHotelId,
-          role: "MADINAH",
-          nights: parsed.data.madinahNights,
-        },
-      });
-    }
-    if (coverImageUrl) {
-      await tx.packageImage.create({
-        data: {
-          packageId: saved.id,
-          url: coverImageUrl,
-          alt: data.coverImageAlt,
-          isCover: true,
-          sortOrder: 0,
-        },
-      });
-    }
-    return saved;
-  });
+  if (categoryId) {
+    await prisma.packageCategory.create({
+      data: { packageId: pkg.id, categoryId },
+    });
+  }
+  if (parsed.data.makkahHotelId) {
+    await prisma.packageHotel.create({
+      data: {
+        packageId: pkg.id,
+        hotelId: parsed.data.makkahHotelId,
+        role: "MAKKAH",
+        nights: parsed.data.makkahNights,
+      },
+    });
+  }
+  if (parsed.data.madinahHotelId) {
+    await prisma.packageHotel.create({
+      data: {
+        packageId: pkg.id,
+        hotelId: parsed.data.madinahHotelId,
+        role: "MADINAH",
+        nights: parsed.data.madinahNights,
+      },
+    });
+  }
+  if (coverImageUrl) {
+    await prisma.packageImage.create({
+      data: {
+        packageId: pkg.id,
+        url: coverImageUrl,
+        alt: data.coverImageAlt,
+        isCover: true,
+        sortOrder: 0,
+      },
+    });
+  }
 
   await writeAuditLog({
     adminUserId: session.user.id,

@@ -39,41 +39,39 @@ export async function POST(request: Request) {
     return jsonError("Slug is already in use");
   }
 
-  const hotel = await prisma.$transaction(async (tx) => {
-    const created = await tx.hotel.create({
-      data: {
-        name: parsed.data.name,
-        slug: parsed.data.slug,
-        city: parsed.data.city,
-        stars: parsed.data.stars,
-        walkingMinutes: parsed.data.walkingMinutes ?? null,
-        distanceToHaramM: parsed.data.distanceToHaramM ?? null,
-        address: parsed.data.address || null,
-        shortDescription: parsed.data.shortDescription || null,
-        description: parsed.data.description || null,
-        amenities: csvToArray(parsed.data.amenities),
-        coverImageUrl: null,
-        coverImageAlt: null,
-        sortOrder: parsed.data.sortOrder,
-        published: parsed.data.published,
-      },
-    });
+  const created = await prisma.hotel.create({
+    data: {
+      name: parsed.data.name,
+      slug: parsed.data.slug,
+      city: parsed.data.city,
+      stars: parsed.data.stars,
+      walkingMinutes: parsed.data.walkingMinutes ?? null,
+      distanceToHaramM: parsed.data.distanceToHaramM ?? null,
+      address: parsed.data.address || null,
+      shortDescription: parsed.data.shortDescription || null,
+      description: parsed.data.description || null,
+      amenities: csvToArray(parsed.data.amenities),
+      coverImageUrl: null,
+      coverImageAlt: null,
+      sortOrder: parsed.data.sortOrder,
+      published: parsed.data.published,
+    },
+  });
 
-    const synced = await syncHotelImages(
-      tx,
-      created.id,
-      parsed.data.imageUrls,
-      parsed.data.name
-    );
+  const synced = await syncHotelImages(
+    prisma,
+    created.id,
+    parsed.data.imageUrls,
+    parsed.data.name
+  );
 
-    return tx.hotel.update({
-      where: { id: created.id },
-      data: {
-        coverImageUrl: synced.coverImageUrl,
-        coverImageAlt: synced.coverImageAlt,
-      },
-      include: { images: { orderBy: { sortOrder: "asc" } } },
-    });
+  const hotel = await prisma.hotel.update({
+    where: { id: created.id },
+    data: {
+      coverImageUrl: synced.coverImageUrl,
+      coverImageAlt: synced.coverImageAlt,
+    },
+    include: { images: { orderBy: { sortOrder: "asc" } } },
   });
 
   await writeAuditLog({

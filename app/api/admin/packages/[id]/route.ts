@@ -86,55 +86,52 @@ export async function PATCH(request: Request, { params }: Params) {
     updatedById: session.user.id,
   };
 
-  const pkg = await prisma.$transaction(async (tx) => {
-    const saved = await tx.package.update({ where: { id }, data });
+  // Sequential writes (Neon HTTP adapter — no interactive transactions / ws).
+  const pkg = await prisma.package.update({ where: { id }, data });
 
-    await tx.packageCategory.deleteMany({ where: { packageId: saved.id } });
-    if (categoryId) {
-      await tx.packageCategory.create({
-        data: { packageId: saved.id, categoryId },
-      });
-    }
+  await prisma.packageCategory.deleteMany({ where: { packageId: pkg.id } });
+  if (categoryId) {
+    await prisma.packageCategory.create({
+      data: { packageId: pkg.id, categoryId },
+    });
+  }
 
-    await tx.packageHotel.deleteMany({ where: { packageId: saved.id } });
-    if (parsed.data.makkahHotelId) {
-      await tx.packageHotel.create({
-        data: {
-          packageId: saved.id,
-          hotelId: parsed.data.makkahHotelId,
-          role: "MAKKAH",
-          nights: parsed.data.makkahNights,
-        },
-      });
-    }
-    if (parsed.data.madinahHotelId) {
-      await tx.packageHotel.create({
-        data: {
-          packageId: saved.id,
-          hotelId: parsed.data.madinahHotelId,
-          role: "MADINAH",
-          nights: parsed.data.madinahNights,
-        },
-      });
-    }
+  await prisma.packageHotel.deleteMany({ where: { packageId: pkg.id } });
+  if (parsed.data.makkahHotelId) {
+    await prisma.packageHotel.create({
+      data: {
+        packageId: pkg.id,
+        hotelId: parsed.data.makkahHotelId,
+        role: "MAKKAH",
+        nights: parsed.data.makkahNights,
+      },
+    });
+  }
+  if (parsed.data.madinahHotelId) {
+    await prisma.packageHotel.create({
+      data: {
+        packageId: pkg.id,
+        hotelId: parsed.data.madinahHotelId,
+        role: "MADINAH",
+        nights: parsed.data.madinahNights,
+      },
+    });
+  }
 
-    if (coverImageUrl) {
-      await tx.packageImage.deleteMany({
-        where: { packageId: saved.id, isCover: true },
-      });
-      await tx.packageImage.create({
-        data: {
-          packageId: saved.id,
-          url: coverImageUrl,
-          alt: data.coverImageAlt,
-          isCover: true,
-          sortOrder: 0,
-        },
-      });
-    }
-
-    return saved;
-  });
+  if (coverImageUrl) {
+    await prisma.packageImage.deleteMany({
+      where: { packageId: pkg.id, isCover: true },
+    });
+    await prisma.packageImage.create({
+      data: {
+        packageId: pkg.id,
+        url: coverImageUrl,
+        alt: data.coverImageAlt,
+        isCover: true,
+        sortOrder: 0,
+      },
+    });
+  }
 
   await writeAuditLog({
     adminUserId: session.user.id,
