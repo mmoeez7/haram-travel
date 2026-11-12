@@ -7,7 +7,7 @@ export async function VideoReviews() {
   if (!videos.length) return null;
 
   return (
-    <section className="bg-cream py-12 md:py-20">
+    <section id="video-reviews" className="scroll-mt-24 bg-cream py-12 md:py-20">
       <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
         <SectionHeading
           eyebrow="Live Experience"

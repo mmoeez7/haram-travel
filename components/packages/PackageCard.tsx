@@ -13,7 +13,7 @@ export function PackageCard({ pkg }: { pkg: PackageItem }) {
 
   return (
     <article className="card-lift flex h-full flex-col overflow-hidden rounded-xl border border-border bg-white shadow-sm md:rounded-2xl">
-      <Link href={href} className="relative block h-36 overflow-hidden bg-cream sm:h-40 md:h-48">
+      <Link href={href} className="relative block h-44 overflow-hidden bg-cream sm:h-48 md:h-56">
         {pkg.image ? (
           <Image
             src={pkg.image}
@@ -28,36 +28,38 @@ export function PackageCard({ pkg }: { pkg: PackageItem }) {
         </span>
       </Link>
 
-      <div className="flex flex-1 flex-col p-3.5 sm:p-4 md:p-5">
+      <div className="flex flex-1 flex-col p-3 sm:p-3.5 md:p-4">
         <h3 className="font-display text-base font-semibold uppercase tracking-wide text-charcoal sm:text-lg md:text-xl">
           <Link href={href} className="hover:text-gold-dark">
             {pkg.title}
           </Link>
         </h3>
-        <p className="mt-0.5 text-xs font-medium text-gold-dark md:mt-1 md:text-sm">
+        <p className="mt-0.5 text-xs font-medium text-gold-dark md:text-sm">
           {pkg.subtitle}
         </p>
 
-        <div className="mt-3 grid grid-cols-2 gap-1.5 md:mt-4 md:gap-2">
-          <div className="rounded-lg bg-cream px-2 py-1.5 text-center text-[10px] font-medium leading-snug text-ink md:px-3 md:py-2 md:text-xs">
+        <div className="mt-2 grid grid-cols-2 gap-1.5 md:mt-2.5 md:gap-2">
+          <div className="rounded-lg bg-cream px-2 py-1.5 text-center text-[10px] font-medium leading-snug text-ink md:px-2.5 md:py-1.5 md:text-xs">
             {String(pkg.makkahNights).padStart(2, "0")} Nights in Makkah
           </div>
-          <div className="rounded-lg bg-cream px-2 py-1.5 text-center text-[10px] font-medium leading-snug text-ink md:px-3 md:py-2 md:text-xs">
+          <div className="rounded-lg bg-cream px-2 py-1.5 text-center text-[10px] font-medium leading-snug text-ink md:px-2.5 md:py-1.5 md:text-xs">
             {String(pkg.madinahNights).padStart(2, "0")} Nights in Madinah
           </div>
         </div>
 
-        <ul className="mt-3 space-y-1.5 md:mt-4 md:space-y-2">
+        <ul className="mt-2 space-y-1.5 md:mt-2.5 md:space-y-2">
           {pkg.features.map((feature) => (
-            <li key={feature} className="flex items-start gap-1.5 text-xs text-muted md:gap-2 md:text-sm">
-              <Check className="mt-0.5 h-3.5 w-3.5 shrink-0 text-forest md:h-4 md:w-4" />
-              {feature}
+            <li key={feature}>
+              <span className="inline-flex max-w-full items-start gap-1.5 rounded-md bg-charcoal/[0.06] px-2 py-1 text-xs text-muted md:gap-2 md:px-2.5 md:py-1.5 md:text-sm">
+                <Check className="mt-0.5 h-3.5 w-3.5 shrink-0 text-forest md:h-4 md:w-4" />
+                {feature}
+              </span>
             </li>
           ))}
         </ul>
 
-        <div className="mt-auto pt-4 md:pt-5">
-          <div className="mb-3 flex items-end justify-between gap-2 md:mb-4 md:gap-3">
+        <div className="mt-auto pt-3 md:pt-3.5">
+          <div className="mb-2.5 flex items-end justify-between gap-2 md:mb-3 md:gap-3">
             <div>
               <p className="text-[10px] uppercase tracking-wide text-muted md:text-xs">From</p>
               <p className="font-display text-2xl font-semibold text-charcoal md:text-3xl">

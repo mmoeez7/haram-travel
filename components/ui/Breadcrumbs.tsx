@@ -18,7 +18,7 @@ export function Breadcrumbs({
     >
       <ol className="flex flex-wrap items-center gap-2">
         {items.map((item, i) => (
-          <li key={item.label} className="flex items-center gap-2">
+          <li key={`${i}-${item.href ?? item.label}`} className="flex items-center gap-2">
             {i > 0 ? (
               <span className={onDark ? "text-white/40" : "text-border"}>/</span>
             ) : null}

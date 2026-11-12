@@ -6,14 +6,14 @@ import { PackageCard } from "@/components/packages/PackageCard";
 
 type PackageCarouselProps = {
   packages: PackageItem[];
-  /** Max cards in the carousel (default 3). */
+  /** Max cards in the carousel. Omit to show all packages. */
   limit?: number;
 };
 
-export function PackageCarousel({ packages, limit = 3 }: PackageCarouselProps) {
+export function PackageCarousel({ packages, limit }: PackageCarouselProps) {
   const trackRef = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
-  const items = packages.slice(0, limit);
+  const items = limit != null ? packages.slice(0, limit) : packages;
 
   const updateActive = useCallback(() => {
     const track = trackRef.current;
