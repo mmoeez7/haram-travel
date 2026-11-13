@@ -1,31 +1,59 @@
 "use client";
 
 import { useState } from "react";
+import toast from "react-hot-toast";
 import { whatsappUrl } from "@/lib/constants";
 import { Button } from "@/components/ui/Button";
 
 const fieldClass =
   "mt-1.5 w-full rounded-lg border border-border bg-white px-3 py-2.5 text-sm text-charcoal outline-none focus:border-gold";
 
+const emptyContact = {
+  name: "",
+  email: "",
+  phone: "",
+  message: "",
+};
+
 export function InquiryForm() {
-  const [form, setForm] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    message: "",
-  });
+  const [form, setForm] = useState(emptyContact);
+  const [submitting, setSubmitting] = useState(false);
 
   function update(key: keyof typeof form, value: string) {
     setForm((current) => ({ ...current, [key]: value }));
   }
 
-  function onSubmit(event: React.FormEvent) {
+  async function onSubmit(event: React.FormEvent) {
     event.preventDefault();
-    const text = `Assalamu Alaikum, contact from ${form.name}.
-Email: ${form.email}
-Contact number: ${form.phone}
-Message: ${form.message || "None"}`;
-    window.open(whatsappUrl(text), "_blank", "noopener,noreferrer");
+    if (!form.name.trim() || !form.email.trim() || !form.phone.trim()) {
+      toast.error("Please enter your name, email and contact number.");
+      return;
+    }
+
+    setSubmitting(true);
+    try {
+      const res = await fetch("/api/inquiries", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          type: "contact",
+          name: form.name.trim(),
+          email: form.email.trim(),
+          phone: form.phone.trim(),
+          message: form.message.trim(),
+        }),
+      });
+      const data = (await res.json().catch(() => ({}))) as { error?: string };
+      if (!res.ok) {
+        throw new Error(data.error || "Could not send message");
+      }
+      toast.success("Message sent — our team will get back to you shortly.");
+      setForm(emptyContact);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Could not send message");
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -65,6 +93,7 @@ Message: ${form.message || "None"}`;
         <label className="block text-sm font-medium text-charcoal">
           Contact Number
           <input
+            required
             className={fieldClass}
             placeholder="Contact Number"
             value={form.phone}
@@ -82,8 +111,8 @@ Message: ${form.message || "None"}`;
           />
         </label>
       </div>
-      <Button type="submit" variant="gold" className="mt-6 w-full !py-3">
-        Send
+      <Button type="submit" variant="gold" className="mt-6 w-full !py-3" disabled={submitting}>
+        {submitting ? "Sending…" : "Send"}
       </Button>
     </form>
   );

@@ -139,3 +139,36 @@ export function csvToArray(value?: string | null) {
     .map((item) => item.trim())
     .filter(Boolean);
 }
+
+export const packageInquirySchema = z.object({
+  name: z.string().trim().min(2, "Enter your name").max(120),
+  email: z.string().trim().email("Enter a valid email").max(160),
+  phone: z
+    .string()
+    .trim()
+    .min(10, "Enter a UK WhatsApp number")
+    .max(24),
+  season: z.enum(["winter", "ramadan", "spring", "flexible"]),
+  departure: z.enum(["london", "manchester", "birmingham"]),
+  nights: z.coerce.number().int().refine((n) => [7, 10, 12, 14].includes(n), {
+    message: "Select nights",
+  }),
+  hotelTier: z.enum(["clock_tower_5", "footsteps_4", "shuttle_3"]),
+  passengers: z.enum(["1", "2", "3", "4_plus"]),
+});
+
+export const contactInquirySchema = z.object({
+  type: z.literal("contact"),
+  name: z.string().trim().min(2, "Enter your name").max(120),
+  email: z.string().trim().email("Enter a valid email").max(160),
+  phone: z
+    .string()
+    .trim()
+    .min(7, "Enter a contact number")
+    .max(24),
+  message: z.string().trim().max(4000).optional().or(z.literal("")),
+});
+
+export const packageInquiryStatusSchema = z.object({
+  status: z.enum(["NEW", "CONTACTED", "CLOSED"]),
+});

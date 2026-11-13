@@ -1,7 +1,7 @@
 import { createMetadata } from "@/lib/seo";
 import { Hero } from "@/components/home/Hero";
 import { FeaturedPackagesSection } from "@/components/home/FeaturedPackagesSection";
-import { CustomQuote } from "@/components/home/CustomQuote";
+import { PackageMatcher } from "@/components/home/PackageMatcher";
 import { WhyUs } from "@/components/home/WhyUs";
 import { Steps } from "@/components/home/Steps";
 import { Testimonials } from "@/components/home/Testimonials";
@@ -21,7 +21,7 @@ export default function HomePage() {
     <>
       <Hero />
       <FeaturedPackagesSection />
-      <CustomQuote />
+      <PackageMatcher />
       <WhyUs />
       <Steps />
       <Testimonials />

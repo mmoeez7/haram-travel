@@ -270,6 +270,29 @@ model VideoReview {
   @@map("video_reviews")
 }
 
+model PackageInquiry {
+  id         String    @id @default(cuid())
+  name       String
+  email      String
+  phone      String
+  season     String?
+  departure  String?
+  nights     Int?
+  hotelTier String?   @map("hotel_tier")
+  passengers String?
+  message    String?   @db.Text
+  status     String    @default("NEW")
+  source     String    @default("HOME_MATCHER")
+  createdAt  DateTime  @default(now()) @map("created_at")
+  updatedAt  DateTime  @updatedAt @map("updated_at")
+  deletedAt  DateTime? @map("deleted_at")
+
+  @@index([status, createdAt])
+  @@index([email])
+  @@index([source, createdAt])
+  @@map("package_inquiries")
+}
+
 model AdminAuditLog {
   id          String   @id @default(cuid())
   adminUserId String?  @map("admin_user_id")

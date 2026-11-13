@@ -26,7 +26,20 @@ function createPrismaClient() {
   });
 }
 
-export const prisma = globalForPrisma.prisma ?? createPrismaClient();
+function getPrismaClient() {
+  const cached = globalForPrisma.prisma;
+  // After `prisma generate` adds models, a hot-reloaded Next process can keep a
+  // stale singleton. Recreate if expected delegates are missing.
+  if (
+    cached &&
+    typeof (cached as { packageInquiry?: unknown }).packageInquiry !== "undefined"
+  ) {
+    return cached;
+  }
+  return createPrismaClient();
+}
+
+export const prisma = getPrismaClient();
 
 if (process.env.NODE_ENV !== "production") {
   globalForPrisma.prisma = prisma;
