@@ -1,5 +1,5 @@
 import { getUmrahByStars } from "@/lib/packages";
-import { getCategorySeoContent } from "@/lib/categories";
+import { getCategorySeoBlock } from "@/lib/categories";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { PackageSection } from "@/components/packages/PackageSection";
 import { CustomQuote } from "@/components/home/CustomQuote";
@@ -24,9 +24,9 @@ export async function StarPackagesPage({
   description,
   pathLabel,
 }: StarPackagesPageProps) {
-  const [packages, seoContent] = await Promise.all([
+  const [packages, seo] = await Promise.all([
     getUmrahByStars(stars),
-    getCategorySeoContent(STAR_SLUG[stars]),
+    getCategorySeoBlock(STAR_SLUG[stars]),
   ]);
 
   return (
@@ -47,7 +47,7 @@ export async function StarPackagesPage({
         </div>
       </section>
       <PackageSection title={title} description={description} packages={packages} />
-      <SeoContent html={seoContent} />
+      <SeoContent html={seo.html} imageSrc={seo.imageSrc} imageAlt={seo.imageAlt} />
       <CustomQuote />
     </>
   );

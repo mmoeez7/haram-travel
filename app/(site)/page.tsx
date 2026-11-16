@@ -24,8 +24,8 @@ export default function HomePage() {
       <PackageMatcher />
       <WhyUs />
       <Steps />
-      <Testimonials />
-      <VideoReviews />
+      <Testimonials limit={3} showSeeMore />
+      <VideoReviews limit={3} showSeeMore />
       <FAQ />
       <BlogGuides />
     </>

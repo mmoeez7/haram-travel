@@ -26,21 +26,35 @@ function createPrismaClient() {
   });
 }
 
-function getPrismaClient() {
-  const cached = globalForPrisma.prisma;
+function hasExpectedModels(client: PrismaClient | undefined): client is PrismaClient {
+  if (!client) return false;
   // After `prisma generate` adds models, a hot-reloaded Next process can keep a
-  // stale singleton. Recreate if expected delegates are missing.
-  if (
-    cached &&
-    typeof (cached as { packageInquiry?: unknown }).packageInquiry !== "undefined"
-  ) {
-    return cached;
+  // stale singleton. Recreate when expected delegates are missing.
+  return (
+    typeof (client as { packageInquiry?: unknown }).packageInquiry !== "undefined" &&
+    typeof (client as { textReview?: unknown }).textReview !== "undefined" &&
+    typeof (client as { videoReview?: unknown }).videoReview !== "undefined"
+  );
+}
+
+function getPrismaClient(): PrismaClient {
+  if (hasExpectedModels(globalForPrisma.prisma)) {
+    return globalForPrisma.prisma;
   }
-  return createPrismaClient();
+
+  const client = createPrismaClient();
+  globalForPrisma.prisma = client;
+  return client;
 }
 
-export const prisma = getPrismaClient();
-
-if (process.env.NODE_ENV !== "production") {
-  globalForPrisma.prisma = prisma;
-}
+/**
+ * Lazy proxy so Turbopack HMR always hits a Prisma client that includes the
+ * latest generated models (e.g. textReview), not a stale module singleton.
+ */
+export const prisma = new Proxy({} as PrismaClient, {
+  get(_target, prop, _receiver) {
+    const client = getPrismaClient();
+    const value = Reflect.get(client, prop, client);
+    return typeof value === "function" ? value.bind(client) : value;
+  },
+});

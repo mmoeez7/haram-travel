@@ -93,5 +93,6 @@ export async function POST(request: Request) {
 
   revalidatePath("/");
   revalidatePath("/pilgrim-reviews");
+  revalidatePath("/customer-video-reviews");
   return NextResponse.json({ review }, { status: 201 });
 }

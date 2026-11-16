@@ -44,6 +44,19 @@ export const videoReviewSchema = z
     }
   });
 
+export const textReviewSchema = z.object({
+  title: z.string().min(2).max(200),
+  name: z.string().min(2).max(120),
+  initial: z
+    .string()
+    .min(1)
+    .max(2)
+    .transform((value) => value.trim().toUpperCase()),
+  text: z.string().min(10).max(2000),
+  sortOrder: z.coerce.number().int().min(0).default(0),
+  published: z.coerce.boolean().default(false),
+});
+
 export const categorySchema = z.object({
   name: z.string().min(2).max(120),
   slug: slugField(160),
@@ -155,6 +168,18 @@ export const packageInquirySchema = z.object({
   }),
   hotelTier: z.enum(["clock_tower_5", "footsteps_4", "shuttle_3"]),
   passengers: z.enum(["1", "2", "3", "4_plus"]),
+});
+
+export const heroInquirySchema = z.object({
+  type: z.literal("hero"),
+  name: z.string().trim().min(2, "Enter your name").max(120),
+  email: z.string().trim().email("Enter a valid email").max(160),
+  phone: z.string().trim().min(7, "Enter a mobile number").max(24),
+  passengers: z.coerce
+    .number()
+    .int()
+    .min(1, "Enter at least 1 passenger")
+    .max(20, "Enter 20 or fewer passengers"),
 });
 
 export const contactInquirySchema = z.object({

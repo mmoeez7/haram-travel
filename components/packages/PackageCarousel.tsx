@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import type { PackageItem } from "@/lib/packages";
 import { PackageCard } from "@/components/packages/PackageCard";
 
@@ -57,27 +58,69 @@ export function PackageCarousel({ packages, limit }: PackageCarouselProps) {
     setActive(index);
   }
 
+  function goPrev() {
+    goTo(Math.max(0, active - 1));
+  }
+
+  function goNext() {
+    goTo(Math.min(items.length - 1, active + 1));
+  }
+
   if (!items.length) return null;
+
+  // Desktop shows 3 cards at once — only navigate when there's overflow.
+  const showArrows = items.length > 3;
+  const atStart = active <= 0;
+  const atEnd = active >= items.length - 1;
 
   return (
     <div>
-      <div
-        ref={trackRef}
-        className="flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth pb-2 [-ms-overflow-style:none] [scrollbar-width:none] md:gap-6 [&::-webkit-scrollbar]:hidden"
-      >
-        {items.map((pkg) => (
-          <div
-            key={pkg.id}
-            data-carousel-card
-            className="w-[min(100%,340px)] shrink-0 snap-start sm:w-[calc((100%-1rem)/2)] md:w-[calc((100%-3rem)/3)]"
-          >
-            <PackageCard pkg={pkg} />
-          </div>
-        ))}
+      <div className="relative">
+        {showArrows ? (
+          <>
+            <button
+              type="button"
+              aria-label="Previous packages"
+              onClick={goPrev}
+              disabled={atStart}
+              className="absolute left-2 top-1/2 z-10 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-border bg-white/95 text-charcoal shadow-md transition hover:border-gold hover:text-gold-dark disabled:pointer-events-none disabled:opacity-35 lg:flex"
+            >
+              <ChevronLeft className="h-5 w-5" aria-hidden />
+            </button>
+            <button
+              type="button"
+              aria-label="Next packages"
+              onClick={goNext}
+              disabled={atEnd}
+              className="absolute right-2 top-1/2 z-10 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-border bg-white/95 text-charcoal shadow-md transition hover:border-gold hover:text-gold-dark disabled:pointer-events-none disabled:opacity-35 lg:flex"
+            >
+              <ChevronRight className="h-5 w-5" aria-hidden />
+            </button>
+          </>
+        ) : null}
+
+        <div
+          ref={trackRef}
+          className="flex flex-col gap-4 overflow-visible pb-2 lg:snap-x lg:snap-mandatory lg:flex-row lg:gap-6 lg:overflow-x-auto lg:scroll-smooth [-ms-overflow-style:none] [scrollbar-width:none] lg:[&::-webkit-scrollbar]:hidden"
+        >
+          {items.map((pkg) => (
+            <div
+              key={pkg.id}
+              data-carousel-card
+              className="w-full lg:w-[calc((100%-3rem)/3)] lg:shrink-0 lg:snap-start"
+            >
+              <PackageCard pkg={pkg} />
+            </div>
+          ))}
+        </div>
       </div>
 
-      {items.length > 1 ? (
-        <div className="mt-4 flex items-center justify-center gap-2" role="tablist" aria-label="Package slides">
+      {showArrows ? (
+        <div
+          className="mt-4 hidden items-center justify-center gap-2 lg:flex"
+          role="tablist"
+          aria-label="Package slides"
+        >
           {items.map((pkg, index) => (
             <button
               key={pkg.id}

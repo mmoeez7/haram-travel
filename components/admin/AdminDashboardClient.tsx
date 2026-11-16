@@ -44,6 +44,16 @@ export function AdminDashboardClient() {
       title: "Packages",
       text: "Create and publish Umrah & Hajj packages with hotels and images.",
     },
+    {
+      href: "/admin/blogs",
+      title: "Blogs",
+      text: "Publish pilgrim guides and SEO articles for the public blog.",
+    },
+    {
+      href: "/admin/reviews",
+      title: "Reviews",
+      text: "Add YouTube video reviews shown on the home and reviews pages.",
+    },
   ];
 
   return (
@@ -91,12 +101,12 @@ export function AdminDashboardClient() {
         />
       </div>
 
-      <div className="mt-8 grid gap-4 md:grid-cols-3">
+      <div className="mt-8 grid gap-4 sm:grid-cols-2 md:grid-cols-3">
         {featureLinks.map((item, index) => (
           <Link
             key={item.href}
             href={item.href}
-            className={`card-lift admin-enter admin-enter-delay-${index + 3} rounded-2xl border border-border bg-white p-5 transition hover:border-gold`}
+            className={`card-lift admin-enter admin-enter-delay-${Math.min(index + 3, 5)} rounded-2xl border border-border bg-white p-5 transition hover:border-gold`}
           >
             <h2 className="font-display text-lg font-semibold uppercase tracking-wide text-charcoal">
               {item.title}

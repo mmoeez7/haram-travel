@@ -270,6 +270,23 @@ model VideoReview {
   @@map("video_reviews")
 }
 
+model TextReview {
+  id        String    @id @default(cuid())
+  title     String
+  name      String
+  initial   String    @db.VarChar(2)
+  text      String    @db.Text
+  sortOrder Int       @default(0) @map("sort_order")
+  published Boolean   @default(false)
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  @@index([published, sortOrder])
+  @@index([deletedAt, sortOrder])
+  @@map("text_reviews")
+}
+
 model PackageInquiry {
   id         String    @id @default(cuid())
   name       String

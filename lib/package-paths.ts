@@ -20,6 +20,17 @@ const SEASON_LISTING = new Set([
   "december",
 ]);
 
+const SEASON_LABELS: Record<string, string> = {
+  january: "January Umrah Packages",
+  february: "February Umrah Packages",
+  easter: "Easter Umrah Packages",
+  ramadan: "Ramadan Umrah Packages",
+  september: "September Umrah Packages",
+  october: "October Umrah Packages",
+  november: "November Umrah Packages",
+  december: "December Umrah Packages",
+};
+
 export function legacyPackageSlug(input: {
   season?: string | null;
   stars: number;
@@ -67,6 +78,28 @@ export function categoryListingHref(childSlug: string) {
   }
   return withTrailingSlash(`/categories/${childSlug}`);
 }
+
+export type DealSeasonOption = {
+  slug: string;
+  href: string;
+  label: string;
+};
+
+/** Ordered deal seasons for the Switch Month control. */
+export const DEAL_SEASON_OPTIONS: DealSeasonOption[] = [
+  "january",
+  "february",
+  "easter",
+  "ramadan",
+  "september",
+  "october",
+  "november",
+  "december",
+].map((slug) => ({
+  slug,
+  href: categoryListingHref(slug),
+  label: SEASON_LABELS[slug] ?? `${slug} Umrah Packages`,
+}));
 
 /** Permanent redirects from old app paths + legacy package slugs to WordPress URLs. */
 export function wordpressUrlRedirects(): Array<{

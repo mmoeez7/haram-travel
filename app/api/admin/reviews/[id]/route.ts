@@ -62,6 +62,7 @@ export async function PATCH(request: Request, { params }: Params) {
 
   revalidatePath("/");
   revalidatePath("/pilgrim-reviews");
+  revalidatePath("/customer-video-reviews");
   return NextResponse.json({ review });
 }
 
@@ -89,5 +90,6 @@ export async function DELETE(_request: Request, { params }: Params) {
 
   revalidatePath("/");
   revalidatePath("/pilgrim-reviews");
+  revalidatePath("/customer-video-reviews");
   return NextResponse.json({ ok: true });
 }

@@ -65,6 +65,7 @@ export function passengersLabel(value: string | null | undefined) {
 export function inquirySourceLabel(value: string | null | undefined) {
   if (value === "CONTACT") return "Contact";
   if (value === "HOME_MATCHER") return "Matcher";
+  if (value === "HERO") return "Hero";
   return value || "—";
 }
 

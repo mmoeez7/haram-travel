@@ -6,10 +6,11 @@ import {
   getPackagesByCategorySlug,
 } from "@/lib/categories";
 import { UMRAH_DEALS_ROOT_SLUG } from "@/lib/category-roots";
+import { pickPackageCover } from "@/lib/package-cover-images";
 import { categoryListingHref } from "@/lib/package-paths";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { PackageSection } from "@/components/packages/PackageSection";
-import { StarGroupedPackages } from "@/components/packages/StarGroupedPackages";
+import { DealFiltersBar } from "@/components/packages/DealFiltersBar";
 import { CustomQuote } from "@/components/home/CustomQuote";
 import { Testimonials } from "@/components/home/Testimonials";
 import { SeoContent } from "@/components/content/SeoContent";
@@ -43,6 +44,7 @@ export default async function CategoryPackagesPage({ params }: PageProps) {
 
   const packages = await getPackagesByCategorySlug(slug);
   const isDeal = category.parent.slug === UMRAH_DEALS_ROOT_SLUG;
+  const seoCover = pickPackageCover(category.slug);
 
   const hasCover = Boolean(category.coverImageUrl);
 
@@ -110,7 +112,8 @@ export default async function CategoryPackagesPage({ params }: PageProps) {
 
       {packages.length ? (
         isDeal ? (
-          <StarGroupedPackages
+          <DealFiltersBar
+            season={category.slug}
             packages={packages}
             eyebrow={category.parent.name}
           />
@@ -133,7 +136,11 @@ export default async function CategoryPackagesPage({ params }: PageProps) {
         </section>
       )}
 
-      <SeoContent html={category.seoContent} />
+      <SeoContent
+        html={category.seoContent}
+        imageSrc={category.coverImageUrl || seoCover.url}
+        imageAlt={category.coverImageAlt || seoCover.alt}
+      />
       <CustomQuote />
       <Testimonials />
     </>

@@ -14,5 +14,5 @@ export default async function EditReviewPage({
     where: { id, deletedAt: null },
   });
   if (!review) notFound();
-  return <ReviewFormClient review={review} />;
+  return <ReviewFormClient kind="video" videoReview={review} />;
 }

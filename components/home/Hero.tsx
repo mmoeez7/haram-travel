@@ -2,10 +2,11 @@ import Image from "next/image";
 import { ArrowRight, Play } from "lucide-react";
 import { SITE } from "@/lib/constants";
 import { Button } from "@/components/ui/Button";
+import { HeroInquiryForm } from "@/components/home/HeroInquiryForm";
 
 export function Hero() {
   return (
-    <section className="relative flex min-h-[100dvh] items-center overflow-hidden py-24 text-white md:h-[100dvh] md:min-h-[100dvh] md:py-0">
+    <section className="relative flex overflow-hidden py-10 pb-14 text-white lg:h-[100dvh] lg:min-h-[100dvh] lg:items-center lg:py-0">
       <Image
         src="/images/hero-bg.jpg"
         alt="Masjid al-Haram and the Kaaba in Makkah"
@@ -59,18 +60,18 @@ export function Hero() {
         />
       </svg>
 
-      <div className="relative z-10 mx-auto w-full max-w-7xl px-5 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-xl text-center md:max-w-2xl lg:mx-0 lg:text-left">
+      <div className="relative z-10 mx-auto grid w-full max-w-7xl items-center gap-6 px-5 sm:px-6 lg:grid-cols-[minmax(0,1fr)_400px] lg:gap-12 lg:px-8">
+        <div className="mx-auto max-w-xl text-center md:max-w-2xl lg:mx-0 lg:max-w-xl lg:text-left">
           <p className="hero-enter font-display text-lg font-semibold uppercase tracking-[0.18em] text-gold-soft md:text-xl">
             {SITE.name}
           </p>
 
-          <h1 className="hero-enter hero-enter-delay-1 mt-4 font-display text-[1.85rem] font-semibold leading-[1.15] tracking-wide sm:text-4xl md:mt-5 md:text-5xl lg:text-6xl">
+          <h1 className="hero-enter hero-enter-delay-1 mt-3 font-display text-[1.85rem] font-semibold leading-[1.15] tracking-wide sm:text-4xl md:mt-5 md:text-5xl lg:text-6xl">
             Your Sacred Journey,{" "}
             <span className="text-gold-soft">Handled With Royal Care.</span>
           </h1>
 
-          <div className="hero-enter hero-enter-delay-2 mt-5 flex flex-wrap items-center justify-center gap-5 sm:gap-8 md:mt-6 lg:justify-start">
+          <div className="hero-enter hero-enter-delay-2 mt-4 flex flex-wrap items-center justify-center gap-5 sm:gap-8 md:mt-6 lg:justify-start">
             <div>
               <p className="font-display text-2xl font-semibold text-gold-soft md:text-3xl">
                 {SITE.trustpilotRating}/5
@@ -90,12 +91,12 @@ export function Hero() {
             </div>
           </div>
 
-          <p className="hero-enter hero-enter-delay-3 mx-auto mt-5 max-w-lg text-sm leading-relaxed text-white/90 md:mt-6 md:text-base lg:mx-0 lg:text-lg">
+          <p className="hero-enter hero-enter-delay-3 mx-auto mt-4 max-w-lg text-sm leading-relaxed text-white/90 md:mt-6 md:text-base lg:mx-0 lg:text-lg">
             All-inclusive UK Umrah packages from £745pp — flights, walking-distance
             Haram hotels, visas & private transfers.
           </p>
 
-          <div className="hero-enter hero-enter-delay-4 mt-7 flex w-full max-w-md flex-col items-stretch gap-3 sm:mt-8 sm:max-w-none sm:flex-row sm:flex-wrap sm:justify-center lg:justify-start">
+          <div className="hero-enter hero-enter-delay-4 mt-5 flex w-full max-w-md flex-col items-stretch gap-3 sm:mt-8 sm:max-w-none sm:flex-row sm:flex-wrap sm:justify-center lg:justify-start">
             <Button
               href="/umrah-packages"
               variant="gold"
@@ -115,6 +116,7 @@ export function Hero() {
             </a>
           </div>
         </div>
+        <HeroInquiryForm />
       </div>
     </section>
   );

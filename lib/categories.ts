@@ -6,6 +6,7 @@ import {
   UMRAH_PACKAGES_ROOT_SLUG,
   type UmrahRootSlug,
 } from "@/lib/category-roots";
+import { pickPackageCover } from "@/lib/package-cover-images";
 import { categoryListingHref } from "@/lib/package-paths";
 import { mapPackageToItem, type PackageItem } from "@/lib/packages";
 
@@ -78,14 +79,32 @@ export async function getCategoryBySlug(slug: string): Promise<PublicCategory | 
   };
 }
 
-export async function getCategorySeoContent(slug: string): Promise<string | null> {
+export type CategorySeoBlock = {
+  html: string | null;
+  imageSrc: string;
+  imageAlt: string;
+};
+
+/** SEO HTML plus a per-category background image (cover, or stable slug fallback). */
+export async function getCategorySeoBlock(slug: string): Promise<CategorySeoBlock> {
   const category = await prisma.category.findFirst({
     where: { slug, deletedAt: null, published: true },
-    select: { seoContent: true },
+    select: { seoContent: true, coverImageUrl: true, coverImageAlt: true },
   });
 
-  const content = category?.seoContent?.trim();
-  return content || null;
+  const fallback = pickPackageCover(slug);
+  const cover = category?.coverImageUrl?.trim();
+
+  return {
+    html: category?.seoContent?.trim() || null,
+    imageSrc: cover || fallback.url,
+    imageAlt: category?.coverImageAlt?.trim() || fallback.alt,
+  };
+}
+
+export async function getCategorySeoContent(slug: string): Promise<string | null> {
+  const block = await getCategorySeoBlock(slug);
+  return block.html;
 }
 
 export async function getPackagesByCategorySlug(slug: string): Promise<PackageItem[]> {

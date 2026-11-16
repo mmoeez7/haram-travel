@@ -487,8 +487,49 @@ async function main() {
     }
   }
 
+  const textReviews = [
+    {
+      title: "Exceptional Experience from Start to End!",
+      name: "Asma Faisal",
+      initial: "A",
+      text: "Every detail was handled with care — hotels truly near the Haram, and the UK team stayed reachable throughout. Our parents felt safe and supported from departure to return.",
+      sortOrder: 0,
+    },
+    {
+      title: "Booking with them was a Fuss-Free Process",
+      name: "Fiza Yousefzai",
+      initial: "F",
+      text: "Clear pricing, ATOL protection explained properly, and our elderly parents managed the walking distance easily. The advisors were honest and never pushed unnecessary upgrades.",
+      sortOrder: 1,
+    },
+    {
+      title: "I am 100% Satisfied with Haram Travel",
+      name: "Alizeh Kamran",
+      initial: "A",
+      text: "From deposit to return, the advisors were honest and responsive. Highly recommend for UK families looking for a peaceful, well-organised Umrah journey.",
+      sortOrder: 2,
+    },
+  ];
+
+  for (const item of textReviews) {
+    const existing = await prisma.textReview.findFirst({
+      where: { name: item.name, title: item.title, deletedAt: null },
+      select: { id: true },
+    });
+    if (existing) {
+      await prisma.textReview.update({
+        where: { id: existing.id },
+        data: { ...item, published: true },
+      });
+    } else {
+      await prisma.textReview.create({
+        data: { ...item, published: true },
+      });
+    }
+  }
+
   console.log(
-    `Seeded admin ${email}, ${allSeedPackages.length} packages, ${hotelsSeed.length} hotels, 2 roots + ${categories.length} child categories, ${videoReviews.length} video reviews.`
+    `Seeded admin ${email}, ${allSeedPackages.length} packages, ${hotelsSeed.length} hotels, 2 roots + ${categories.length} child categories, ${videoReviews.length} video reviews, ${textReviews.length} text reviews.`
   );
 }
 

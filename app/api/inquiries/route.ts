@@ -3,6 +3,7 @@ import { prisma } from "@/lib/db";
 import { jsonError } from "@/lib/admin-api-auth";
 import {
   contactInquirySchema,
+  heroInquirySchema,
   packageInquirySchema,
 } from "@/lib/admin-schemas";
 
@@ -14,11 +15,12 @@ export async function POST(request: Request) {
     return jsonError("Invalid request body");
   }
 
-  const isContact =
-    typeof body === "object" &&
-    body !== null &&
-    "type" in body &&
-    (body as { type?: string }).type === "contact";
+  const bodyType =
+    typeof body === "object" && body !== null && "type" in body
+      ? (body as { type?: string }).type
+      : undefined;
+
+  const isContact = bodyType === "contact";
 
   if (isContact) {
     const parsed = contactInquirySchema.safeParse(body);
@@ -35,6 +37,27 @@ export async function POST(request: Request) {
         message: data.message?.trim() || null,
         status: "NEW",
         source: "CONTACT",
+      },
+    });
+
+    return NextResponse.json({ ok: true, id: inquiry.id }, { status: 201 });
+  }
+
+  if (bodyType === "hero") {
+    const parsed = heroInquirySchema.safeParse(body);
+    if (!parsed.success) {
+      return jsonError(parsed.error.issues[0]?.message ?? "Invalid inquiry");
+    }
+
+    const data = parsed.data;
+    const inquiry = await prisma.packageInquiry.create({
+      data: {
+        name: data.name,
+        email: data.email.toLowerCase(),
+        phone: data.phone,
+        passengers: String(data.passengers),
+        status: "NEW",
+        source: "HERO",
       },
     });
 

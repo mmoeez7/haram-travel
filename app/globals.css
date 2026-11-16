@@ -426,3 +426,32 @@ h3,
     transform: none;
   }
 }
+
+/* SEO content glass card — gold scrollbar */
+.seo-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--gold) color-mix(in srgb, var(--border) 55%, transparent);
+}
+
+.seo-scroll::-webkit-scrollbar {
+  width: 10px;
+}
+
+.seo-scroll::-webkit-scrollbar-track {
+  margin: 12px 0;
+  background: color-mix(in srgb, var(--cream-dark) 55%, transparent);
+  border-radius: 999px;
+}
+
+.seo-scroll::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, var(--gold-soft), var(--gold), var(--gold-dark));
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+.seo-scroll::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, var(--gold), var(--gold-dark));
+  background-clip: padding-box;
+  border: 2px solid transparent;
+}

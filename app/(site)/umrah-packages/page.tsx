@@ -1,6 +1,6 @@
 import { createMetadata } from "@/lib/seo";
 import { getUmrahByStars } from "@/lib/packages";
-import { getCategorySeoContent } from "@/lib/categories";
+import { getCategorySeoBlock } from "@/lib/categories";
 import { UMRAH_PACKAGES_ROOT_SLUG } from "@/lib/category-roots";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { CategoryFilters } from "@/components/packages/CategoryFilters";
@@ -16,11 +16,11 @@ export const metadata = createMetadata({
 });
 
 export default async function UmrahPackagesPage() {
-  const [threeStar, fourStar, fiveStar, seoContent] = await Promise.all([
+  const [threeStar, fourStar, fiveStar, seo] = await Promise.all([
     getUmrahByStars(3),
     getUmrahByStars(4),
     getUmrahByStars(5),
-    getCategorySeoContent(UMRAH_PACKAGES_ROOT_SLUG),
+    getCategorySeoBlock(UMRAH_PACKAGES_ROOT_SLUG),
   ]);
 
   return (
@@ -60,7 +60,7 @@ export default async function UmrahPackagesPage() {
           packages={fiveStar}
         />
       </div>
-      <SeoContent html={seoContent} />
+      <SeoContent html={seo.html} imageSrc={seo.imageSrc} imageAlt={seo.imageAlt} />
       <CustomQuote />
     </>
   );

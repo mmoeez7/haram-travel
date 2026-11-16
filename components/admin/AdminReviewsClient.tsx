@@ -4,6 +4,7 @@ import toast from "react-hot-toast";
 import Link from "next/link";
 import { Pencil, Search, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { adminFetch } from "@/lib/admin-fetch";
 import {
   ADMIN_PAGE_SIZE,
@@ -23,6 +24,7 @@ import {
 import { AdminLoadingLink } from "@/components/admin/AdminLoadingLink";
 import { AdminAsyncButton } from "@/components/admin/AdminAsyncButton";
 import { AdminPagination } from "@/components/admin/AdminPagination";
+import type { ReviewKind } from "@/components/admin/ReviewFormClient";
 
 const filterControlClass =
   "h-10 w-full rounded-xl border border-border bg-white px-3.5 text-sm text-ink outline-none ring-gold transition focus:ring-2";
@@ -30,12 +32,21 @@ const filterControlClass =
 const filterSelectClass =
   "admin-select h-10 w-full rounded-xl border border-border px-3.5 text-sm text-ink outline-none ring-gold transition focus:ring-2";
 
-type ReviewRow = {
+type VideoReviewRow = {
   id: string;
   youtubeId: string;
   videoUrl: string;
   title: string;
   description: string;
+  published: boolean;
+};
+
+type TextReviewRow = {
+  id: string;
+  title: string;
+  name: string;
+  initial: string;
+  text: string;
   published: boolean;
 };
 
@@ -47,14 +58,26 @@ const emptyMeta: AdminPaginationMeta = {
 };
 
 export function AdminReviewsClient() {
-  const [reviews, setReviews] = useState<ReviewRow[]>([]);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const typeParam = searchParams.get("type");
+  const kind: ReviewKind = typeParam === "text" ? "text" : "video";
+
+  const [videoReviews, setVideoReviews] = useState<VideoReviewRow[]>([]);
+  const [textReviews, setTextReviews] = useState<TextReviewRow[]>([]);
   const [pagination, setPagination] = useState<AdminPaginationMeta>(emptyMeta);
   const [page, setPage] = useState(1);
   const [q, setQ] = useState("");
   const [status, setStatus] = useState("");
   const [loading, setLoading] = useState(true);
 
-  async function load(nextQ = q, nextStatus = status, nextPage = page) {
+  function setKind(next: ReviewKind) {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("type", next);
+    router.replace(`/admin/reviews?${params.toString()}`);
+  }
+
+  async function load(nextQ = q, nextStatus = status, nextPage = page, nextKind = kind) {
     setLoading(true);
     try {
       const params = new URLSearchParams();
@@ -62,13 +85,26 @@ export function AdminReviewsClient() {
       params.set("limit", String(ADMIN_PAGE_SIZE));
       if (nextQ) params.set("q", nextQ);
       if (nextStatus) params.set("status", nextStatus);
-      const data = await adminFetch<{
-        reviews: ReviewRow[];
-        pagination: AdminPaginationMeta;
-      }>(`/api/admin/reviews?${params.toString()}`);
-      setReviews(data.reviews);
-      setPagination(data.pagination ?? emptyMeta);
-      setPage(data.pagination?.page ?? nextPage);
+
+      if (nextKind === "video") {
+        const data = await adminFetch<{
+          reviews: VideoReviewRow[];
+          pagination: AdminPaginationMeta;
+        }>(`/api/admin/reviews?${params.toString()}`);
+        setVideoReviews(data.reviews);
+        setTextReviews([]);
+        setPagination(data.pagination ?? emptyMeta);
+        setPage(data.pagination?.page ?? nextPage);
+      } else {
+        const data = await adminFetch<{
+          reviews: TextReviewRow[];
+          pagination: AdminPaginationMeta;
+        }>(`/api/admin/text-reviews?${params.toString()}`);
+        setTextReviews(data.reviews);
+        setVideoReviews([]);
+        setPagination(data.pagination ?? emptyMeta);
+        setPage(data.pagination?.page ?? nextPage);
+      }
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Failed to load");
     } finally {
@@ -77,32 +113,59 @@ export function AdminReviewsClient() {
   }
 
   useEffect(() => {
-    void load();
+    setPage(1);
+    void load(q, status, 1, kind);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [kind]);
 
   async function remove(id: string) {
-    if (!confirm("Delete this video review?")) return;
-    await adminFetch(`/api/admin/reviews/${id}`, { method: "DELETE" });
+    const label = kind === "video" ? "video review" : "text review";
+    if (!confirm(`Delete this ${label}?`)) return;
+    const endpoint =
+      kind === "video" ? `/api/admin/reviews/${id}` : `/api/admin/text-reviews/${id}`;
+    await adminFetch(endpoint, { method: "DELETE" });
     toast.success("Review deleted");
-    const nextPage = reviews.length === 1 && page > 1 ? page - 1 : page;
+    const rows = kind === "video" ? videoReviews : textReviews;
+    const nextPage = rows.length === 1 && page > 1 ? page - 1 : page;
     setPage(nextPage);
-    await load(q, status, nextPage);
+    await load(q, status, nextPage, kind);
   }
 
   return (
     <div className={adminPageClass}>
       <AdminPageHeader
         title="Reviews"
-        description="Add YouTube pilgrim video reviews for the home page."
+        description="Manage YouTube video reviews and written pilgrim reviews for the site."
       />
+
+      <div className="admin-enter mb-4 flex flex-wrap gap-2">
+        {(
+          [
+            { id: "video", label: "Video reviews" },
+            { id: "text", label: "Text reviews" },
+          ] as const
+        ).map((tab) => (
+          <button
+            key={tab.id}
+            type="button"
+            onClick={() => setKind(tab.id)}
+            className={`rounded-full border px-3.5 py-1.5 text-sm font-semibold transition ${
+              kind === tab.id
+                ? "border-gold bg-gold/15 text-gold-dark"
+                : "border-border bg-white text-muted hover:border-gold/50 hover:text-charcoal"
+            }`}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
 
       <form
         className="admin-enter admin-enter-delay-1 mb-4 flex flex-wrap items-center gap-2"
         onSubmit={(event) => {
           event.preventDefault();
           setPage(1);
-          void load(q, status, 1);
+          void load(q, status, 1, kind);
         }}
       >
         <label className="relative block min-w-[220px] max-w-xs flex-1">
@@ -113,7 +176,7 @@ export function AdminReviewsClient() {
           <input
             value={q}
             onChange={(e) => setQ(e.target.value)}
-            placeholder="Search reviews"
+            placeholder={kind === "video" ? "Search video reviews" : "Search text reviews"}
             className={`${filterControlClass} pl-9`}
           />
         </label>
@@ -123,7 +186,7 @@ export function AdminReviewsClient() {
             const nextStatus = e.target.value;
             setStatus(nextStatus);
             setPage(1);
-            void load(q, nextStatus, 1);
+            void load(q, nextStatus, 1, kind);
           }}
           className={`${filterSelectClass} max-w-[180px]`}
           aria-label="Filter by status"
@@ -133,8 +196,11 @@ export function AdminReviewsClient() {
           <option value="draft">Draft</option>
         </select>
         <div className="ml-auto">
-          <AdminLoadingLink href="/admin/reviews/new" pendingLabel="Opening…">
-            Add review
+          <AdminLoadingLink
+            href={`/admin/reviews/new?type=${kind}`}
+            pendingLabel="Opening…"
+          >
+            {kind === "video" ? "Add video review" : "Add text review"}
           </AdminLoadingLink>
         </div>
       </form>
@@ -145,70 +211,128 @@ export function AdminReviewsClient() {
         ) : (
           <>
             <div className="overflow-x-auto">
-              <table className="min-w-full text-left text-sm">
-                <thead className="border-b border-border text-[10px] uppercase tracking-wide text-muted">
-                  <tr>
-                    <th className="px-2 py-2">Description</th>
-                    <th className="px-2 py-2">YouTube</th>
-                    <th className="px-2 py-2">Status</th>
-                    <th className="px-2 py-2 text-center">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {reviews.map((review) => (
-                    <tr key={review.id} className="border-b border-border/60">
-                      <td className="max-w-md px-2 py-3">
-                        <Link
-                          href={`/admin/reviews/${review.id}`}
-                          className={adminTitleLinkClass}
-                        >
-                          <span className="line-clamp-2">{review.description}</span>
-                        </Link>
-                      </td>
-                      <td className="px-2 py-3 font-mono text-xs text-muted">
-                        {review.youtubeId}
-                      </td>
-                      <td className="px-2 py-3">
-                        <span
-                          className={
-                            review.published
-                              ? adminStatusPublishedClass
-                              : adminStatusDraftClass
-                          }
-                        >
-                          {review.published ? "Published" : "Draft"}
-                        </span>
-                      </td>
-                      <td className="px-2 py-3">
-                        <div className="flex items-center justify-center gap-2">
+              {kind === "video" ? (
+                <table className="min-w-full text-left text-sm">
+                  <thead className="border-b border-border text-[10px] uppercase tracking-wide text-muted">
+                    <tr>
+                      <th className="px-2 py-2">Description</th>
+                      <th className="px-2 py-2">YouTube</th>
+                      <th className="px-2 py-2">Status</th>
+                      <th className="px-2 py-2 text-center">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {videoReviews.map((review) => (
+                      <tr key={review.id} className="border-b border-border/60">
+                        <td className="max-w-md px-2 py-3">
                           <Link
                             href={`/admin/reviews/${review.id}`}
-                            className={adminEditLinkClass}
+                            className={adminTitleLinkClass}
                           >
-                            <Pencil className="h-3.5 w-3.5" aria-hidden />
-                            Edit
+                            <span className="line-clamp-2">{review.description}</span>
                           </Link>
-                          <AdminAsyncButton
-                            onClick={() => remove(review.id)}
-                            pendingLabel="Deleting…"
-                            idleIcon={<Trash2 className="h-3.5 w-3.5" />}
-                            className={adminDangerButtonClass}
+                        </td>
+                        <td className="px-2 py-3 font-mono text-xs text-muted">
+                          {review.youtubeId}
+                        </td>
+                        <td className="px-2 py-3">
+                          <span
+                            className={
+                              review.published
+                                ? adminStatusPublishedClass
+                                : adminStatusDraftClass
+                            }
                           >
-                            Delete
-                          </AdminAsyncButton>
-                        </div>
-                      </td>
+                            {review.published ? "Published" : "Draft"}
+                          </span>
+                        </td>
+                        <td className="px-2 py-3">
+                          <div className="flex items-center justify-center gap-2">
+                            <Link
+                              href={`/admin/reviews/${review.id}`}
+                              className={adminEditLinkClass}
+                            >
+                              <Pencil className="h-3.5 w-3.5" aria-hidden />
+                              Edit
+                            </Link>
+                            <AdminAsyncButton
+                              onClick={() => remove(review.id)}
+                              pendingLabel="Deleting…"
+                              idleIcon={<Trash2 className="h-3.5 w-3.5" />}
+                              className={adminDangerButtonClass}
+                            >
+                              Delete
+                            </AdminAsyncButton>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              ) : (
+                <table className="min-w-full text-left text-sm">
+                  <thead className="border-b border-border text-[10px] uppercase tracking-wide text-muted">
+                    <tr>
+                      <th className="px-2 py-2">Title</th>
+                      <th className="px-2 py-2">Pilgrim</th>
+                      <th className="px-2 py-2">Status</th>
+                      <th className="px-2 py-2 text-center">Actions</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {textReviews.map((review) => (
+                      <tr key={review.id} className="border-b border-border/60">
+                        <td className="max-w-md px-2 py-3">
+                          <Link
+                            href={`/admin/reviews/text/${review.id}`}
+                            className={adminTitleLinkClass}
+                          >
+                            <span className="line-clamp-2">{review.title}</span>
+                          </Link>
+                        </td>
+                        <td className="px-2 py-3 text-muted">{review.name}</td>
+                        <td className="px-2 py-3">
+                          <span
+                            className={
+                              review.published
+                                ? adminStatusPublishedClass
+                                : adminStatusDraftClass
+                            }
+                          >
+                            {review.published ? "Published" : "Draft"}
+                          </span>
+                        </td>
+                        <td className="px-2 py-3">
+                          <div className="flex items-center justify-center gap-2">
+                            <Link
+                              href={`/admin/reviews/text/${review.id}`}
+                              className={adminEditLinkClass}
+                            >
+                              <Pencil className="h-3.5 w-3.5" aria-hidden />
+                              Edit
+                            </Link>
+                            <AdminAsyncButton
+                              onClick={() => remove(review.id)}
+                              pendingLabel="Deleting…"
+                              idleIcon={<Trash2 className="h-3.5 w-3.5" />}
+                              className={adminDangerButtonClass}
+                            >
+                              Delete
+                            </AdminAsyncButton>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
             </div>
             <AdminPagination
               meta={pagination}
               disabled={loading}
               onPageChange={(nextPage) => {
                 setPage(nextPage);
-                void load(q, status, nextPage);
+                void load(q, status, nextPage, kind);
               }}
             />
           </>

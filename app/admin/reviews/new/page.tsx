@@ -1,7 +1,13 @@
 import { requireAdmin } from "@/lib/admin";
-import { ReviewFormClient } from "@/components/admin/ReviewFormClient";
+import { ReviewFormClient, type ReviewKind } from "@/components/admin/ReviewFormClient";
 
-export default async function NewReviewPage() {
+type PageProps = {
+  searchParams: Promise<{ type?: string }>;
+};
+
+export default async function NewReviewPage({ searchParams }: PageProps) {
   await requireAdmin();
-  return <ReviewFormClient />;
+  const params = await searchParams;
+  const kind: ReviewKind = params.type === "text" ? "text" : "video";
+  return <ReviewFormClient kind={kind} />;
 }

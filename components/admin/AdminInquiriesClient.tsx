@@ -242,6 +242,8 @@ export function AdminInquiriesClient() {
                       <td className="px-2 py-3 text-xs text-muted">
                         {row.source === "CONTACT" ? (
                           <span>—</span>
+                        ) : row.source === "HERO" ? (
+                          <p>{row.passengers ? `${row.passengers} passengers` : "—"}</p>
                         ) : (
                           <div className="space-y-0.5">
                             <p>{seasonLabel(row.season)}</p>

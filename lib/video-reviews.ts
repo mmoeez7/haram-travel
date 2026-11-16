@@ -10,10 +10,13 @@ export type PublicVideoReview = {
   cta: string;
 };
 
-export async function getPublishedVideoReviews(): Promise<PublicVideoReview[]> {
+export async function getPublishedVideoReviews(
+  limit?: number
+): Promise<PublicVideoReview[]> {
   return prisma.videoReview.findMany({
     where: { deletedAt: null, published: true },
     orderBy: [{ sortOrder: "asc" }, { createdAt: "desc" }],
+    ...(limit ? { take: limit } : {}),
     select: {
       id: true,
       youtubeId: true,

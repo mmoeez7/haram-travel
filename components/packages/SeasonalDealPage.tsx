@@ -1,10 +1,10 @@
 import {
-  getCategorySeoContent,
+  getCategorySeoBlock,
   getPackagesByCategorySlug,
 } from "@/lib/categories";
 import { getSeasonalPackages, type DealSeason } from "@/lib/packages";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
-import { StarGroupedPackages } from "@/components/packages/StarGroupedPackages";
+import { DealFiltersBar } from "@/components/packages/DealFiltersBar";
 import { CustomQuote } from "@/components/home/CustomQuote";
 import { SeoContent } from "@/components/content/SeoContent";
 
@@ -21,7 +21,7 @@ export async function SeasonalDealPage({
   pathLabel,
   season,
 }: SeasonalDealPageProps) {
-  const seoContent = await getCategorySeoContent(season);
+  const seo = await getCategorySeoBlock(season);
   let packages = await getPackagesByCategorySlug(season);
   if (!packages.length) {
     packages = await getSeasonalPackages(season);
@@ -46,7 +46,7 @@ export async function SeasonalDealPage({
       </section>
 
       {packages.length ? (
-        <StarGroupedPackages packages={packages} eyebrow="Umrah Deals" />
+        <DealFiltersBar season={season} packages={packages} eyebrow="Umrah Deals" />
       ) : (
         <section className="py-16">
           <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
@@ -58,7 +58,7 @@ export async function SeasonalDealPage({
         </section>
       )}
 
-      <SeoContent html={seoContent} />
+      <SeoContent html={seo.html} imageSrc={seo.imageSrc} imageAlt={seo.imageAlt} />
       <CustomQuote />
     </>
   );
