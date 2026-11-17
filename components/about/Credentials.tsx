@@ -41,7 +41,7 @@ export function Credentials() {
             protected from day one.
           </p>
           <div className="mt-5 flex flex-col items-stretch justify-center gap-2.5 sm:flex-row sm:flex-wrap sm:items-center md:mt-7 md:gap-3">
-            <Button href="/umrah-packages" variant="gold">
+            <Button href="/umrah-packages" variant="swipe">
               Find My Package
             </Button>
             <Button

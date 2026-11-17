@@ -27,8 +27,11 @@ export async function getSiteNavItems(): Promise<NavItem[]> {
   }
 
   if (umrahDealsChildren.length) {
+    // Parent href must NOT share /umrah-packages with Umrah Packages — that dual-
+    // highlights both dropdowns on the packages listing. Use first deal child as
+    // the parent anchor (desktop/mobile parents are expand buttons, not links).
     items.push({
-      href: "/umrah-packages",
+      href: umrahDealsChildren[0]!.href,
       label: "Umrah Deals",
       children: umrahDealsChildren,
     });

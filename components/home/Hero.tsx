@@ -99,7 +99,7 @@ export function Hero() {
           <div className="hero-enter hero-enter-delay-4 mt-5 flex w-full max-w-md flex-col items-stretch gap-3 sm:mt-8 sm:max-w-none sm:flex-row sm:flex-wrap sm:justify-center lg:justify-start">
             <Button
               href="/umrah-packages"
-              variant="gold"
+              variant="swipe"
               className="h-12 w-full !rounded-full px-6 sm:w-[200px]"
             >
               Explore Packages

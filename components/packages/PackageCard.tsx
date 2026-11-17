@@ -99,7 +99,7 @@ export function PackageCard({ pkg, titleOverride }: PackageCardProps) {
               Call Now
             </Button>
           </div>
-          <Button href={href} variant="gold" className="w-full !py-2 text-xs md:!py-2.5 md:text-sm">
+          <Button href={href} variant="swipe" className="w-full !py-2 text-xs md:!py-2.5 md:text-sm">
             Inquire & Book Now →
           </Button>
         </div>

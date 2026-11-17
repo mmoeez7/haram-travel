@@ -307,7 +307,7 @@ export function PackageMatcher() {
                 </label>
                 <Button
                   type="submit"
-                  variant="gold"
+                  variant="swipe"
                   className="mt-1 w-full !rounded-full py-3"
                   disabled={submitting}
                 >

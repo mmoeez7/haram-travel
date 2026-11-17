@@ -111,7 +111,7 @@ export function InquiryForm() {
           />
         </label>
       </div>
-      <Button type="submit" variant="gold" className="mt-6 w-full !py-3" disabled={submitting}>
+      <Button type="submit" variant="swipe" className="mt-6 w-full !py-3" disabled={submitting}>
         {submitting ? "Sending…" : "Send"}
       </Button>
     </form>
@@ -211,7 +211,7 @@ Nights: ${form.nights}`;
           />
         </label>
       </div>
-      <Button type="submit" variant="gold" className="mt-6 w-full !py-3">
+      <Button type="submit" variant="swipe" className="mt-6 w-full !py-3">
         Send
       </Button>
     </form>

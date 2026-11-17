@@ -1,7 +1,11 @@
 import { createMetadata } from "@/lib/seo";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
-import { Testimonials } from "@/components/home/Testimonials";
+import { CustomerReviewsGrid } from "@/components/home/CustomerReviewsGrid";
 import { CustomQuote } from "@/components/home/CustomQuote";
+import {
+  getTestimonialsPage,
+  TESTIMONIALS_PAGE_SIZE,
+} from "@/lib/testimonials";
 
 export const metadata = createMetadata({
   title: "Customer Reviews",
@@ -10,7 +14,12 @@ export const metadata = createMetadata({
   path: "/customer-reviews",
 });
 
-export default function CustomerReviewsPage() {
+export default async function CustomerReviewsPage() {
+  const { reviews, total } = await getTestimonialsPage({
+    offset: 0,
+    limit: TESTIMONIALS_PAGE_SIZE,
+  });
+
   return (
     <>
       <section className="bg-cream pt-12 pb-4">
@@ -27,7 +36,7 @@ export default function CustomerReviewsPage() {
           </p>
         </div>
       </section>
-      <Testimonials />
+      <CustomerReviewsGrid initialReviews={reviews} total={total} />
       <CustomQuote />
     </>
   );

@@ -202,16 +202,18 @@ export function HeroInquiryForm() {
         <button
           type="submit"
           disabled={submitting}
-          className="mt-1 flex w-full items-center justify-center gap-3 rounded-full bg-gradient-to-r from-gold-dark via-gold to-gold-dark py-3 pl-5 pr-3 text-sm font-semibold tracking-wide text-charcoal shadow-[0_8px_24px_rgba(212,175,55,0.4)] transition hover:brightness-105 disabled:opacity-60"
+          className="relative mt-1 flex w-full items-center justify-center gap-3 overflow-hidden rounded-full border border-gold bg-white py-3 pl-5 pr-3 text-sm font-semibold tracking-wide text-gold-dark shadow-sm transition-all before:absolute before:bottom-0 before:left-0 before:top-0 before:z-0 before:h-full before:w-0 before:bg-gold before:transition-all before:duration-500 hover:text-charcoal hover:shadow-md hover:shadow-gold/30 hover:before:w-full disabled:pointer-events-none disabled:opacity-60"
         >
-          <span className="flex-1 text-center">
-            {submitting ? "Sending…" : "Submit Request"}
-          </span>
-          {!submitting ? (
-            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-charcoal text-gold">
-              <ArrowRight className="h-4 w-4" aria-hidden />
+          <span className="relative z-10 flex flex-1 items-center justify-center gap-3">
+            <span className="flex-1 text-center">
+              {submitting ? "Sending…" : "Submit Request"}
             </span>
-          ) : null}
+            {!submitting ? (
+              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-charcoal text-gold">
+                <ArrowRight className="h-4 w-4" aria-hidden />
+              </span>
+            ) : null}
+          </span>
         </button>
       </div>
     </form>

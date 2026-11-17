@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { ChevronDown, Menu, X } from "lucide-react";
 import { FaWhatsapp } from "react-icons/fa";
 import { useEffect, useRef, useState } from "react";
@@ -8,9 +9,43 @@ import { whatsappUrl, type NavItem } from "@/lib/constants";
 import { Button } from "@/components/ui/Button";
 import { Logo } from "@/components/layout/Logo";
 
-function DesktopNavItem({ item }: { item: NavItem }) {
+function normalizePath(path: string) {
+  if (!path) return "/";
+  const bare = path.split("?")[0].split("#")[0];
+  if (bare.length > 1 && bare.endsWith("/")) return bare.slice(0, -1);
+  return bare || "/";
+}
+
+function pathMatches(pathname: string, href: string) {
+  const current = normalizePath(pathname);
+  const target = normalizePath(href);
+  if (target === "/") return current === "/";
+  return current === target || current.startsWith(`${target}/`);
+}
+
+function isNavItemActive(pathname: string, item: NavItem) {
+  // Dropdown parents: prefer child matches so a shared/placeholder parent href
+  // cannot light up the wrong group. Also allow exact parent-href match for
+  // real listing pages (e.g. Umrah Packages → /umrah-packages).
+  if (item.children?.length) {
+    if (item.children.some((child) => pathMatches(pathname, child.href))) {
+      return true;
+    }
+    const current = normalizePath(pathname);
+    const parent = normalizePath(item.href);
+    return current === parent;
+  }
+  return pathMatches(pathname, item.href);
+}
+
+const navLinkIdle = "text-ink transition hover:text-gold-dark";
+const navLinkActive =
+  "font-semibold text-gold-dark underline decoration-gold decoration-2 underline-offset-[10px]";
+
+function DesktopNavItem({ item, pathname }: { item: NavItem; pathname: string }) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+  const active = isNavItemActive(pathname, item);
 
   useEffect(() => {
     function onDocClick(e: MouseEvent) {
@@ -24,7 +59,8 @@ function DesktopNavItem({ item }: { item: NavItem }) {
     return (
       <Link
         href={item.href}
-        className="text-sm font-medium text-ink transition hover:text-gold-dark"
+        aria-current={active ? "page" : undefined}
+        className={`text-sm font-medium ${active ? navLinkActive : navLinkIdle}`}
       >
         {item.label}
       </Link>
@@ -40,8 +76,11 @@ function DesktopNavItem({ item }: { item: NavItem }) {
     >
       <button
         type="button"
-        className="inline-flex items-center gap-1 text-sm font-medium text-ink transition hover:text-gold-dark"
+        className={`inline-flex items-center gap-1 text-sm font-medium ${
+          active ? navLinkActive : navLinkIdle
+        }`}
         aria-expanded={open}
+        aria-current={active ? "page" : undefined}
         onClick={() => setOpen((v) => !v)}
       >
         {item.label}
@@ -50,18 +89,26 @@ function DesktopNavItem({ item }: { item: NavItem }) {
 
       {open ? (
         <div className="absolute left-0 top-full z-50 max-h-[70vh] min-w-[260px] overflow-y-auto rounded-md border border-border bg-white pt-2 shadow-lg">
-          {item.children.map((child, index) => (
-            <Link
-              key={`${child.href}-${child.label}`}
-              href={child.href}
-              className={`block px-4 py-2.5 text-sm text-charcoal transition hover:bg-cream hover:text-gold-dark ${
-                index > 0 ? "border-t border-border" : ""
-              }`}
-              onClick={() => setOpen(false)}
-            >
-              {child.label}
-            </Link>
-          ))}
+          {item.children.map((child, index) => {
+            const childActive = pathMatches(pathname, child.href);
+            return (
+              <Link
+                key={`${child.href}-${child.label}`}
+                href={child.href}
+                aria-current={childActive ? "page" : undefined}
+                className={`block px-4 py-2.5 text-sm transition hover:bg-cream hover:text-gold-dark ${
+                  index > 0 ? "border-t border-border" : ""
+                } ${
+                  childActive
+                    ? "bg-gold/10 font-semibold text-gold-dark"
+                    : "text-charcoal"
+                }`}
+                onClick={() => setOpen(false)}
+              >
+                {child.label}
+              </Link>
+            );
+          })}
         </div>
       ) : null}
     </div>
@@ -69,6 +116,7 @@ function DesktopNavItem({ item }: { item: NavItem }) {
 }
 
 export function Header({ navItems }: { navItems: NavItem[] }) {
+  const pathname = usePathname() || "/";
   const [open, setOpen] = useState(false);
   const [mobileExpanded, setMobileExpanded] = useState<string | null>(null);
 
@@ -79,7 +127,7 @@ export function Header({ navItems }: { navItems: NavItem[] }) {
 
         <nav className="hidden items-center gap-5 xl:flex">
           {navItems.map((item) => (
-            <DesktopNavItem key={item.label} item={item} />
+            <DesktopNavItem key={item.label} item={item} pathname={pathname} />
           ))}
         </nav>
 
@@ -94,7 +142,7 @@ export function Header({ navItems }: { navItems: NavItem[] }) {
             <FaWhatsapp className="h-4 w-4" />
             WhatsApp
           </Button>
-          <Button href="/umrah-packages" variant="dark" className="!rounded-full">
+          <Button href="/umrah-packages" variant="swipe" className="!rounded-full">
             Find Package →
           </Button>
         </div>
@@ -115,13 +163,17 @@ export function Header({ navItems }: { navItems: NavItem[] }) {
             {navItems.map((item) => {
               const hasChildren = Boolean(item.children?.length);
               const expanded = mobileExpanded === item.label;
+              const active = isNavItemActive(pathname, item);
 
               if (!hasChildren) {
                 return (
                   <Link
                     key={item.label}
                     href={item.href}
-                    className="border-b border-border py-3 text-sm font-medium text-ink"
+                    aria-current={active ? "page" : undefined}
+                    className={`border-b border-border py-3 text-sm font-medium ${
+                      active ? "font-semibold text-gold-dark" : "text-ink"
+                    }`}
                     onClick={() => setOpen(false)}
                   >
                     {item.label}
@@ -133,9 +185,12 @@ export function Header({ navItems }: { navItems: NavItem[] }) {
                 <div key={item.label} className="border-b border-border">
                   <button
                     type="button"
-                    className="flex w-full items-center justify-between py-3 text-left text-sm font-medium text-ink"
+                    className={`flex w-full items-center justify-between py-3 text-left text-sm font-medium ${
+                      active ? "font-semibold text-gold-dark" : "text-ink"
+                    }`}
                     onClick={() => setMobileExpanded(expanded ? null : item.label)}
                     aria-expanded={expanded}
+                    aria-current={active ? "page" : undefined}
                   >
                     {item.label}
                     <ChevronDown
@@ -144,18 +199,26 @@ export function Header({ navItems }: { navItems: NavItem[] }) {
                   </button>
                   {expanded ? (
                     <div className="mb-3 max-h-72 overflow-y-auto rounded-md border border-border bg-white">
-                      {item.children!.map((child, index) => (
-                        <Link
-                          key={`${child.href}-${child.label}`}
-                          href={child.href}
-                          className={`block px-4 py-2.5 text-sm text-charcoal ${
-                            index > 0 ? "border-t border-border" : ""
-                          }`}
-                          onClick={() => setOpen(false)}
-                        >
-                          {child.label}
-                        </Link>
-                      ))}
+                      {item.children!.map((child, index) => {
+                        const childActive = pathMatches(pathname, child.href);
+                        return (
+                          <Link
+                            key={`${child.href}-${child.label}`}
+                            href={child.href}
+                            aria-current={childActive ? "page" : undefined}
+                            className={`block px-4 py-2.5 text-sm ${
+                              index > 0 ? "border-t border-border" : ""
+                            } ${
+                              childActive
+                                ? "bg-gold/10 font-semibold text-gold-dark"
+                                : "text-charcoal"
+                            }`}
+                            onClick={() => setOpen(false)}
+                          >
+                            {child.label}
+                          </Link>
+                        );
+                      })}
                     </div>
                   ) : null}
                 </div>
@@ -174,7 +237,7 @@ export function Header({ navItems }: { navItems: NavItem[] }) {
               <FaWhatsapp className="h-4 w-4" />
               WhatsApp
             </Button>
-            <Button href="/umrah-packages" variant="dark" className="!rounded-full">
+            <Button href="/umrah-packages" variant="swipe" className="!rounded-full">
               Find Package →
             </Button>
           </div>
