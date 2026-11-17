@@ -1,5 +1,6 @@
 import { createMetadata } from "@/lib/seo";
 import { getUmrahByStars } from "@/lib/packages";
+import { starListingCardTitle } from "@/lib/package-card-title";
 import { getCategorySeoBlock } from "@/lib/categories";
 import { UMRAH_PACKAGES_ROOT_SLUG } from "@/lib/category-roots";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
@@ -45,12 +46,14 @@ export default async function UmrahPackagesPage() {
         title="3 Star Umrah Packages"
         description="Reliable economy comfort with flights included for 7, 10 and 12 night stays."
         packages={threeStar}
+        titleOverride={starListingCardTitle(3)}
       />
       <div className="bg-ivory">
         <PackageSection
           title="4 Star Umrah Packages"
           description="Executive hotels closer to the Haram with elevated comfort for families."
           packages={fourStar}
+          titleOverride={starListingCardTitle(4)}
         />
       </div>
       <div id="5-star">
@@ -58,6 +61,7 @@ export default async function UmrahPackagesPage() {
           title="5 Star Umrah Packages"
           description="Clock Tower and courtyard VIP stays with white-glove UK & Saudi support."
           packages={fiveStar}
+          titleOverride={starListingCardTitle(5)}
         />
       </div>
       <SeoContent html={seo.html} imageSrc={seo.imageSrc} imageAlt={seo.imageAlt} />

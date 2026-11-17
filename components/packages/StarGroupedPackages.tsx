@@ -22,9 +22,12 @@ const STAR_GROUPS = [
 export function StarGroupedPackages({
   packages,
   eyebrow,
+  titleOverride,
 }: {
   packages: PackageItem[];
   eyebrow?: string;
+  /** Parent listing title for every card (e.g. January Umrah Package). */
+  titleOverride?: string;
 }) {
   if (!packages.length) return null;
 
@@ -41,6 +44,7 @@ export function StarGroupedPackages({
             title={group.title}
             description={group.description}
             packages={groupPackages}
+            titleOverride={titleOverride}
           />
         );
       })}

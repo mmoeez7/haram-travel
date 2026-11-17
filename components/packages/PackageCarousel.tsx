@@ -9,9 +9,15 @@ type PackageCarouselProps = {
   packages: PackageItem[];
   /** Max cards in the carousel. Omit to show all packages. */
   limit?: number;
+  /** Listing parent title shown on every card. */
+  titleOverride?: string;
 };
 
-export function PackageCarousel({ packages, limit }: PackageCarouselProps) {
+export function PackageCarousel({
+  packages,
+  limit,
+  titleOverride,
+}: PackageCarouselProps) {
   const trackRef = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
   const items = limit != null ? packages.slice(0, limit) : packages;
@@ -109,7 +115,7 @@ export function PackageCarousel({ packages, limit }: PackageCarouselProps) {
               data-carousel-card
               className="w-full lg:w-[calc((100%-3rem)/3)] lg:shrink-0 lg:snap-start"
             >
-              <PackageCard pkg={pkg} />
+              <PackageCard pkg={pkg} titleOverride={titleOverride} />
             </div>
           ))}
         </div>

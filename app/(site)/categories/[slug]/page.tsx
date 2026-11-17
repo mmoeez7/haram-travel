@@ -7,6 +7,7 @@ import {
 } from "@/lib/categories";
 import { UMRAH_DEALS_ROOT_SLUG } from "@/lib/category-roots";
 import { pickPackageCover } from "@/lib/package-cover-images";
+import { listingCardTitle } from "@/lib/package-card-title";
 import { categoryListingHref } from "@/lib/package-paths";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { PackageSection } from "@/components/packages/PackageSection";
@@ -116,6 +117,7 @@ export default async function CategoryPackagesPage({ params }: PageProps) {
             season={category.slug}
             packages={packages}
             eyebrow={category.parent.name}
+            titleOverride={listingCardTitle(category.name)}
           />
         ) : (
           <PackageSection
@@ -123,6 +125,7 @@ export default async function CategoryPackagesPage({ params }: PageProps) {
             title={`${category.name} packages`}
             description={`Browse published packages in ${category.name}.`}
             packages={packages}
+            titleOverride={listingCardTitle(category.name)}
           />
         )
       ) : (

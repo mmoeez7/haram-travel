@@ -1,4 +1,5 @@
 import { getUmrahByStars } from "@/lib/packages";
+import { starListingCardTitle } from "@/lib/package-card-title";
 import { getCategorySeoBlock } from "@/lib/categories";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { PackageSection } from "@/components/packages/PackageSection";
@@ -46,7 +47,12 @@ export async function StarPackagesPage({
           <p className="mt-4 max-w-2xl text-muted">{description}</p>
         </div>
       </section>
-      <PackageSection title={title} description={description} packages={packages} />
+      <PackageSection
+        title={title}
+        description={description}
+        packages={packages}
+        titleOverride={starListingCardTitle(stars)}
+      />
       <SeoContent html={seo.html} imageSrc={seo.imageSrc} imageAlt={seo.imageAlt} />
       <CustomQuote />
     </>

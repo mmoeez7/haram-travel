@@ -1,5 +1,6 @@
 import { createMetadata } from "@/lib/seo";
 import { getSeasonalPackages } from "@/lib/packages";
+import { seasonListingCardTitle } from "@/lib/package-card-title";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { CategoryFilters } from "@/components/packages/CategoryFilters";
 import { StarGroupedPackages } from "@/components/packages/StarGroupedPackages";
@@ -37,7 +38,11 @@ export default async function EasterUmrahPackagesPage() {
           </div>
         </div>
       </section>
-      <StarGroupedPackages packages={packages} eyebrow="Umrah Deals" />
+      <StarGroupedPackages
+        packages={packages}
+        eyebrow="Umrah Deals"
+        titleOverride={seasonListingCardTitle("easter")}
+      />
       <CustomQuote />
     </>
   );

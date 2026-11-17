@@ -7,8 +7,15 @@ import { packageHref } from "@/lib/package-paths";
 import { telUrl, whatsappUrl } from "@/lib/constants";
 import { Button } from "@/components/ui/Button";
 
-export function PackageCard({ pkg }: { pkg: PackageItem }) {
-  const waMessage = `Assalamu Alaikum, I'm interested in ${pkg.title} (${pkg.subtitle}) from £${pkg.priceFrom}pp.`;
+type PackageCardProps = {
+  pkg: PackageItem;
+  /** Listing parent title shown on cards (does not change stored package title). */
+  titleOverride?: string;
+};
+
+export function PackageCard({ pkg, titleOverride }: PackageCardProps) {
+  const displayTitle = titleOverride?.trim() || pkg.title;
+  const waMessage = `Assalamu Alaikum, I'm interested in ${displayTitle} (${pkg.subtitle}) from £${pkg.priceFrom}pp.`;
   const href = packageHref(pkg.id);
 
   return (
@@ -17,7 +24,7 @@ export function PackageCard({ pkg }: { pkg: PackageItem }) {
         {pkg.image ? (
           <Image
             src={pkg.image}
-            alt={pkg.title}
+            alt={displayTitle}
             fill
             className="object-cover"
             sizes="(max-width: 768px) 80vw, 33vw"
@@ -31,7 +38,7 @@ export function PackageCard({ pkg }: { pkg: PackageItem }) {
       <div className="flex flex-1 flex-col p-3 sm:p-3.5 md:p-4">
         <h3 className="font-display text-base font-semibold uppercase tracking-wide text-charcoal sm:text-lg md:text-xl">
           <Link href={href} className="hover:text-gold-dark">
-            {pkg.title}
+            {displayTitle}
           </Link>
         </h3>
         <p className="mt-0.5 text-xs font-medium text-gold-dark md:text-sm">

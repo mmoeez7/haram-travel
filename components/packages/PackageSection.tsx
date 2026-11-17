@@ -7,6 +7,8 @@ type PackageSectionProps = {
   description: string;
   packages: PackageItem[];
   eyebrow?: string;
+  /** Listing parent title shown on every card. */
+  titleOverride?: string;
 };
 
 export function PackageSection({
@@ -14,6 +16,7 @@ export function PackageSection({
   description,
   packages,
   eyebrow,
+  titleOverride,
 }: PackageSectionProps) {
   if (!packages.length) return null;
 
@@ -21,7 +24,7 @@ export function PackageSection({
     <section className="py-12 md:py-16">
       <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
         <SectionHeading eyebrow={eyebrow} title={title} description={description} />
-        <PackageCarousel packages={packages} />
+        <PackageCarousel packages={packages} titleOverride={titleOverride} />
       </div>
     </section>
   );

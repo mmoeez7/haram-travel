@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { PackageItem } from "@/lib/packages";
+import { seasonListingCardTitle } from "@/lib/package-card-title";
 import { DEAL_SEASON_OPTIONS } from "@/lib/package-paths";
 import { StarGroupedPackages } from "@/components/packages/StarGroupedPackages";
 
@@ -19,13 +20,17 @@ type DealFiltersBarProps = {
   season: string;
   packages: PackageItem[];
   eyebrow?: string;
+  /** Override card titles; defaults to season listing title. */
+  titleOverride?: string;
 };
 
 export function DealFiltersBar({
   season,
   packages,
   eyebrow = "Umrah Deals",
+  titleOverride,
 }: DealFiltersBarProps) {
+  const cardTitle = titleOverride ?? seasonListingCardTitle(season);
   const router = useRouter();
   const [starFilter, setStarFilter] = useState<StarFilter>("all");
 
@@ -87,7 +92,11 @@ export function DealFiltersBar({
       </div>
 
       {filtered.length ? (
-        <StarGroupedPackages packages={filtered} eyebrow={eyebrow} />
+        <StarGroupedPackages
+          packages={filtered}
+          eyebrow={eyebrow}
+          titleOverride={cardTitle}
+        />
       ) : (
         <section className="py-16">
           <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import type { PackageItem } from "@/lib/packages";
+import { starListingCardTitle } from "@/lib/package-card-title";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Reveal } from "@/components/ui/Reveal";
 import { CategoryFilters } from "@/components/packages/CategoryFilters";
@@ -27,6 +28,7 @@ export function FeaturedPackages({
         "Reliable economy comfort with flights included, courtyard-friendly hotels, and full visa support for first-time and returning pilgrims.",
       packages: threeStar,
       seeMoreHref: "/3-star-umrah-packages",
+      titleOverride: starListingCardTitle(3),
     },
     {
       id: undefined as string | undefined,
@@ -35,6 +37,7 @@ export function FeaturedPackages({
         "Executive hotels closer to the Haram with elevated dining, quieter rooms, and family configurations for 7, 10 or 12 nights.",
       packages: fourStar,
       seeMoreHref: "/4-star-umrah-packages",
+      titleOverride: starListingCardTitle(4),
     },
     {
       id: "5-star" as string | undefined,
@@ -43,6 +46,7 @@ export function FeaturedPackages({
         "Clock Tower and courtyard VIP stays for pilgrims who want footsteps-from-Haram luxury with white-glove UK & Saudi support.",
       packages: fiveStar,
       seeMoreHref: "/5-star-umrah-packages",
+      titleOverride: starListingCardTitle(5),
     },
   ];
 
@@ -79,7 +83,11 @@ export function FeaturedPackages({
                     </Link>
                   </div>
                 </Reveal>
-                <PackageCarousel packages={group.packages} limit={3} />
+                <PackageCarousel
+                  packages={group.packages}
+                  limit={3}
+                  titleOverride={group.titleOverride}
+                />
               </div>
             ) : null
           )}
