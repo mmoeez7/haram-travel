@@ -67,20 +67,11 @@ export function FeaturedPackages({
             group.packages.length ? (
               <div key={group.title} id={group.id}>
                 <Reveal>
-                  <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-                    <div className="max-w-2xl">
-                      <h3 className="mb-2 font-display text-xl font-semibold uppercase tracking-wide text-charcoal md:text-2xl">
-                        {group.title}
-                      </h3>
-                      <p className="text-sm text-muted">{group.description}</p>
-                    </div>
-                    <Link
-                      href={group.seeMoreHref}
-                      className="inline-flex shrink-0 items-center gap-1.5 self-start rounded-md border border-border bg-white px-4 py-2 text-sm font-semibold text-charcoal transition hover:border-gold hover:text-gold-dark sm:self-auto"
-                    >
-                      See more
-                      <ArrowRight className="h-4 w-4" aria-hidden />
-                    </Link>
+                  <div className="mb-6 max-w-2xl">
+                    <h3 className="mb-2 font-display text-xl font-semibold uppercase tracking-wide text-charcoal md:text-2xl">
+                      {group.title}
+                    </h3>
+                    <p className="text-sm text-muted">{group.description}</p>
                   </div>
                 </Reveal>
                 <PackageCarousel
@@ -88,6 +79,15 @@ export function FeaturedPackages({
                   limit={3}
                   titleOverride={group.titleOverride}
                 />
+                <div className="mt-6 flex justify-center sm:justify-start">
+                  <Link
+                    href={group.seeMoreHref}
+                    className="inline-flex items-center gap-1.5 rounded-md border border-border bg-white px-4 py-2 text-sm font-semibold text-charcoal transition hover:border-gold hover:text-gold-dark"
+                  >
+                    See more
+                    <ArrowRight className="h-4 w-4" aria-hidden />
+                  </Link>
+                </div>
               </div>
             ) : null
           )}

@@ -1,4 +1,5 @@
 import { wordpressPackageSlug } from "@/lib/package-paths";
+import { defaultIncludesForStars } from "@/lib/package-includes";
 
 export type SeedSeason =
   | "all"
@@ -27,8 +28,6 @@ export type PackageItem = {
   category: "umrah" | "hajj";
   image: string;
 };
-
-const features = ["Flight & Visa Included"];
 
 type Stay = {
   nights: number;
@@ -76,7 +75,7 @@ function packageItem(
     priceFrom,
     deposit: 99,
     badge: month || `${stars} Star`,
-    features,
+    features: defaultIncludesForStars(stars),
     season,
     category: "umrah",
     image: "",

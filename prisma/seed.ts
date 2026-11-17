@@ -3,6 +3,10 @@ import bcrypt from "bcryptjs";
 import { hajjPackages, umrahPackages } from "../lib/packages-seed-data";
 import { pickPackageCover } from "../lib/package-cover-images";
 import { legacyPackageSlug } from "../lib/package-paths";
+import {
+  defaultIncludesForStars,
+  shouldBackfillIncludes,
+} from "../lib/package-includes";
 
 const prisma = new PrismaClient();
 
@@ -445,6 +449,21 @@ async function main() {
     where: { slug: { notIn: keptSlugs }, deletedAt: null },
     data: { deletedAt: new Date(), published: false },
   });
+
+  // Upgrade empty / legacy "Flight & Visa Included"-only includes to star defaults.
+  const packagesForIncludes = await prisma.package.findMany({
+    where: { deletedAt: null, stars: { in: [3, 4, 5] } },
+    select: { id: true, stars: true, features: true },
+  });
+  for (const row of packagesForIncludes) {
+    if (!shouldBackfillIncludes(row.features)) continue;
+    const nextFeatures = defaultIncludesForStars(row.stars);
+    if (!nextFeatures.length) continue;
+    await prisma.package.update({
+      where: { id: row.id },
+      data: { features: nextFeatures },
+    });
+  }
 
   await prisma.category.updateMany({
     where: { slug: { in: ["hajj", "umrah"] }, deletedAt: null },

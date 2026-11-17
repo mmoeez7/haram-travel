@@ -6,7 +6,7 @@ import { Logo } from "@/components/layout/Logo";
 
 export function Footer() {
   return (
-    <footer className="border-t border-border bg-[#faf6ef]">
+    <footer className="border-t border-border bg-[#faf6ef] pb-24 md:pb-0">
       <div className="mx-auto grid max-w-7xl gap-10 px-5 py-14 sm:px-6 md:grid-cols-2 lg:grid-cols-4 lg:px-8">
         <div>
           <div className="mb-4">

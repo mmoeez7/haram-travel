@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useState, type ReactNode } from "react";
 import { ArrowRight } from "lucide-react";
 import toast from "react-hot-toast";
@@ -20,10 +21,23 @@ import {
 } from "@/lib/package-inquiry";
 
 const chipBase =
-  "w-full rounded-full border px-3 py-2.5 text-left text-sm font-medium transition";
+  "flex w-full items-center gap-2.5 rounded-full border px-3 py-2.5 text-left text-sm font-medium transition";
 const chipIdle =
   "border-border bg-white text-ink hover:border-gold/50 hover:bg-cream";
 const chipActive = "border-gold bg-gold/15 text-charcoal shadow-sm";
+
+const SEASON_ICONS: Record<InquirySeason, string> = {
+  winter: "/images/matcher/winter.png",
+  ramadan: "/images/matcher/ramadan.png",
+  spring: "/images/matcher/spring.png",
+  flexible: "/images/matcher/annual.png",
+};
+
+const HOTEL_ICONS: Record<InquiryHotelTier, string> = {
+  clock_tower_5: "/images/matcher/kaaba.png",
+  footsteps_4: "/images/matcher/footsteps.png",
+  shuttle_3: "/images/matcher/shuttle.png",
+};
 
 type FormState = {
   season: InquirySeason | "";
@@ -47,14 +61,32 @@ const initialForm: FormState = {
   email: "",
 };
 
+function ChipIcon({ src, alt }: { src: string; alt: string }) {
+  return (
+    <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center">
+      <Image
+        src={src}
+        alt={alt}
+        width={28}
+        height={28}
+        className="h-7 w-7 object-contain"
+      />
+    </span>
+  );
+}
+
 function ChipButton({
   active,
   children,
   onClick,
+  iconSrc,
+  iconAlt,
 }: {
   active: boolean;
   children: ReactNode;
   onClick: () => void;
+  iconSrc?: string;
+  iconAlt?: string;
 }) {
   return (
     <button
@@ -63,7 +95,8 @@ function ChipButton({
       className={`${chipBase} ${active ? chipActive : chipIdle}`}
       aria-pressed={active}
     >
-      {children}
+      {iconSrc ? <ChipIcon src={iconSrc} alt={iconAlt || ""} /> : null}
+      <span className="min-w-0 flex-1">{children}</span>
     </button>
   );
 }
@@ -78,9 +111,9 @@ function Column({
   children: ReactNode;
 }) {
   return (
-    <div className="flex flex-col gap-3 border-b border-border/70 pb-5 last:border-b-0 last:pb-0 lg:border-b-0 lg:border-r lg:pb-0 lg:pr-5 lg:last:border-r-0 lg:last:pr-0">
+    <div className="flex flex-col gap-3 rounded-2xl bg-cream-dark p-3.5 sm:p-4">
       <div>
-        <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-gold-dark">
+        <p className="text-xs font-extrabold uppercase tracking-[0.14em] text-gold-dark md:text-[13px]">
           {step}. {title}
         </p>
       </div>
@@ -153,7 +186,7 @@ export function PackageMatcher() {
         <Reveal delay={100}>
           <form
             onSubmit={onSubmit}
-            className="mt-8 rounded-2xl border border-border bg-white p-4 shadow-sm sm:p-6 md:mt-10 md:p-8"
+            className="mt-8 rounded-2xl border border-border/60 bg-[#fffdf9] p-3 shadow-sm sm:p-4 md:mt-10 md:p-5"
           >
             <div className="grid gap-5 lg:grid-cols-4 lg:gap-6">
               <Column step={1} title="Travel Season">
@@ -164,6 +197,8 @@ export function PackageMatcher() {
                     onClick={() =>
                       setForm((prev) => ({ ...prev, season: option.value }))
                     }
+                    iconSrc={SEASON_ICONS[option.value]}
+                    iconAlt={resolveSeasonOptionLabel(option)}
                   >
                     {resolveSeasonOptionLabel(option)}
                   </ChipButton>
@@ -203,6 +238,8 @@ export function PackageMatcher() {
                     onClick={() =>
                       setForm((prev) => ({ ...prev, hotelTier: option.value }))
                     }
+                    iconSrc={HOTEL_ICONS[option.value]}
+                    iconAlt={option.label}
                   >
                     {option.label}
                   </ChipButton>

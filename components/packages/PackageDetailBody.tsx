@@ -8,26 +8,26 @@ export function PackageDetailBody({ pkg }: { pkg: PackageDetail }) {
     `${pkg.subtitle}. A carefully arranged ${pkg.nights}-night journey with ${pkg.makkahNights} nights in Makkah and ${pkg.madinahNights} nights in Madinah.`;
 
   return (
-    <div className="space-y-10">
+    <div className="space-y-8 md:space-y-10">
       <section>
-        <h2 className="font-display text-2xl font-semibold uppercase tracking-wide text-charcoal md:text-3xl">
+        <h2 className="font-display text-xl font-semibold uppercase tracking-wide text-charcoal sm:text-2xl md:text-3xl">
           Package Overview
         </h2>
-        <p className="mt-4 whitespace-pre-line text-sm leading-relaxed text-muted md:text-base">
+        <p className="mt-3 whitespace-pre-line text-sm leading-relaxed text-muted sm:mt-4 md:text-base">
           {overview}
         </p>
       </section>
 
       <section>
-        <h2 className="font-display text-2xl font-semibold uppercase tracking-wide text-charcoal md:text-3xl">
+        <h2 className="font-display text-xl font-semibold uppercase tracking-wide text-charcoal sm:text-2xl md:text-3xl">
           Package Summary
         </h2>
 
-        <div className="mt-5 grid grid-cols-2 gap-2 sm:max-w-md">
-          <div className="rounded-xl border border-border bg-white px-3 py-3 text-center text-sm font-medium text-ink">
+        <div className="mt-4 grid grid-cols-2 gap-2 sm:mt-5 sm:max-w-md">
+          <div className="rounded-xl border border-border bg-white px-2.5 py-2.5 text-center text-xs font-medium text-ink sm:px-3 sm:py-3 sm:text-sm">
             {String(pkg.makkahNights).padStart(2, "0")} Nights in Makkah
           </div>
-          <div className="rounded-xl border border-border bg-white px-3 py-3 text-center text-sm font-medium text-ink">
+          <div className="rounded-xl border border-border bg-white px-2.5 py-2.5 text-center text-xs font-medium text-ink sm:px-3 sm:py-3 sm:text-sm">
             {String(pkg.madinahNights).padStart(2, "0")} Nights in Madinah
           </div>
         </div>

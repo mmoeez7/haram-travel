@@ -1,9 +1,11 @@
 import Image from "next/image";
 import type { PackageDetail } from "@/lib/packages";
+import { packageDetailDisplayTitle } from "@/lib/package-card-title";
 import { categoryListingHref } from "@/lib/package-paths";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 
 export function PackageDetailHero({ pkg }: { pkg: PackageDetail }) {
+  const displayTitle = packageDetailDisplayTitle(pkg);
   const intro = pkg.shortDescription?.trim() || pkg.subtitle;
   const categoryHref = pkg.linkedCategory
     ? categoryListingHref(pkg.linkedCategory.slug)
@@ -11,20 +13,20 @@ export function PackageDetailHero({ pkg }: { pkg: PackageDetail }) {
   const categoryLabel = pkg.linkedCategory?.name ?? "Umrah Packages";
 
   return (
-    <div className="grid gap-6 lg:gap-8">
+    <div className="grid gap-5 sm:gap-6 lg:gap-8">
       <Breadcrumbs
         items={[
           { label: "Home", href: "/" },
           { label: categoryLabel, href: categoryHref },
-          { label: pkg.title },
+          { label: displayTitle },
         ]}
       />
 
-      <div className="relative min-h-[240px] overflow-hidden rounded-2xl border border-border bg-white shadow-sm sm:min-h-[300px] md:min-h-[380px]">
+      <div className="relative min-h-[200px] overflow-hidden rounded-xl border border-border bg-white shadow-sm sm:min-h-[280px] sm:rounded-2xl md:min-h-[380px]">
         {pkg.image ? (
           <Image
             src={pkg.image}
-            alt={pkg.coverImageAlt || pkg.title}
+            alt={pkg.coverImageAlt || displayTitle}
             fill
             className="object-cover"
             sizes="(max-width: 1024px) 100vw, 66vw"
@@ -40,14 +42,16 @@ export function PackageDetailHero({ pkg }: { pkg: PackageDetail }) {
         ) : null}
       </div>
 
-      <div>
+      <div className="min-w-0">
         <p className="text-xs font-semibold uppercase tracking-[0.16em] text-gold-dark">
           {pkg.stars}★ · {pkg.nights} nights
         </p>
-        <h1 className="mt-2 font-display text-3xl font-semibold uppercase tracking-wide text-charcoal md:text-4xl lg:text-5xl">
-          {pkg.title}
+        <h1 className="mt-2 break-words font-display text-2xl font-semibold uppercase leading-tight tracking-wide text-charcoal sm:text-3xl md:text-4xl lg:text-5xl">
+          {displayTitle}
         </h1>
-        <p className="mt-3 max-w-3xl text-muted md:text-lg">{intro}</p>
+        <p className="mt-3 max-w-3xl text-sm text-muted sm:text-base md:text-lg">
+          {intro}
+        </p>
       </div>
     </div>
   );

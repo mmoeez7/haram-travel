@@ -30,6 +30,10 @@ import {
 import { AdminIncludesInput } from "@/components/admin/AdminIncludesInput";
 import { AdminSlugField } from "@/components/admin/AdminSlugField";
 import { SITE } from "@/lib/constants";
+import {
+  defaultIncludesForStars,
+  isDefaultIncludes,
+} from "@/lib/package-includes";
 type Category = {
   id: string;
   name: string;
@@ -97,10 +101,23 @@ export function PackageFormClient({ packageId }: { packageId?: string }) {
   const [journeyType, setJourneyType] = useState("UMRAH");
   const [umrahGroup, setUmrahGroup] = useState<UmrahRootSlug>(UMRAH_PACKAGES_ROOT_SLUG);
   const [categoryId, setCategoryId] = useState("");
-  const [includes, setIncludes] = useState<string[]>([]);
+  const [stars, setStars] = useState(3);
+  const [includes, setIncludes] = useState<string[]>(() =>
+    defaultIncludesForStars(3)
+  );
   const [title, setTitle] = useState("");
   const [slug, setSlug] = useState("");
   const [galleryKey, setGalleryKey] = useState("new-package");
+
+  function handleStarsChange(nextStars: number) {
+    setIncludes((current) => {
+      if (isDefaultIncludes(current, stars) || current.length === 0) {
+        return defaultIncludesForStars(nextStars);
+      }
+      return current;
+    });
+    setStars(nextStars);
+  }
 
   useEffect(() => {
     async function load() {
@@ -117,6 +134,7 @@ export function PackageFormClient({ packageId }: { packageId?: string }) {
           );
           setPkg(detail.package);
           setJourneyType(detail.package.journeyType);
+          setStars(detail.package.stars);
           setIncludes(detail.package.features ?? []);
           setTitle(detail.package.title);
           setSlug(detail.package.slug);
@@ -307,7 +325,13 @@ export function PackageFormClient({ packageId }: { packageId?: string }) {
                 min={3}
                 max={5}
                 required
-                defaultValue={pkg?.stars ?? 3}
+                value={stars}
+                onChange={(event) => {
+                  const next = Number(event.target.value || 3);
+                  handleStarsChange(
+                    Number.isFinite(next) ? Math.min(5, Math.max(3, next)) : 3
+                  );
+                }}
                 className={adminInputClass}
               />
             </label>
