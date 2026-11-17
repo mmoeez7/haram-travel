@@ -46,7 +46,7 @@ export function PackageDetailHero({ pkg }: { pkg: PackageDetail }) {
         <p className="text-xs font-semibold uppercase tracking-[0.16em] text-gold-dark">
           {pkg.stars}★ · {pkg.nights} nights
         </p>
-        <h1 className="mt-2 break-words font-display text-2xl font-semibold uppercase leading-tight tracking-wide text-charcoal sm:text-3xl md:text-4xl lg:text-5xl">
+        <h1 className="mt-1.5 break-words font-display text-xl font-semibold uppercase leading-snug tracking-wide text-charcoal sm:mt-2 sm:text-2xl md:text-3xl">
           {displayTitle}
         </h1>
         <p className="mt-3 max-w-3xl text-sm text-muted sm:text-base md:text-lg">
