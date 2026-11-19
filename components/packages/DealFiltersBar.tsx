@@ -42,12 +42,12 @@ export function DealFiltersBar({
   return (
     <>
       <div className="border-y border-border">
-        <div className="mx-auto flex max-w-7xl flex-col gap-4 px-5 py-4 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8">
-          <div className="flex flex-col gap-2.5 sm:flex-row sm:items-center sm:gap-3">
+        <div className="mx-auto flex max-w-7xl flex-col gap-3 px-4 py-3.5 sm:gap-4 sm:px-6 sm:py-4 lg:flex-row lg:items-center lg:justify-between lg:px-8">
+          <div className="flex min-w-0 flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
             <span className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted">
               Filter by:
             </span>
-            <div className="flex flex-wrap gap-2">
+            <div className="grid w-full grid-cols-4 gap-1.5 sm:flex sm:w-auto sm:flex-wrap sm:gap-2">
               {STAR_FILTERS.map((filter) => {
                 const active = starFilter === filter.id;
                 return (
@@ -55,13 +55,20 @@ export function DealFiltersBar({
                     key={String(filter.id)}
                     type="button"
                     onClick={() => setStarFilter(filter.id)}
-                    className={`rounded-full border px-3.5 py-1.5 text-sm font-semibold transition ${
+                    className={`whitespace-nowrap rounded-full border px-1.5 py-1.5 text-center text-[11px] font-semibold transition sm:px-3.5 sm:text-sm ${
                       active
                         ? "border-forest bg-forest text-white"
                         : "border-border bg-white text-charcoal hover:border-forest/40"
                     }`}
                   >
-                    {filter.label}
+                    {filter.id === "all" ? (
+                      <>
+                        <span className="sm:hidden">All</span>
+                        <span className="hidden sm:inline">{filter.label}</span>
+                      </>
+                    ) : (
+                      filter.label
+                    )}
                   </button>
                 );
               })}

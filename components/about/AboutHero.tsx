@@ -15,7 +15,7 @@ export function AboutHero() {
         <span className="mb-4 inline-block rounded-full bg-gold-soft/60 px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-gold-dark">
           Official UK Licensed Umrah Specialist
         </span>
-        <h1 className="max-w-4xl font-display text-4xl font-semibold uppercase tracking-wide text-charcoal md:text-5xl">
+        <h1 className="max-w-4xl break-words font-display text-xl font-semibold uppercase leading-snug tracking-wide text-charcoal sm:text-3xl md:text-4xl lg:text-5xl">
           Guiding British Pilgrims with Reverence, Honesty & Royal Care
         </h1>
         <p className="mt-5 max-w-3xl text-base leading-relaxed text-muted md:text-lg">

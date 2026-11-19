@@ -29,7 +29,7 @@ export async function SeasonalDealPage({
 
   return (
     <>
-      <section className="bg-cream pt-12 pb-6">
+      <section className="bg-cream pt-8 pb-5 sm:pt-12 sm:pb-6">
         <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
           <Breadcrumbs
             items={[
@@ -38,10 +38,12 @@ export async function SeasonalDealPage({
               { label: pathLabel },
             ]}
           />
-          <h1 className="font-display text-3xl font-semibold uppercase tracking-wide text-charcoal md:text-5xl">
+          <h1 className="mt-1 max-w-3xl break-words font-display text-xl font-semibold uppercase leading-snug tracking-wide text-charcoal sm:text-3xl md:text-4xl lg:text-5xl">
             {title}
           </h1>
-          <p className="mt-4 max-w-2xl text-muted">{description}</p>
+          <p className="mt-3 max-w-2xl text-sm text-muted sm:mt-4 sm:text-base">
+            {description}
+          </p>
         </div>
       </section>
 

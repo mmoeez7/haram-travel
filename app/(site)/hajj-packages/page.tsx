@@ -19,7 +19,7 @@ export default async function HajjPackagesPage() {
       <section className="bg-cream pt-12 pb-6">
         <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
           <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Hajj Packages" }]} />
-          <h1 className="font-display text-4xl font-semibold uppercase tracking-wide text-charcoal md:text-5xl">
+          <h1 className="break-words font-display text-xl font-semibold uppercase leading-snug tracking-wide text-charcoal sm:text-3xl md:text-4xl lg:text-5xl">
             Hajj Packages from the UK
           </h1>
           <p className="mt-4 max-w-2xl text-muted">

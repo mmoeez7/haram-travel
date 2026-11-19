@@ -18,7 +18,7 @@ export default function PrivacyPolicyPage() {
         <span className="mb-3 inline-block rounded-full bg-gold-soft/60 px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-gold-dark">
           Customer Terms & Data Policy
         </span>
-        <h1 className="font-display text-2xl font-semibold uppercase tracking-wide text-charcoal sm:text-3xl md:text-5xl">
+        <h1 className="break-words font-display text-xl font-semibold uppercase leading-snug tracking-wide text-charcoal sm:text-3xl md:text-4xl lg:text-5xl">
           Privacy & Customer Data Policy
         </h1>
 

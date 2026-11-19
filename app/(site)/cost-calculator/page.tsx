@@ -17,7 +17,7 @@ export default function CostCalculatorPage() {
     <section className="bg-cream py-12 md:py-16">
       <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
         <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "0% Cost Calculator" }]} />
-        <h1 className="font-display text-4xl font-semibold uppercase tracking-wide text-charcoal md:text-5xl">
+        <h1 className="break-words font-display text-xl font-semibold uppercase leading-snug tracking-wide text-charcoal sm:text-3xl md:text-4xl lg:text-5xl">
           Instant Umrah Budget & Installment Calculator
         </h1>
         <p className="mt-4 max-w-2xl text-muted md:text-lg">

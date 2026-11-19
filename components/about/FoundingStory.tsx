@@ -8,7 +8,7 @@ export function FoundingStory() {
           <span className="mb-3 inline-block rounded-full bg-gold-soft/60 px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-gold-dark">
             Our Founding Story
           </span>
-          <h2 className="font-display text-3xl font-semibold uppercase tracking-wide text-charcoal md:text-4xl">
+          <h2 className="break-words font-display text-xl font-semibold uppercase leading-snug tracking-wide text-charcoal sm:text-2xl md:text-3xl lg:text-4xl">
             A Sacred Journey Deserves Complete Honesty.
           </h2>
           <div className="mt-5 space-y-4 text-sm leading-relaxed text-muted md:text-base">

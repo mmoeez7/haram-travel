@@ -5,7 +5,8 @@ import { SiteLoader } from "@/components/layout/SiteLoader";
 import { AdminToaster } from "@/components/admin/AdminToaster";
 import { getSiteNavItems } from "@/lib/nav";
 
-export const revalidate = 60;
+/** Render on request so `next build` does not prerender against Neon (avoids connect timeouts). */
+export const dynamic = "force-dynamic";
 
 export default async function SiteLayout({
   children,

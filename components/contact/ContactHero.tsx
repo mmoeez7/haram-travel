@@ -34,7 +34,7 @@ export function ContactHero() {
           Dedicated UK Pilgrimage Advisors
         </span>
 
-        <h1 className="font-display text-3xl font-semibold uppercase leading-tight tracking-wide text-[#001a26] sm:text-4xl md:text-5xl lg:text-[3.25rem]">
+        <h1 className="break-words font-display text-xl font-semibold uppercase leading-snug tracking-wide text-[#001a26] sm:text-3xl md:text-4xl lg:text-5xl">
           Speak Directly to a
           <br className="hidden sm:block" /> British Umrah Specialist
         </h1>

@@ -41,10 +41,12 @@ export async function StarPackagesPage({
               { label: pathLabel },
             ]}
           />
-          <h1 className="font-display text-3xl font-semibold uppercase tracking-wide text-charcoal md:text-5xl">
+          <h1 className="break-words font-display text-xl font-semibold uppercase leading-snug tracking-wide text-charcoal sm:text-3xl md:text-4xl lg:text-5xl">
             {title}
           </h1>
-          <p className="mt-4 max-w-2xl text-muted">{description}</p>
+          <p className="mt-3 max-w-2xl text-sm text-muted sm:mt-4 sm:text-base">
+            {description}
+          </p>
         </div>
       </section>
       <PackageSection

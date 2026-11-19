@@ -62,7 +62,7 @@ export default async function BlogPostPage({ params }: PageProps) {
                 {dateLabel}
               </p>
             ) : null}
-            <h1 className="mt-2 font-display text-3xl font-semibold tracking-wide text-charcoal md:text-5xl">
+            <h1 className="mt-2 break-words font-display text-xl font-semibold leading-snug tracking-wide text-charcoal sm:text-3xl md:text-4xl lg:text-5xl">
               {post.title}
             </h1>
             {post.excerpt ? (

@@ -92,7 +92,7 @@ export default async function CategoryPackagesPage({ params }: PageProps) {
             />
           </div>
           <h1
-            className={`font-display text-5xl font-semibold uppercase tracking-wide md:text-6xl lg:text-7xl ${
+            className={`max-w-4xl break-words font-display text-xl font-semibold uppercase leading-snug tracking-wide sm:text-3xl md:text-4xl lg:text-5xl ${
               hasCover ? "text-white" : "text-charcoal"
             }`}
           >
