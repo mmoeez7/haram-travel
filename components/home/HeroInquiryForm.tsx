@@ -14,7 +14,7 @@ const emptyForm = {
 const passengerOptions = Array.from({ length: 20 }, (_, index) => String(index + 1));
 
 const inputClass =
-  "brand-hero-input h-12 w-full rounded-xl border-[1.5px] border-[#E0D7C8] bg-[#FAF8F5] px-4 text-sm font-medium text-charcoal outline-none transition placeholder:text-slate-400 focus:border-gold focus:bg-white focus:shadow-[0_0_0_3px_rgba(197,160,56,0.2)] sm:h-[52px] sm:text-[15px]";
+  "brand-hero-input h-8 w-full rounded-md border border-[#E0D7C8] bg-[#FAF8F5] px-2.5 text-[11px] font-medium text-charcoal outline-none transition placeholder:text-slate-400 focus:border-gold focus:bg-white focus:shadow-[0_0_0_3px_rgba(197,160,56,0.2)] sm:h-[52px] sm:rounded-xl sm:border-[1.5px] sm:px-4 sm:text-[15px]";
 
 export function HeroInquiryForm() {
   const [form, setForm] = useState(emptyForm);
@@ -65,16 +65,16 @@ export function HeroInquiryForm() {
   return (
     <div
       id="enquiry-form"
-      className="mx-auto max-w-6xl scroll-mt-24 rounded-3xl border border-[#EAE3D6] bg-white p-6 shadow-[0_14px_45px_rgba(26,26,26,0.07)] sm:p-8 md:p-9"
+      className="mx-auto max-w-6xl scroll-mt-24 rounded-xl border border-[#EAE3D6] bg-white p-2 shadow-[0_10px_28px_rgba(26,26,26,0.07)] sm:rounded-3xl sm:p-8 sm:shadow-[0_14px_45px_rgba(26,26,26,0.07)] md:p-9"
     >
       <form
         onSubmit={onSubmit}
-        className="grid grid-cols-1 items-end gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-5"
+        className="grid grid-cols-1 items-end gap-1.5 sm:grid-cols-2 sm:gap-5 lg:grid-cols-5"
       >
         <div>
           <label
             htmlFor="hero-inquiry-name"
-            className="mb-2 block text-sm font-bold text-charcoal"
+            className="mb-0.5 block text-[9px] font-bold text-charcoal sm:mb-2 sm:text-sm"
           >
             Full Name
           </label>
@@ -84,7 +84,7 @@ export function HeroInquiryForm() {
             name="name"
             autoComplete="name"
             className={inputClass}
-            placeholder="Enter Your Name"
+            placeholder="Name"
             value={form.name}
             onChange={(event) => update("name", event.target.value)}
           />
@@ -93,7 +93,7 @@ export function HeroInquiryForm() {
         <div>
           <label
             htmlFor="hero-inquiry-email"
-            className="mb-2 block text-sm font-bold text-charcoal"
+            className="mb-0.5 block text-[9px] font-bold text-charcoal sm:mb-2 sm:text-sm"
           >
             Email
           </label>
@@ -105,7 +105,7 @@ export function HeroInquiryForm() {
             autoComplete="email"
             inputMode="email"
             className={inputClass}
-            placeholder="Enter Your Email"
+            placeholder="Email"
             value={form.email}
             onChange={(event) => update("email", event.target.value)}
           />
@@ -114,7 +114,7 @@ export function HeroInquiryForm() {
         <div>
           <label
             htmlFor="hero-inquiry-phone"
-            className="mb-2 block text-sm font-bold text-charcoal"
+            className="mb-0.5 block text-[9px] font-bold text-charcoal sm:mb-2 sm:text-sm"
           >
             Phone Number
           </label>
@@ -126,7 +126,7 @@ export function HeroInquiryForm() {
             autoComplete="tel"
             inputMode="tel"
             className={inputClass}
-            placeholder="Enter Your Phone Number"
+            placeholder="Phone"
             value={form.phone}
             onChange={(event) => update("phone", event.target.value)}
           />
@@ -135,7 +135,7 @@ export function HeroInquiryForm() {
         <div>
           <label
             htmlFor="hero-inquiry-passengers"
-            className="mb-2 block text-sm font-bold text-charcoal"
+            className="mb-0.5 block text-[9px] font-bold text-charcoal sm:mb-2 sm:text-sm"
           >
             No of Passengers
           </label>
@@ -159,11 +159,13 @@ export function HeroInquiryForm() {
           <button
             type="submit"
             disabled={submitting}
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-gold px-4 text-sm font-bold uppercase tracking-wider text-white shadow-sm transition hover:bg-gold-dark disabled:cursor-not-allowed disabled:opacity-60 sm:h-[52px]"
+            className="flex h-8 w-full items-center justify-center gap-1 rounded-md bg-gold px-2.5 text-[10px] font-bold uppercase tracking-wide text-white shadow-sm transition hover:bg-gold-dark disabled:cursor-not-allowed disabled:opacity-60 sm:h-[52px] sm:gap-2 sm:rounded-xl sm:px-4 sm:text-sm sm:tracking-wider"
           >
-            <span>{submitting ? "Sending…" : "Request a Quote"}</span>
+            <span className="whitespace-nowrap">
+              {submitting ? "Sending…" : "Request a Quote"}
+            </span>
             {!submitting ? (
-              <ArrowRight className="h-4 w-4" aria-hidden />
+              <ArrowRight className="h-3 w-3 sm:h-4 sm:w-4" aria-hidden />
             ) : null}
           </button>
         </div>

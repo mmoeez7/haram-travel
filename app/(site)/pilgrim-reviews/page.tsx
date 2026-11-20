@@ -35,7 +35,7 @@ export default async function PilgrimReviewsPage() {
         </div>
       </section>
       <CustomerReviewsGrid initialReviews={reviews} total={total} />
-      <VideoReviews />
+      <VideoReviews limit={3} showSeeMore />
       <CustomQuote />
     </>
   );

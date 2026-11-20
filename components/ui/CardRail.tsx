@@ -8,6 +8,8 @@ type CardRailProps = {
   /** Grid column classes applied from md+ (default 2 / 3 cols). */
   cols?: string;
   className?: string;
+  /** Classes for each rail item wrapper (mobile max-width, etc.). */
+  itemClassName?: string;
 };
 
 /**
@@ -19,6 +21,7 @@ export function CardRail({
   children,
   cols = "md:grid-cols-2 xl:grid-cols-3",
   className = "",
+  itemClassName = "mx-auto w-full max-w-[340px] md:mx-0 md:h-full md:max-w-none",
 }: CardRailProps) {
   return (
     <div className={`grid grid-cols-1 gap-4 md:gap-6 ${cols} ${className}`}>
@@ -26,7 +29,7 @@ export function CardRail({
         <Reveal
           key={index}
           delay={Math.min(index * 90, 360)}
-          className="mx-auto w-full max-w-[340px] md:mx-0 md:h-full md:max-w-none"
+          className={itemClassName}
         >
           <div className="h-full w-full">{child}</div>
         </Reveal>

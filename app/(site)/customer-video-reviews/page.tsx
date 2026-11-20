@@ -1,7 +1,11 @@
 import { createMetadata } from "@/lib/seo";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
-import { VideoReviews } from "@/components/home/VideoReviews";
+import { CustomerVideoReviewsGrid } from "@/components/home/CustomerVideoReviewsGrid";
 import { CustomQuote } from "@/components/home/CustomQuote";
+import {
+  getPublishedVideoReviewsPage,
+  VIDEO_REVIEWS_PAGE_SIZE,
+} from "@/lib/video-reviews";
 
 export const metadata = createMetadata({
   title: "Customer Video Reviews",
@@ -10,7 +14,12 @@ export const metadata = createMetadata({
   path: "/customer-video-reviews",
 });
 
-export default function CustomerVideoReviewsPage() {
+export default async function CustomerVideoReviewsPage() {
+  const { reviews, total } = await getPublishedVideoReviewsPage({
+    offset: 0,
+    limit: VIDEO_REVIEWS_PAGE_SIZE,
+  });
+
   return (
     <>
       <section className="bg-cream pt-12 pb-4">
@@ -30,7 +39,7 @@ export default function CustomerVideoReviewsPage() {
           </p>
         </div>
       </section>
-      <VideoReviews />
+      <CustomerVideoReviewsGrid initialReviews={reviews} total={total} />
       <CustomQuote />
     </>
   );

@@ -47,7 +47,7 @@ export const NAV_ITEMS: NavItem[] = [
   { href: "/umrah-packages", label: "Umrah Packages" },
   { href: "/blogs", label: "Blogs" },
   { href: "/about-us", label: "About Us" },
-  { href: "/contact-us", label: "Contact Us" },
+  { href: "/reviews", label: "Reviews" },
 ];
 
 /** @deprecated Prefer getSiteNavItems() */
@@ -60,14 +60,6 @@ export const FOOTER_PACKAGES = [
   { href: "/ramadan-umrah-packages", label: "Ramadan 2027 Packages" },
   { href: "/umrah-packages", label: "Family & Group Umrah" },
   { href: "/#guides", label: "Pilgrim Guides & Articles" },
-] as const;
-
-export const FOOTER_DEPARTURES = [
-  { href: "/umrah-packages", label: "Umrah from London Heathrow" },
-  { href: "/umrah-packages", label: "Umrah from London Gatwick" },
-  { href: "/umrah-packages", label: "Umrah from Manchester" },
-  { href: "/umrah-packages", label: "Umrah from Birmingham" },
-  { href: "/umrah-packages", label: "Umrah from Scotland" },
 ] as const;
 
 export function whatsappUrl(message?: string) {

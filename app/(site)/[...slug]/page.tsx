@@ -68,7 +68,7 @@ export default async function PackageDetailPage({ params }: PageProps) {
       </section>
 
       <CustomQuote />
-      <Testimonials />
+      <Testimonials limit={3} showSeeMore />
     </>
   );
 }

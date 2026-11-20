@@ -17,30 +17,30 @@ export function FloatingWidgets() {
         <div className="mx-auto grid max-w-lg grid-cols-3 gap-2">
           <a
             href={telUrl()}
-            className="inline-flex h-11 items-center justify-center gap-1.5 rounded-lg border border-call-border bg-call text-sm font-semibold text-call-border"
+            className="inline-flex h-10 items-center justify-center gap-1 rounded-lg border border-call-border bg-call text-xs font-semibold text-call-border"
             aria-label={`Call ${SITE.phone}`}
           >
-            <Phone className="h-4 w-4 shrink-0" aria-hidden />
+            <Phone className="h-3.5 w-3.5 shrink-0" aria-hidden />
             Call
           </a>
           <a
             href={voucherHref}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex h-11 items-center justify-center gap-1.5 rounded-lg bg-gradient-to-l from-gold to-gold-dark text-sm font-semibold text-charcoal"
+            className="inline-flex h-10 items-center justify-center gap-1 rounded-lg bg-gradient-to-l from-gold to-gold-dark text-xs font-semibold text-charcoal"
             aria-label="Claim £50pp Voucher"
           >
-            <Ticket className="h-4 w-4 shrink-0" aria-hidden />
+            <Ticket className="h-3.5 w-3.5 shrink-0" aria-hidden />
             Voucher
           </a>
           <a
             href={whatsappUrl()}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex h-11 items-center justify-center gap-1.5 rounded-lg bg-whatsapp text-sm font-semibold text-white"
+            className="inline-flex h-10 items-center justify-center gap-1 rounded-lg bg-whatsapp text-xs font-semibold text-white"
             aria-label="Chat on WhatsApp"
           >
-            <FaWhatsapp className="h-4 w-4 shrink-0" aria-hidden />
+            <FaWhatsapp className="h-3.5 w-3.5 shrink-0" aria-hidden />
             WhatsApp
           </a>
         </div>
