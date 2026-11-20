@@ -43,14 +43,6 @@ function HotelCard({
         ]
       : [];
   const active = images[activeIndex] ?? images[0];
-
-  useEffect(() => {
-    if (images.length < 2) return;
-    const timer = window.setTimeout(() => {
-      setActiveIndex((current) => (current + 1) % images.length);
-    }, 3000);
-    return () => window.clearTimeout(timer);
-  }, [activeIndex, images.length]);
   const distance = distanceLabel(hotel);
   const copy =
     hotel.shortDescription?.trim() ||
@@ -105,9 +97,17 @@ function HotelCard({
           {hotel.name}
         </h3>
         <div className="mt-2 flex flex-wrap items-center gap-3 text-xs text-muted">
-          <span className="inline-flex items-center gap-1 font-medium text-ink">
-            <Star className="h-3.5 w-3.5 fill-gold text-gold" />
-            {hotel.stars} Star
+          <span
+            className="inline-flex items-center gap-0.5 font-medium text-ink"
+            aria-label={`${hotel.stars} star`}
+          >
+            {Array.from({ length: hotel.stars }, (_, i) => (
+              <Star
+                key={i}
+                className="h-3.5 w-3.5 fill-gold text-gold"
+                aria-hidden
+              />
+            ))}
           </span>
           {distance ? (
             <span className="inline-flex items-center gap-1">
@@ -117,7 +117,9 @@ function HotelCard({
           ) : null}
           {hotel.nights != null ? <span>{hotel.nights} nights</span> : null}
         </div>
-        <p className="mt-3 text-sm leading-relaxed text-muted">{copy}</p>
+        <p className="mt-3 h-28 overflow-y-auto pr-1 text-sm leading-relaxed text-muted">
+          {copy}
+        </p>
         {hotel.amenities.length ? (
           <div className="mt-4 flex flex-wrap gap-1.5">
             {hotel.amenities.slice(0, 6).map((item) => (
