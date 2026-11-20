@@ -1,10 +1,11 @@
 import { createMetadata } from "@/lib/seo";
 import { SeasonalDealPage } from "@/components/packages/SeasonalDealPage";
+import { seasonPageDescription } from "@/lib/package-page-copy";
 
 export const metadata = createMetadata({
   title: "February Umrah Package from UK",
   description:
-    "February Umrah Package from the UK with flights, visas, and walking-distance Haram hotels. ATOL protected.",
+    seasonPageDescription("february"),
   path: "/february-umrah-package",
 });
 
@@ -13,7 +14,7 @@ export default function Page() {
     <SeasonalDealPage
       title="February Umrah Package"
       pathLabel="February"
-      description="Handcrafted February Umrah itineraries for UK pilgrims — flights included and ATOL protected."
+      description={seasonPageDescription("february")}
       season="february"
     />
   );

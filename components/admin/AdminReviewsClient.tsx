@@ -2,8 +2,8 @@
 
 import toast from "react-hot-toast";
 import Link from "next/link";
-import { Pencil, Search, Trash2 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { GripVertical, Pencil, Search, Trash2 } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { adminFetch } from "@/lib/admin-fetch";
 import {
@@ -70,6 +70,14 @@ export function AdminReviewsClient() {
   const [q, setQ] = useState("");
   const [status, setStatus] = useState("");
   const [loading, setLoading] = useState(true);
+  const [dragIndex, setDragIndex] = useState<number | null>(null);
+  const [savingOrder, setSavingOrder] = useState(false);
+  const dragFromRef = useRef<number | null>(null);
+  const orderSnapshotRef = useRef<VideoReviewRow[] | null>(null);
+  const videoOrderRef = useRef(videoReviews);
+  videoOrderRef.current = videoReviews;
+
+  const canReorderVideo = kind === "video" && !q.trim() && !status;
 
   function setKind(next: ReviewKind) {
     const params = new URLSearchParams(searchParams.toString());
@@ -129,6 +137,63 @@ export function AdminReviewsClient() {
     const nextPage = rows.length === 1 && page > 1 ? page - 1 : page;
     setPage(nextPage);
     await load(q, status, nextPage, kind);
+  }
+
+  async function persistVideoOrder(nextRows: VideoReviewRow[]) {
+    const snapshot = orderSnapshotRef.current;
+    setSavingOrder(true);
+    try {
+      await adminFetch("/api/admin/reviews/reorder", {
+        method: "PUT",
+        body: JSON.stringify({
+          ids: nextRows.map((row) => row.id),
+          page,
+          pageSize: pagination.pageSize || ADMIN_PAGE_SIZE,
+        }),
+      });
+      toast.success("Order saved", { duration: 1600 });
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Failed to save order");
+      if (snapshot) setVideoReviews(snapshot);
+    } finally {
+      setSavingOrder(false);
+      orderSnapshotRef.current = null;
+    }
+  }
+
+  function reorderVideoLive(from: number, to: number) {
+    if (from === to || from < 0 || to < 0) return;
+    const rows = videoOrderRef.current;
+    if (to >= rows.length) return;
+    const next = [...rows];
+    const [moved] = next.splice(from, 1);
+    if (!moved) return;
+    next.splice(to, 0, moved);
+    dragFromRef.current = to;
+    videoOrderRef.current = next;
+    setVideoReviews(next);
+    setDragIndex(to);
+  }
+
+  function finishVideoDrag() {
+    const from = dragFromRef.current;
+    dragFromRef.current = null;
+    setDragIndex(null);
+    if (from === null) return;
+
+    const snapshot = orderSnapshotRef.current;
+    const next = videoOrderRef.current;
+    const unchanged =
+      snapshot &&
+      snapshot.length === next.length &&
+      snapshot.every((row, i) => row.id === next[i]?.id);
+
+    if (unchanged) {
+      orderSnapshotRef.current = null;
+      return;
+    }
+
+    void persistVideoOrder(next);
   }
 
   return (
@@ -212,63 +277,119 @@ export function AdminReviewsClient() {
           <>
             <div className="overflow-x-auto">
               {kind === "video" ? (
-                <table className="min-w-full text-left text-sm">
-                  <thead className="border-b border-border text-[10px] uppercase tracking-wide text-muted">
-                    <tr>
-                      <th className="px-2 py-2">Description</th>
-                      <th className="px-2 py-2">YouTube</th>
-                      <th className="px-2 py-2">Status</th>
-                      <th className="px-2 py-2 text-center">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {videoReviews.map((review) => (
-                      <tr key={review.id} className="border-b border-border/60">
-                        <td className="max-w-md px-2 py-3">
-                          <Link
-                            href={`/admin/reviews/${review.id}`}
-                            className={adminTitleLinkClass}
-                          >
-                            <span className="line-clamp-2">{review.description}</span>
-                          </Link>
-                        </td>
-                        <td className="px-2 py-3 font-mono text-xs text-muted">
-                          {review.youtubeId}
-                        </td>
-                        <td className="px-2 py-3">
-                          <span
-                            className={
-                              review.published
-                                ? adminStatusPublishedClass
-                                : adminStatusDraftClass
+                <>
+                  {canReorderVideo ? (
+                    <p className="border-b border-border px-2 py-2 text-xs text-muted">
+                      Drag the handle to set which video shows first on the site.
+                      {savingOrder ? " Saving…" : null}
+                    </p>
+                  ) : (
+                    <p className="border-b border-border px-2 py-2 text-xs text-muted">
+                      Clear search/status filters to rearrange video order.
+                    </p>
+                  )}
+                  <table className="min-w-full text-left text-sm">
+                    <thead className="border-b border-border text-[10px] uppercase tracking-wide text-muted">
+                      <tr>
+                        <th className="w-10 px-2 py-2" aria-label="Reorder" />
+                        <th className="px-2 py-2">Description</th>
+                        <th className="px-2 py-2">YouTube</th>
+                        <th className="px-2 py-2">Status</th>
+                        <th className="px-2 py-2 text-center">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {videoReviews.map((review, index) => (
+                        <tr
+                          key={review.id}
+                          onDragOver={(event) => {
+                            if (!canReorderVideo || dragFromRef.current === null) return;
+                            event.preventDefault();
+                            event.dataTransfer.dropEffect = "move";
+                            const from = dragFromRef.current;
+                            if (from !== null && from !== index) {
+                              reorderVideoLive(from, index);
                             }
-                          >
-                            {review.published ? "Published" : "Draft"}
-                          </span>
-                        </td>
-                        <td className="px-2 py-3">
-                          <div className="flex items-center justify-center gap-2">
+                          }}
+                          className={`border-b border-border/60 transition-colors ${
+                            dragIndex === index ? "bg-gold/10" : ""
+                          }`}
+                        >
+                          <td className="px-2 py-3 align-middle">
+                            <button
+                              type="button"
+                              draggable={canReorderVideo && !savingOrder}
+                              onDragStart={(event) => {
+                                if (!canReorderVideo) return;
+                                orderSnapshotRef.current = videoReviews;
+                                dragFromRef.current = index;
+                                setDragIndex(index);
+                                event.dataTransfer.effectAllowed = "move";
+                                event.dataTransfer.setData("text/plain", review.id);
+                              }}
+                              onDragEnd={() => finishVideoDrag()}
+                              disabled={!canReorderVideo || savingOrder}
+                              className={`inline-flex h-8 w-8 items-center justify-center rounded-lg ${
+                                canReorderVideo
+                                  ? "cursor-grab text-muted hover:bg-cream hover:text-charcoal active:cursor-grabbing"
+                                  : "cursor-not-allowed text-border"
+                              }`}
+                              title={
+                                canReorderVideo
+                                  ? "Drag to reorder"
+                                  : "Clear filters to reorder"
+                              }
+                              aria-label="Drag to reorder"
+                            >
+                              <GripVertical className="h-4 w-4" />
+                            </button>
+                          </td>
+                          <td className="max-w-md px-2 py-3">
                             <Link
                               href={`/admin/reviews/${review.id}`}
-                              className={adminEditLinkClass}
+                              className={adminTitleLinkClass}
                             >
-                              <Pencil className="h-3.5 w-3.5" aria-hidden />
-                              Edit
+                              <span className="line-clamp-2">{review.description}</span>
                             </Link>
-                            <AdminAsyncButton
-                              onClick={() => remove(review.id)}
-                              pendingLabel="Deleting…"
-                              idleIcon={<Trash2 className="h-3.5 w-3.5" />}
-                              className={adminDangerButtonClass}
+                          </td>
+                          <td className="px-2 py-3 font-mono text-xs text-muted">
+                            {review.youtubeId}
+                          </td>
+                          <td className="px-2 py-3">
+                            <span
+                              className={
+                                review.published
+                                  ? adminStatusPublishedClass
+                                  : adminStatusDraftClass
+                              }
                             >
-                              Delete
-                            </AdminAsyncButton>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+                              {review.published ? "Published" : "Draft"}
+                            </span>
+                          </td>
+                          <td className="px-2 py-3">
+                            <div className="flex items-center justify-center gap-2">
+                              <Link
+                                href={`/admin/reviews/${review.id}`}
+                                className={adminEditLinkClass}
+                              >
+                                <Pencil className="h-3.5 w-3.5" aria-hidden />
+                                Edit
+                              </Link>
+                              <AdminAsyncButton
+                                onClick={() => remove(review.id)}
+                                pendingLabel="Deleting…"
+                                idleIcon={<Trash2 className="h-3.5 w-3.5" />}
+                                className={adminDangerButtonClass}
+                              >
+                                Delete
+                              </AdminAsyncButton>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </>
               ) : (
                 <table className="min-w-full text-left text-sm">
                   <thead className="border-b border-border text-[10px] uppercase tracking-wide text-muted">

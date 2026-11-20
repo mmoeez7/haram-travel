@@ -8,6 +8,7 @@ import { CategoryFilters } from "@/components/packages/CategoryFilters";
 import { PackageSection } from "@/components/packages/PackageSection";
 import { CustomQuote } from "@/components/home/CustomQuote";
 import { SeoContent } from "@/components/content/SeoContent";
+import { starPageDescription } from "@/lib/package-page-copy";
 
 export const metadata = createMetadata({
   title: "Umrah Packages from UK",
@@ -44,14 +45,14 @@ export default async function UmrahPackagesPage() {
 
       <PackageSection
         title="3 Star Umrah Packages"
-        description="Reliable economy comfort with flights included for 7, 10 and 12 night stays."
+        description={starPageDescription(3)}
         packages={threeStar}
         titleOverride={starListingCardTitle(3)}
       />
       <div className="bg-ivory">
         <PackageSection
           title="4 Star Umrah Packages"
-          description="Executive hotels closer to the Haram with elevated comfort for families."
+          description={starPageDescription(4)}
           packages={fourStar}
           titleOverride={starListingCardTitle(4)}
         />
@@ -59,7 +60,7 @@ export default async function UmrahPackagesPage() {
       <div id="5-star">
         <PackageSection
           title="5 Star Umrah Packages"
-          description="Clock Tower and courtyard VIP stays with white-glove UK & Saudi support."
+          description={starPageDescription(5)}
           packages={fiveStar}
           titleOverride={starListingCardTitle(5)}
         />

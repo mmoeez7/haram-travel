@@ -4,24 +4,40 @@ import type { PackageDetail } from "@/lib/packages";
 import { packageDetailDisplayTitle } from "@/lib/package-card-title";
 import { telUrl, whatsappUrl } from "@/lib/constants";
 import { Button } from "@/components/ui/Button";
+import { SiteLoadingButton } from "@/components/layout/SiteLoadingButton";
 
-export function PackageDetailSidebar({ pkg }: { pkg: PackageDetail }) {
+export function PackageDetailSidebar({
+  pkg,
+  matchCover = false,
+}: {
+  pkg: PackageDetail;
+  /** Stretch to cover image height (desktop); natural height when stacked. */
+  matchCover?: boolean;
+}) {
   const displayTitle = packageDetailDisplayTitle(pkg);
   const waMessage = `Assalamu Alaikum, I'm interested in ${displayTitle} (${pkg.subtitle}) from £${pkg.priceFrom}pp.`;
 
   return (
-    <aside className="rounded-xl border border-border bg-white p-4 shadow-sm sm:rounded-2xl sm:p-5 lg:sticky lg:top-24">
-      <p className="text-xs uppercase tracking-wide text-muted">Price from</p>
-      <p className="mt-1 font-display text-3xl font-semibold text-charcoal sm:text-4xl">
-        £{pkg.priceFrom.toLocaleString()}
-        <span className="text-sm font-sans font-medium text-muted sm:text-base">
-          {" "}
-          /pp
+    <aside
+      className={
+        matchCover
+          ? "flex h-full flex-col justify-between rounded-xl border border-border bg-white p-4 shadow-sm sm:rounded-2xl sm:p-5 lg:min-h-[380px] lg:p-5"
+          : "rounded-xl border border-border bg-white p-4 shadow-sm sm:rounded-2xl sm:p-5 lg:sticky lg:top-24"
+      }
+    >
+      <div>
+        <p className="text-xs uppercase tracking-wide text-muted">Price from</p>
+        <p className="mt-1 font-display text-3xl font-semibold text-charcoal sm:text-4xl">
+          £{pkg.priceFrom.toLocaleString()}
+          <span className="text-sm font-sans font-medium text-muted sm:text-base">
+            {" "}
+            /pp
+          </span>
+        </p>
+        <span className="mt-3 inline-flex rounded-full bg-forest/10 px-3 py-1 text-xs font-semibold text-forest">
+          Deposit: £{pkg.deposit}pp
         </span>
-      </p>
-      <span className="mt-3 inline-flex rounded-full bg-forest/10 px-3 py-1 text-xs font-semibold text-forest">
-        Deposit: £{pkg.deposit}pp
-      </span>
+      </div>
 
       <div className="mt-5 grid gap-2 sm:grid-cols-2 lg:grid-cols-1">
         <Button
@@ -38,9 +54,13 @@ export function PackageDetailSidebar({ pkg }: { pkg: PackageDetail }) {
           <Phone className="h-4 w-4" />
           Call Now
         </Button>
-        <Button href="/contact-us" variant="swipe" className="w-full sm:col-span-2 lg:col-span-1">
+        <SiteLoadingButton
+          href="/contact-us"
+          variant="swipe"
+          className="w-full sm:col-span-2 lg:col-span-1"
+        >
           Inquire & Book Now →
-        </Button>
+        </SiteLoadingButton>
       </div>
 
       <p className="mt-4 text-xs leading-relaxed text-muted">

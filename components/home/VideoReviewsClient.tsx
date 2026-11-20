@@ -13,7 +13,7 @@ export function VideoReviewsClient({
   const [playingId, setPlayingId] = useState<string | null>(null);
 
   return (
-    <div className="flex flex-wrap justify-center gap-3 md:gap-4">
+    <div className="flex flex-wrap justify-center gap-2 sm:gap-2.5 md:gap-3">
       {videos.map((video, index) => {
         const isPlaying = playingId === video.youtubeId;
         const thumbSrc = `https://i.ytimg.com/vi/${video.youtubeId}/hqdefault.jpg`;
@@ -22,7 +22,7 @@ export function VideoReviewsClient({
           <Reveal
             key={video.id}
             delay={Math.min(index * 90, 360)}
-            className="w-[calc(50%-0.375rem)] max-w-[200px] shrink-0 sm:w-[200px] sm:max-w-none md:w-[220px]"
+            className="w-[calc(50%-0.25rem)] max-w-[180px] shrink-0 sm:w-[180px] sm:max-w-none md:w-[200px]"
           >
             <article className="card-lift overflow-hidden rounded-xl shadow-[0_10px_28px_rgba(0,0,0,0.08)] md:rounded-2xl">
               <div className="relative aspect-[9/16] overflow-hidden">
@@ -61,7 +61,7 @@ export function VideoReviewsClient({
                           {video.title}
                         </p>
                         <p className="truncate text-[8px] text-white/75">
-                          Alharam Travel - UK
+                          Haram Travel
                         </p>
                       </div>
                     </div>

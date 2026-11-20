@@ -6,6 +6,7 @@ import type { PackageItem } from "@/lib/packages";
 import { packageHref } from "@/lib/package-paths";
 import { telUrl, whatsappUrl } from "@/lib/constants";
 import { Button } from "@/components/ui/Button";
+import { SiteLoadingButton } from "@/components/layout/SiteLoadingButton";
 
 type PackageCardProps = {
   pkg: PackageItem;
@@ -99,9 +100,13 @@ export function PackageCard({ pkg, titleOverride }: PackageCardProps) {
               Call Now
             </Button>
           </div>
-          <Button href={href} variant="swipe" className="w-full !py-2 text-xs md:!py-2.5 md:text-sm">
+          <SiteLoadingButton
+            href={href}
+            variant="swipe"
+            className="w-full !py-2 text-xs md:!py-2.5 md:text-sm"
+          >
             Inquire & Book Now →
-          </Button>
+          </SiteLoadingButton>
         </div>
       </div>
     </article>

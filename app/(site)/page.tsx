@@ -25,7 +25,7 @@ export default function HomePage() {
       <WhyUs />
       <Steps />
       <Testimonials limit={3} showSeeMore />
-      <VideoReviews limit={3} showSeeMore />
+      <VideoReviews limit={4} showSeeMore />
       <FAQ />
       <BlogGuides />
     </>

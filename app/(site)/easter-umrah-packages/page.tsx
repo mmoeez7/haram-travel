@@ -5,11 +5,12 @@ import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { CategoryFilters } from "@/components/packages/CategoryFilters";
 import { StarGroupedPackages } from "@/components/packages/StarGroupedPackages";
 import { CustomQuote } from "@/components/home/CustomQuote";
+import { seasonPageDescription } from "@/lib/package-page-copy";
 
 export const metadata = createMetadata({
   title: "Easter Umrah Packages",
   description:
-    "February half-term and Easter Umrah packages from the UK with family-friendly hotels and flights included.",
+    seasonPageDescription("easter"),
   path: "/easter-umrah-packages",
 });
 
@@ -30,9 +31,7 @@ export default async function EasterUmrahPackagesPage() {
           <h1 className="break-words font-display text-xl font-semibold uppercase leading-snug tracking-wide text-charcoal sm:text-3xl md:text-4xl lg:text-5xl">
             Easter & Half-Term Umrah Packages
           </h1>
-          <p className="mt-4 max-w-2xl text-muted">
-            Family-friendly spring departures timed for UK school holidays.
-          </p>
+          <p className="mt-4 max-w-2xl text-muted">{seasonPageDescription("easter")}</p>
           <div className="mt-8">
             <CategoryFilters active="easter" />
           </div>

@@ -1,0 +1,667 @@
+{
+  "seasonIntros": {
+    "january": "Enjoy mild Saudi winter weather in January, offering comfortable conditions for worship and Ziyarat. Explore suitable travel options for a peaceful spiritual journey.",
+    "february": "February brings pleasant temperatures and cooler evenings in Saudi Arabia, making it a wonderful time to perform Umrah and explore the holy cities.",
+    "easter": "Make the Easter school holidays meaningful with a spiritual journey to Makkah and Madinah. Ideal for UK families planning Umrah together during their break.",
+    "ramadan": "Experience the blessings of Ramadan in Makkah and Madinah, with special prayers, Taraweeh and a unique spiritual atmosphere throughout the blessed month.",
+    "september": "September offers opportunities to find competitive Umrah deals after the summer peak. Enjoy your spiritual journey while exploring different hotel and travel options.",
+    "october": "October brings gradually easing temperatures in Saudi Arabia, creating more comfortable conditions for worship and Ziyarat. Discover suitable packages for your spiritual journey.",
+    "november": "November offers generally pleasant weather in Makkah and Madinah, making outdoor worship and Ziyarat more enjoyable during your spiritual journey.",
+    "december": "Combine your winter holidays with a meaningful Umrah journey. December offers milder Saudi weather, making it a popular choice for families and couples."
+  },
+  "starIntros": {
+    "3": "Explore affordable Umrah packages with comfortable hotel stays and essential travel arrangements. A practical choice for pilgrims seeking value, convenience and a meaningful spiritual journey.",
+    "4": "Enjoy enhanced comfort with quality hotel accommodation and convenient travel arrangements. Ideal for pilgrims seeking a balance of comfort, value and a memorable Umrah experience.",
+    "5": "Experience premium Umrah travel with luxurious hotel accommodation and elevated comfort. Perfect for pilgrims seeking exceptional hospitality, convenience and a more refined spiritual journey."
+  },
+  "packages": [
+    {
+      "season": "JANUARY",
+      "stars": 3,
+      "nights": 7,
+      "text": "This 7-night 3 Star January Umrah package offers an affordable pilgrimage experience with 4 nights in Makkah and 3 nights in Madinah. Ideal for pilgrims looking for a shorter spiritual journey with comfortable accommodation and time to visit both holy cities."
+    },
+    {
+      "season": "JANUARY",
+      "stars": 3,
+      "nights": 10,
+      "text": "This 10-night 3 Star Umrah package combines January\u2019s milder Saudi weather with 5 nights in Makkah and 5 nights in Madinah. Enjoy a comfortable winter pilgrimage, with time for worship, prayers and visits to both holy cities."
+    },
+    {
+      "season": "JANUARY",
+      "stars": 3,
+      "nights": 12,
+      "text": "Plan your 12-night Umrah in January, when cooler winter conditions can make time outdoors in Makkah and Madinah more comfortable. This package gives you an extended stay for worship, prayers and visits to the holy sites."
+    },
+    {
+      "season": "JANUARY",
+      "stars": 3,
+      "nights": 14,
+      "text": "Choose this 14-night January Umrah package for an extended stay in Makkah and Madinah. The cooler winter season can make daily walks and visits more comfortable, while the longer duration gives you additional time for worship and reflection."
+    },
+    {
+      "season": "JANUARY",
+      "stars": 4,
+      "nights": 7,
+      "text": "Enjoy a 7-night January Umrah in 4 Star accommodation, with the cooler Saudi winter season making time for worship and visits around Makkah and Madinah more comfortable. A balanced option for pilgrims seeking added comfort during a shorter spiritual journey."
+    },
+    {
+      "season": "JANUARY",
+      "stars": 4,
+      "nights": 10,
+      "text": "This 10-night January package pairs 4 Star accommodation with Saudi Arabia\u2019s cooler winter season. Enjoy more time for worship and exploring Makkah and Madinah, with a comfortable stay for pilgrims wanting longer in the holy cities."
+    },
+    {
+      "season": "JANUARY",
+      "stars": 4,
+      "nights": 12,
+      "text": "Spend 12 nights in Saudi Arabia with this January 4 Star Umrah package. Cooler winter conditions can make daily outings more comfortable, while the longer stay gives you additional time for prayers, worship and visits in Makkah and Madinah."
+    },
+    {
+      "season": "JANUARY",
+      "stars": 4,
+      "nights": 14,
+      "text": "Choose a 14-night January Umrah package with 4 Star accommodation for an extended stay in Makkah and Madinah. The cooler season can make time outdoors more comfortable, while the longer journey allows more time for worship and reflection."
+    },
+    {
+      "season": "JANUARY",
+      "stars": 5,
+      "nights": 7,
+      "text": "This 7-night January 5 Star Umrah package offers a premium stay during Saudi Arabia\u2019s cooler winter season. Enjoy an elevated level of accommodation while making time for worship and visits to Makkah and Madinah during your spiritual journey."
+    },
+    {
+      "season": "JANUARY",
+      "stars": 5,
+      "nights": 10,
+      "text": "Experience a 10-night January pilgrimage with 5 Star accommodation in the cooler Saudi winter. This package suits pilgrims seeking a premium hotel stay, with more time to worship and experience the spiritual atmosphere of Makkah and Madinah."
+    },
+    {
+      "season": "JANUARY",
+      "stars": 5,
+      "nights": 12,
+      "text": "Make the most of a 12-night January Umrah with 5 Star accommodation. The cooler winter season can make visits around the holy cities more comfortable, while the extended stay offers extra time for worship, prayer and reflection."
+    },
+    {
+      "season": "JANUARY",
+      "stars": 5,
+      "nights": 14,
+      "text": "Choose a 14-night January 5 Star Umrah package for an extended pilgrimage with premium accommodation. Enjoy Saudi Arabia\u2019s milder winter conditions and more time to focus on worship, prayers and the spiritual experience of Makkah and Madinah."
+    },
+    {
+      "season": "FEBRUARY",
+      "stars": 3,
+      "nights": 7,
+      "text": "Enjoy a 7-night February Umrah with comfortable 3 Star accommodation. Pleasant daytime temperatures and cooler evenings make it a suitable time for worship and visiting the holy cities of Makkah and Madinah."
+    },
+    {
+      "season": "FEBRUARY",
+      "stars": 3,
+      "nights": 10,
+      "text": "This 10-night February Umrah package offers a comfortable pilgrimage during Saudi Arabia's pleasant winter season. Enjoy more time for prayers, worship and exploring Makkah and Madinah while keeping your travel experience affordable."
+    },
+    {
+      "season": "FEBRUARY",
+      "stars": 3,
+      "nights": 12,
+      "text": "Plan a 12-night February pilgrimage with comfortable 3 Star accommodation. The generally pleasant weather makes outdoor Ziyarat more enjoyable, giving you additional time to experience the spiritual atmosphere of both holy cities."
+    },
+    {
+      "season": "FEBRUARY",
+      "stars": 3,
+      "nights": 14,
+      "text": "Make your February Umrah a more relaxed experience with this 14-night package. Enjoy comfortable accommodation, cooler evenings and an extended stay in Makkah and Madinah, with more opportunities for worship and reflection."
+    },
+    {
+      "season": "FEBRUARY",
+      "stars": 4,
+      "nights": 7,
+      "text": "Experience a 7-night February Umrah with quality 4 Star accommodation. The pleasant winter conditions offer a comfortable setting for worship and Ziyarat, making this package a great option for pilgrims seeking added comfort."
+    },
+    {
+      "season": "FEBRUARY",
+      "stars": 4,
+      "nights": 10,
+      "text": "Enjoy a 10-night February Umrah with 4 Star accommodation and more time to experience Makkah and Madinah. Pleasant seasonal weather makes it easier to enjoy outdoor visits while focusing on your spiritual journey."
+    },
+    {
+      "season": "FEBRUARY",
+      "stars": 4,
+      "nights": 12,
+      "text": "This 12-night February package combines quality 4 Star accommodation with an extended pilgrimage experience. Enjoy the generally pleasant Saudi weather, spend more time in the holy cities and make your Umrah journey truly memorable."
+    },
+    {
+      "season": "FEBRUARY",
+      "stars": 4,
+      "nights": 14,
+      "text": "Choose a 14-night February Umrah for a longer and more comfortable pilgrimage. With quality 4 Star accommodation and generally pleasant weather, you can enjoy additional time for prayers, worship and Ziyarat in both holy cities."
+    },
+    {
+      "season": "FEBRUARY",
+      "stars": 5,
+      "nights": 7,
+      "text": "Enjoy a premium 7-night February Umrah with 5 Star accommodation. Pleasant seasonal weather and an elevated hotel experience make this package ideal for pilgrims seeking comfort while performing their spiritual journey."
+    },
+    {
+      "season": "FEBRUARY",
+      "stars": 5,
+      "nights": 10,
+      "text": "Experience a 10-night February pilgrimage with premium 5 Star accommodation. Enjoy the pleasant Saudi winter season, additional time for worship and a refined stay while exploring the spiritual beauty of Makkah and Madinah."
+    },
+    {
+      "season": "FEBRUARY",
+      "stars": 5,
+      "nights": 12,
+      "text": "Make your February pilgrimage special with 12 nights of 5 Star accommodation. Enjoy a premium stay during the pleasant winter season, with additional time for prayers, reflection and experiencing the holy cities."
+    },
+    {
+      "season": "FEBRUARY",
+      "stars": 5,
+      "nights": 14,
+      "text": "Enjoy an extended 14-night February Umrah with premium 5 Star accommodation. The generally pleasant weather provides comfortable conditions for Ziyarat, while the longer duration allows more time for worship and spiritual reflection."
+    },
+    {
+      "season": "EASTER",
+      "stars": 3,
+      "nights": 7,
+      "text": "Make your Easter school holidays meaningful with a 7-night Umrah journey. Enjoy affordable 3 Star accommodation and time for worship in Makkah and Madinah, making it a practical choice for families and pilgrims with limited holiday time."
+    },
+    {
+      "season": "EASTER",
+      "stars": 3,
+      "nights": 10,
+      "text": "Spend your Easter break on a 10-night Umrah journey with comfortable 3 Star accommodation. Enjoy additional time for prayers, worship and exploring the holy cities, making it a suitable option for families travelling during the UK school holidays."
+    },
+    {
+      "season": "EASTER",
+      "stars": 3,
+      "nights": 12,
+      "text": "Turn your Easter holidays into a memorable spiritual experience with 12 nights in Saudi Arabia. This affordable 3 Star package offers more time to perform Umrah, enjoy Ziyarat and experience the peaceful atmosphere of Makkah and Madinah."
+    },
+    {
+      "season": "EASTER",
+      "stars": 3,
+      "nights": 14,
+      "text": "Enjoy an extended Easter Umrah with 14 nights in the holy cities. With affordable 3 Star accommodation, this package is ideal for families and pilgrims wanting extra time for worship, reflection and exploring Makkah and Madinah."
+    },
+    {
+      "season": "EASTER",
+      "stars": 4,
+      "nights": 7,
+      "text": "Make the most of your Easter break with a 7-night Umrah journey and quality 4 Star accommodation. A comfortable choice for families and individuals looking to combine their school holidays with a meaningful pilgrimage."
+    },
+    {
+      "season": "EASTER",
+      "stars": 4,
+      "nights": 10,
+      "text": "Enjoy a 10-night Easter Umrah with quality 4 Star accommodation and additional time in Makkah and Madinah. Perfect for pilgrims seeking a balance of comfort, convenience and a rewarding spiritual experience during their holiday break."
+    },
+    {
+      "season": "EASTER",
+      "stars": 4,
+      "nights": 12,
+      "text": "Use your Easter holidays for a 12-night spiritual journey with comfortable 4 Star accommodation. Enjoy more opportunities for worship, prayers and Ziyarat while experiencing the unique atmosphere of the two holy cities."
+    },
+    {
+      "season": "EASTER",
+      "stars": 4,
+      "nights": 14,
+      "text": "Choose a 14-night Easter Umrah for an extended pilgrimage with quality 4 Star accommodation. Spend more time in Makkah and Madinah, allowing a relaxed travel experience with additional opportunities for worship and reflection."
+    },
+    {
+      "season": "EASTER",
+      "stars": 5,
+      "nights": 7,
+      "text": "Enjoy a premium Easter Umrah with 7 nights of 5 Star accommodation. Ideal for pilgrims seeking a luxurious hotel experience while making the most of their school holiday break and spiritual time in Makkah and Madinah."
+    },
+    {
+      "season": "EASTER",
+      "stars": 5,
+      "nights": 10,
+      "text": "Experience a 10-night Easter pilgrimage with premium 5 Star accommodation. Enjoy an elevated level of comfort, additional time for worship and a memorable spiritual journey through the holy cities during your holiday break."
+    },
+    {
+      "season": "EASTER",
+      "stars": 5,
+      "nights": 12,
+      "text": "Make your Easter pilgrimage special with 12 nights of premium 5 Star accommodation. Enjoy an extended stay in Makkah and Madinah, with more time for prayers, reflection and experiencing the spiritual significance of both holy cities."
+    },
+    {
+      "season": "EASTER",
+      "stars": 5,
+      "nights": 14,
+      "text": "Enjoy an extended 14-night Easter Umrah with premium 5 Star accommodation. Perfect for pilgrims seeking a luxurious stay, more time for worship and a comfortable spiritual journey during the UK spring holiday season."
+    },
+    {
+      "season": "RAMADAN",
+      "stars": 3,
+      "nights": 7,
+      "text": "Experience the blessings of Ramadan with a 7-night Umrah journey in Makkah and Madinah. This affordable 3 Star package offers a meaningful opportunity for worship, Taraweeh prayers and experiencing the special atmosphere of the holy month."
+    },
+    {
+      "season": "RAMADAN",
+      "stars": 3,
+      "nights": 10,
+      "text": "Spend 10 nights in the holy cities during Ramadan with comfortable 3 Star accommodation. Enjoy more time for prayers, Quran recitation and worship while experiencing the unique spiritual atmosphere of this blessed month."
+    },
+    {
+      "season": "RAMADAN",
+      "stars": 3,
+      "nights": 12,
+      "text": "Make your Ramadan spiritually rewarding with a 12-night Umrah journey. Enjoy affordable 3 Star accommodation and additional time for Taraweeh, prayers and reflection in Makkah and Madinah during this blessed month."
+    },
+    {
+      "season": "RAMADAN",
+      "stars": 3,
+      "nights": 14,
+      "text": "Enjoy an extended 14-night Ramadan Umrah with comfortable 3 Star accommodation. Spend more time experiencing the blessings of the holy month through daily prayers, Quran recitation and worship in Makkah and Madinah."
+    },
+    {
+      "season": "RAMADAN",
+      "stars": 4,
+      "nights": 7,
+      "text": "Experience Ramadan in the holy cities with a 7-night Umrah journey and quality 4 Star accommodation. Enjoy a comfortable pilgrimage while making time for Taraweeh prayers, worship and the special atmosphere of the blessed month."
+    },
+    {
+      "season": "RAMADAN",
+      "stars": 4,
+      "nights": 10,
+      "text": "Make your Ramadan journey memorable with 10 nights of 4 Star accommodation in Saudi Arabia. Enjoy additional time for prayers, Quran recitation and spiritual reflection while experiencing the blessings of Makkah and Madinah."
+    },
+    {
+      "season": "RAMADAN",
+      "stars": 4,
+      "nights": 12,
+      "text": "Spend 12 nights performing Umrah during the blessed month of Ramadan. With quality 4 Star accommodation, this package offers a comfortable pilgrimage and more opportunities to attend prayers and experience the spiritual atmosphere of both holy cities."
+    },
+    {
+      "season": "RAMADAN",
+      "stars": 4,
+      "nights": 14,
+      "text": "Enjoy an extended Ramadan pilgrimage with 14 nights of quality 4 Star accommodation. Experience more time for worship, Taraweeh and Quran recitation while embracing the peaceful spiritual atmosphere of Makkah and Madinah."
+    },
+    {
+      "season": "RAMADAN",
+      "stars": 5,
+      "nights": 7,
+      "text": "Experience the blessed month of Ramadan with a premium 7-night Umrah journey. Enjoy 5 Star accommodation while dedicating your time to worship, Taraweeh prayers and the unique spiritual experience of Makkah and Madinah."
+    },
+    {
+      "season": "RAMADAN",
+      "stars": 5,
+      "nights": 10,
+      "text": "Enjoy 10 nights of premium 5 Star accommodation during Ramadan. This package is ideal for pilgrims seeking an elevated hotel experience while making time for daily prayers, Quran recitation and the blessings of the holy month."
+    },
+    {
+      "season": "RAMADAN",
+      "stars": 5,
+      "nights": 12,
+      "text": "Make your Ramadan Umrah special with 12 nights of premium 5 Star accommodation. Enjoy an extended spiritual journey with more time for worship, reflection and experiencing the blessed atmosphere of Makkah and Madinah."
+    },
+    {
+      "season": "RAMADAN",
+      "stars": 5,
+      "nights": 14,
+      "text": "Experience an extended 14-night Ramadan pilgrimage with premium 5 Star accommodation. Enjoy a refined hotel experience while dedicating more time to prayers, Quran recitation and worship in the two holiest cities of Islam."
+    },
+    {
+      "season": "SEPTEMBER",
+      "stars": 3,
+      "nights": 7,
+      "text": "Plan your September Umrah with this affordable 7-night 3 Star package. Although Saudi Arabia remains hot, it offers an opportunity to explore different travel options and enjoy a meaningful spiritual journey in Makkah and Madinah."
+    },
+    {
+      "season": "SEPTEMBER",
+      "stars": 3,
+      "nights": 10,
+      "text": "Enjoy a 10-night September Umrah with comfortable 3 Star accommodation. As the busy summer travel season passes, explore different package options while spending more time in Makkah and Madinah for worship and spiritual reflection."
+    },
+    {
+      "season": "SEPTEMBER",
+      "stars": 3,
+      "nights": 12,
+      "text": "Make your September pilgrimage memorable with 12 nights in Saudi Arabia. This affordable 3 Star package provides an extended stay for prayers, worship and Ziyarat, giving you more time to experience the holy cities."
+    },
+    {
+      "season": "SEPTEMBER",
+      "stars": 3,
+      "nights": 14,
+      "text": "Choose a 14-night September Umrah for an extended spiritual journey with affordable 3 Star accommodation. Enjoy additional time in Makkah and Madinah for worship, reflection and exploring important religious sites."
+    },
+    {
+      "season": "SEPTEMBER",
+      "stars": 4,
+      "nights": 7,
+      "text": "Experience a 7-night September Umrah with quality 4 Star accommodation. This package offers a comfortable pilgrimage experience for those looking to visit Makkah and Madinah while exploring travel options outside the busy summer season."
+    },
+    {
+      "season": "SEPTEMBER",
+      "stars": 4,
+      "nights": 10,
+      "text": "Enjoy 10 nights of Umrah in September with quality 4 Star accommodation. Spend additional time performing prayers, worship and Ziyarat while experiencing the spiritual atmosphere of Makkah and Madinah after the summer holidays."
+    },
+    {
+      "season": "SEPTEMBER",
+      "stars": 4,
+      "nights": 12,
+      "text": "Plan a 12-night September pilgrimage with comfortable 4 Star accommodation. Enjoy an extended stay in the holy cities, giving you more opportunities for worship, reflection and visits to important religious sites during your journey."
+    },
+    {
+      "season": "SEPTEMBER",
+      "stars": 4,
+      "nights": 14,
+      "text": "Make the most of your September Umrah with 14 nights in Saudi Arabia. Quality 4 Star accommodation and an extended travel duration make this package suitable for pilgrims seeking comfort and more time for worship."
+    },
+    {
+      "season": "SEPTEMBER",
+      "stars": 5,
+      "nights": 7,
+      "text": "Enjoy a premium 7-night September Umrah with 5 Star accommodation. Experience an elevated hotel stay while dedicating your time to worship, prayers and exploring the spiritual significance of Makkah and Madinah."
+    },
+    {
+      "season": "SEPTEMBER",
+      "stars": 5,
+      "nights": 10,
+      "text": "Experience 10 nights of premium 5 Star accommodation during your September Umrah. Enjoy a refined pilgrimage experience with additional time for worship, reflection and visiting the holy sites of Makkah and Madinah."
+    },
+    {
+      "season": "SEPTEMBER",
+      "stars": 5,
+      "nights": 12,
+      "text": "Make your September pilgrimage special with 12 nights of premium 5 Star accommodation. Enjoy an extended stay in Saudi Arabia, allowing more time for prayers, spiritual reflection and experiencing both holy cities."
+    },
+    {
+      "season": "SEPTEMBER",
+      "stars": 5,
+      "nights": 14,
+      "text": "Choose a 14-night September Umrah for an extended premium pilgrimage. Enjoy 5 Star accommodation, more time for worship and the opportunity to experience Makkah and Madinah at a comfortable pace throughout your journey."
+    },
+    {
+      "season": "OCTOBER",
+      "stars": 3,
+      "nights": 7,
+      "text": "October brings gradually easing temperatures in Saudi Arabia, making it a suitable time for Umrah. Enjoy this affordable 7-night 3 Star package with time for worship and visits to Makkah and Madinah."
+    },
+    {
+      "season": "OCTOBER",
+      "stars": 3,
+      "nights": 10,
+      "text": "Enjoy a 10-night October Umrah with comfortable 3 Star accommodation. As temperatures gradually become more pleasant, spend additional time exploring Makkah and Madinah, performing prayers and experiencing the spiritual beauty of both holy cities."
+    },
+    {
+      "season": "OCTOBER",
+      "stars": 3,
+      "nights": 12,
+      "text": "Plan a 12-night October pilgrimage during the transition towards Saudi Arabia's cooler season. This affordable 3 Star package gives you more time for worship, Ziyarat and experiencing the peaceful atmosphere of the holy cities."
+    },
+    {
+      "season": "OCTOBER",
+      "stars": 3,
+      "nights": 14,
+      "text": "Enjoy an extended 14-night October Umrah with affordable 3 Star accommodation. With temperatures gradually easing, make more time for prayers, worship and visits to important religious sites in Makkah and Madinah."
+    },
+    {
+      "season": "OCTOBER",
+      "stars": 4,
+      "nights": 7,
+      "text": "Experience October's gradually improving weather with a 7-night Umrah journey and quality 4 Star accommodation. A comfortable option for pilgrims seeking a rewarding spiritual experience in Makkah and Madinah."
+    },
+    {
+      "season": "OCTOBER",
+      "stars": 4,
+      "nights": 10,
+      "text": "Make October a memorable time for Umrah with 10 nights of quality 4 Star accommodation. Enjoy more comfortable conditions for outdoor Ziyarat, daily prayers and exploring the spiritual significance of both holy cities."
+    },
+    {
+      "season": "OCTOBER",
+      "stars": 4,
+      "nights": 12,
+      "text": "Spend 12 nights performing Umrah in October with comfortable 4 Star accommodation. As the Saudi weather gradually cools, enjoy additional opportunities for worship, Ziyarat and spiritual reflection in Makkah and Madinah."
+    },
+    {
+      "season": "OCTOBER",
+      "stars": 4,
+      "nights": 14,
+      "text": "Choose a 14-night October Umrah for an extended pilgrimage with quality 4 Star accommodation. Enjoy gradually improving weather, more time for worship and a comfortable opportunity to explore the holy cities."
+    },
+    {
+      "season": "OCTOBER",
+      "stars": 5,
+      "nights": 7,
+      "text": "Enjoy a premium 7-night October Umrah with 5 Star accommodation. As temperatures gradually ease in Saudi Arabia, experience a comfortable pilgrimage while dedicating your time to worship and visiting Makkah and Madinah."
+    },
+    {
+      "season": "OCTOBER",
+      "stars": 5,
+      "nights": 10,
+      "text": "Experience a 10-night October pilgrimage with premium 5 Star accommodation. Enjoy a refined hotel experience, more comfortable seasonal conditions and additional time for prayers, worship and exploring the two holy cities."
+    },
+    {
+      "season": "OCTOBER",
+      "stars": 5,
+      "nights": 12,
+      "text": "Make your October Umrah special with 12 nights of premium 5 Star accommodation. Enjoy an extended spiritual journey during the gradually cooler season, with more time for worship, reflection and visits around Makkah and Madinah."
+    },
+    {
+      "season": "OCTOBER",
+      "stars": 5,
+      "nights": 14,
+      "text": "Enjoy an extended 14-night October Umrah with premium 5 Star accommodation. The gradually easing Saudi weather offers a pleasant setting for Ziyarat, prayers and a more relaxed spiritual experience in Makkah and Madinah."
+    },
+    {
+      "season": "NOVEMBER",
+      "stars": 3,
+      "nights": 7,
+      "text": "Enjoy a 7-night November Umrah with affordable 3 Star accommodation. The pleasant autumn weather in Saudi Arabia makes outdoor worship and Ziyarat more comfortable, offering a wonderful opportunity to visit Makkah and Madinah."
+    },
+    {
+      "season": "NOVEMBER",
+      "stars": 3,
+      "nights": 10,
+      "text": "Plan your 10-night November Umrah during one of the more comfortable periods of the year. Enjoy affordable accommodation, pleasant temperatures and additional time for prayers, worship and exploring the holy cities of Makkah and Madinah."
+    },
+    {
+      "season": "NOVEMBER",
+      "stars": 3,
+      "nights": 12,
+      "text": "Make your November pilgrimage memorable with 12 nights of comfortable 3 Star accommodation. Enjoy the milder Saudi weather, spend more time performing prayers and explore important religious sites during your extended stay in the holy cities."
+    },
+    {
+      "season": "NOVEMBER",
+      "stars": 3,
+      "nights": 14,
+      "text": "Choose a 14-night November Umrah for an extended spiritual journey at an affordable price. Enjoy comfortable seasonal weather, more opportunities for outdoor Ziyarat and additional time for worship and reflection in Makkah and Madinah."
+    },
+    {
+      "season": "NOVEMBER",
+      "stars": 4,
+      "nights": 7,
+      "text": "Experience a 7-night November Umrah with quality 4 Star accommodation. The milder autumn weather provides comfortable conditions for worship and visiting religious sites, making it a great time to experience the beauty of Makkah and Madinah."
+    },
+    {
+      "season": "NOVEMBER",
+      "stars": 4,
+      "nights": 10,
+      "text": "Enjoy a 10-night November pilgrimage with quality 4 Star accommodation. Take advantage of the comfortable seasonal weather while spending additional time in Makkah and Madinah for prayers, worship and meaningful Ziyarat experiences."
+    },
+    {
+      "season": "NOVEMBER",
+      "stars": 4,
+      "nights": 12,
+      "text": "Spend 12 nights performing Umrah in November with comfortable 4 Star accommodation. The pleasant weather makes exploring the holy cities more enjoyable, giving you additional opportunities for worship, reflection and visits to significant religious sites."
+    },
+    {
+      "season": "NOVEMBER",
+      "stars": 4,
+      "nights": 14,
+      "text": "Enjoy an extended 14-night November Umrah with quality 4 Star accommodation. Experience the comfortable autumn season in Saudi Arabia while making more time for prayers, spiritual reflection and exploring Makkah and Madinah at a relaxed pace."
+    },
+    {
+      "season": "NOVEMBER",
+      "stars": 5,
+      "nights": 7,
+      "text": "Experience a premium 7-night November Umrah with 5 Star accommodation. Enjoy Saudi Arabia's pleasant autumn weather alongside an elevated hotel experience, creating a wonderful opportunity for worship and spiritual reflection in the holy cities."
+    },
+    {
+      "season": "NOVEMBER",
+      "stars": 5,
+      "nights": 10,
+      "text": "Enjoy 10 nights of premium 5 Star accommodation during your November Umrah. The comfortable seasonal temperatures make outdoor visits more enjoyable, while your extended stay provides additional time for prayers and experiencing Makkah and Madinah."
+    },
+    {
+      "season": "NOVEMBER",
+      "stars": 5,
+      "nights": 12,
+      "text": "Make your November pilgrimage special with 12 nights of premium 5 Star accommodation. Enjoy a refined hotel experience during the pleasant autumn season, with more time for worship, Ziyarat and spiritual reflection in both holy cities."
+    },
+    {
+      "season": "NOVEMBER",
+      "stars": 5,
+      "nights": 14,
+      "text": "Choose a 14-night November Umrah for an extended premium pilgrimage. Enjoy 5 Star accommodation, comfortable weather and additional time to focus on worship, explore important religious sites and experience the spiritual atmosphere of Makkah and Madinah."
+    },
+    {
+      "season": "DECEMBER",
+      "stars": 3,
+      "nights": 7,
+      "text": "Combine your December winter holidays with a meaningful 7-night Umrah journey. Enjoy affordable 3 Star accommodation and milder Saudi winter weather, making it a suitable opportunity for worship and Ziyarat in Makkah and Madinah."
+    },
+    {
+      "season": "DECEMBER",
+      "stars": 3,
+      "nights": 10,
+      "text": "Make your winter break memorable with a 10-night December Umrah. Enjoy comfortable 3 Star accommodation, pleasant daytime conditions and additional time for prayers, worship and exploring the spiritual beauty of the two holy cities."
+    },
+    {
+      "season": "DECEMBER",
+      "stars": 3,
+      "nights": 12,
+      "text": "Enjoy a 12-night December pilgrimage with affordable 3 Star accommodation. The cooler Saudi winter season offers comfortable conditions for outdoor Ziyarat, giving you more opportunities to explore Makkah and Madinah and focus on worship."
+    },
+    {
+      "season": "DECEMBER",
+      "stars": 3,
+      "nights": 14,
+      "text": "Spend your December holidays on an extended 14-night Umrah journey. With affordable 3 Star accommodation and milder winter weather, enjoy more time for prayers, Ziyarat and spiritual reflection in the holy cities of Saudi Arabia."
+    },
+    {
+      "season": "DECEMBER",
+      "stars": 4,
+      "nights": 7,
+      "text": "Enjoy a 7-night December Umrah with quality 4 Star accommodation. The cooler winter season provides pleasant conditions for worship and outdoor visits, making this package a comfortable choice for pilgrims travelling during the winter holidays."
+    },
+    {
+      "season": "DECEMBER",
+      "stars": 4,
+      "nights": 10,
+      "text": "Make the most of your December break with a 10-night Umrah journey and quality 4 Star accommodation. Enjoy the milder Saudi winter, additional time for worship and memorable visits to Makkah and Madinah."
+    },
+    {
+      "season": "DECEMBER",
+      "stars": 4,
+      "nights": 12,
+      "text": "Experience a 12-night December pilgrimage with comfortable 4 Star accommodation. Enjoy the pleasant winter atmosphere, spend more time performing prayers and explore important religious sites while experiencing the spiritual beauty of both holy cities."
+    },
+    {
+      "season": "DECEMBER",
+      "stars": 4,
+      "nights": 14,
+      "text": "Choose a 14-night December Umrah for an extended winter pilgrimage with quality 4 Star accommodation. Enjoy comfortable seasonal conditions, more opportunities for Ziyarat and additional time for worship and reflection in Makkah and Madinah."
+    },
+    {
+      "season": "DECEMBER",
+      "stars": 5,
+      "nights": 7,
+      "text": "Enjoy a premium 7-night December Umrah with 5 Star accommodation. Combine your winter holidays with a spiritual journey, enjoying a refined hotel experience and pleasant seasonal weather while visiting the holy cities of Makkah and Madinah."
+    },
+    {
+      "season": "DECEMBER",
+      "stars": 5,
+      "nights": 10,
+      "text": "Experience a 10-night December pilgrimage with premium 5 Star accommodation. Enjoy the cooler Saudi winter season, an elevated hotel experience and additional opportunities for worship, prayers and exploring the spiritual significance of both holy cities."
+    },
+    {
+      "season": "DECEMBER",
+      "stars": 5,
+      "nights": 12,
+      "text": "Make your December Umrah special with 12 nights of premium 5 Star accommodation. Enjoy a comfortable winter pilgrimage with more time for worship, reflection and visiting the significant religious sites of Makkah and Madinah."
+    },
+    {
+      "season": "DECEMBER",
+      "stars": 5,
+      "nights": 14,
+      "text": "Enjoy an extended 14-night December Umrah with premium 5 Star accommodation. Perfect for pilgrims seeking a refined winter travel experience, with additional time for prayers, Ziyarat and spiritual reflection in the two holy cities."
+    },
+    {
+      "season": "ALL",
+      "stars": 3,
+      "nights": 7,
+      "text": "This 7-night 3 Star Umrah package offers an affordable pilgrimage experience with 4 nights in Makkah and 3 nights in Madinah. Ideal for pilgrims seeking comfortable accommodation, essential travel convenience and a meaningful spiritual journey within a shorter duration."
+    },
+    {
+      "season": "ALL",
+      "stars": 3,
+      "nights": 10,
+      "text": "This 10-night 3 Star Umrah package offers a comfortable and budget-friendly pilgrimage experience. Enjoy additional time in Makkah and Madinah for worship, prayers and Ziyarat, making it a suitable choice for pilgrims seeking affordability and flexibility."
+    },
+    {
+      "season": "ALL",
+      "stars": 3,
+      "nights": 12,
+      "text": "Enjoy a 12-night Umrah journey with comfortable 3 Star accommodation and more time to experience the holy cities. This package is ideal for pilgrims seeking an affordable, relaxed pilgrimage with additional opportunities for worship, reflection and Ziyarat."
+    },
+    {
+      "season": "ALL",
+      "stars": 3,
+      "nights": 14,
+      "text": "This 14-night 3 Star Umrah package offers an extended spiritual journey with affordable hotel accommodation. Spend more time in Makkah and Madinah, enjoy a relaxed travel experience and make the most of your pilgrimage through prayers, worship and reflection."
+    },
+    {
+      "season": "ALL",
+      "stars": 4,
+      "nights": 7,
+      "text": "This 7-night 4 Star Umrah package offers a comfortable pilgrimage experience with quality hotel accommodation in Makkah and Madinah. Ideal for pilgrims seeking enhanced comfort, convenient travel arrangements and a memorable spiritual journey within a shorter duration."
+    },
+    {
+      "season": "ALL",
+      "stars": 4,
+      "nights": 10,
+      "text": "Enjoy a 10-night 4 Star Umrah package designed for pilgrims seeking quality accommodation and added comfort. Spend more time in Makkah and Madinah for prayers, worship and Ziyarat while enjoying a balanced and convenient pilgrimage experience."
+    },
+    {
+      "season": "ALL",
+      "stars": 4,
+      "nights": 12,
+      "text": "This 12-night 4 Star Umrah package combines quality hotel accommodation with an extended spiritual journey. Enjoy additional time in the holy cities, allowing you to focus on worship, explore important religious sites and experience greater comfort throughout your stay."
+    },
+    {
+      "season": "ALL",
+      "stars": 4,
+      "nights": 14,
+      "text": "Experience an extended 14-night pilgrimage with quality 4 Star accommodation in Makkah and Madinah. Perfect for pilgrims seeking a comfortable stay, more time for worship and Ziyarat, and a relaxed journey focused on their spiritual experience."
+    },
+    {
+      "season": "ALL",
+      "stars": 5,
+      "nights": 7,
+      "text": "This 7-night 5 Star Umrah package offers a premium pilgrimage experience with luxury hotel accommodation in Makkah and Madinah. Ideal for pilgrims seeking enhanced comfort, quality hospitality and a memorable spiritual journey within a shorter duration."
+    },
+    {
+      "season": "ALL",
+      "stars": 5,
+      "nights": 10,
+      "text": "Experience a 10-night 5 Star Umrah package designed for pilgrims who value luxury and comfort. Enjoy premium hotel accommodation, additional time for worship and opportunities to explore Makkah and Madinah throughout your spiritual journey."
+    },
+    {
+      "season": "ALL",
+      "stars": 5,
+      "nights": 12,
+      "text": "This 12-night 5 Star Umrah package combines premium accommodation with an extended pilgrimage experience. Spend more time in the holy cities while enjoying elevated comfort, quality hospitality and additional opportunities for prayers, worship and reflection."
+    },
+    {
+      "season": "ALL",
+      "stars": 5,
+      "nights": 14,
+      "text": "Enjoy an extended 14-night 5 Star Umrah journey with luxury hotel accommodation. Perfect for pilgrims seeking a refined travel experience, more time for worship and a comfortable stay while exploring the spiritual significance of Makkah and Madinah."
+    }
+  ]
+}

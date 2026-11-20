@@ -3,6 +3,7 @@ import type { PackageDetail } from "@/lib/packages";
 import { packageDetailDisplayTitle } from "@/lib/package-card-title";
 import { categoryListingHref } from "@/lib/package-paths";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
+import { PackageDetailSidebar } from "@/components/packages/PackageDetailSidebar";
 
 export function PackageDetailHero({ pkg }: { pkg: PackageDetail }) {
   const displayTitle = packageDetailDisplayTitle(pkg);
@@ -22,24 +23,29 @@ export function PackageDetailHero({ pkg }: { pkg: PackageDetail }) {
         ]}
       />
 
-      <div className="relative min-h-[200px] overflow-hidden rounded-xl border border-border bg-white shadow-sm sm:min-h-[280px] sm:rounded-2xl md:min-h-[380px]">
-        {pkg.image ? (
-          <Image
-            src={pkg.image}
-            alt={pkg.coverImageAlt || displayTitle}
-            fill
-            className="object-cover"
-            sizes="(max-width: 1024px) 100vw, 66vw"
-            priority
-          />
-        ) : (
-          <div className="absolute inset-0 bg-cream" />
-        )}
-        {pkg.badge ? (
-          <span className="absolute left-3 top-3 rounded-md bg-gold px-2.5 py-1 text-xs font-semibold text-charcoal md:left-4 md:top-4">
-            {pkg.badge}
-          </span>
-        ) : null}
+      {/* Cover keeps original size; booking card stretches to match */}
+      <div className="grid gap-4 sm:gap-5 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-stretch lg:gap-6">
+        <div className="relative min-h-[200px] overflow-hidden rounded-xl border border-border bg-white shadow-sm sm:min-h-[280px] sm:rounded-2xl md:min-h-[380px]">
+          {pkg.image ? (
+            <Image
+              src={pkg.image}
+              alt={pkg.coverImageAlt || displayTitle}
+              fill
+              className="object-cover"
+              sizes="(max-width: 1024px) 100vw, 66vw"
+              priority
+            />
+          ) : (
+            <div className="absolute inset-0 bg-cream" />
+          )}
+          {pkg.badge ? (
+            <span className="absolute left-3 top-3 rounded-md bg-gold px-2.5 py-1 text-xs font-semibold text-charcoal md:left-4 md:top-4">
+              {pkg.badge}
+            </span>
+          ) : null}
+        </div>
+
+        <PackageDetailSidebar pkg={pkg} matchCover />
       </div>
 
       <div className="min-w-0">

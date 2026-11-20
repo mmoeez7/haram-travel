@@ -5,11 +5,12 @@ import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { CategoryFilters } from "@/components/packages/CategoryFilters";
 import { StarGroupedPackages } from "@/components/packages/StarGroupedPackages";
 import { CustomQuote } from "@/components/home/CustomQuote";
+import { seasonPageDescription } from "@/lib/package-page-copy";
 
 export const metadata = createMetadata({
   title: "Ramadan Umrah Packages",
   description:
-    "Ramadan Umrah packages from the UK including Last 10 Nights and full-month stays near the Haram.",
+    seasonPageDescription("ramadan"),
   path: "/ramadan-umrah-packages",
 });
 
@@ -30,9 +31,7 @@ export default async function RamadanUmrahPackagesPage() {
           <h1 className="break-words font-display text-xl font-semibold uppercase leading-snug tracking-wide text-charcoal sm:text-3xl md:text-4xl lg:text-5xl">
             Ramadan Umrah Packages
           </h1>
-          <p className="mt-4 max-w-2xl text-muted">
-            Last 10 Nights and full Ramadan stays with courtyard hotels and dedicated UK support.
-          </p>
+          <p className="mt-4 max-w-2xl text-muted">{seasonPageDescription("ramadan")}</p>
           <div className="mt-8">
             <CategoryFilters active="ramadan" />
           </div>

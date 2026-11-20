@@ -5,11 +5,12 @@ import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { CategoryFilters } from "@/components/packages/CategoryFilters";
 import { StarGroupedPackages } from "@/components/packages/StarGroupedPackages";
 import { CustomQuote } from "@/components/home/CustomQuote";
+import { seasonPageDescription } from "@/lib/package-page-copy";
 
 export const metadata = createMetadata({
   title: "December Umrah Packages | Affordable UK",
   description:
-    "Affordable December Umrah packages from the UK with flights, visas, and walking-distance hotels. From £699pp.",
+    seasonPageDescription("december"),
   path: "/december-umrah-packages",
 });
 
@@ -30,9 +31,7 @@ export default async function DecemberUmrahPackagesPage() {
           <h1 className="break-words font-display text-xl font-semibold uppercase leading-snug tracking-wide text-charcoal sm:text-3xl md:text-4xl lg:text-5xl">
             December Umrah Packages
           </h1>
-          <p className="mt-4 max-w-2xl text-muted">
-            Affordable, reliable December Umrah packages crafted for UK families and groups.
-          </p>
+          <p className="mt-4 max-w-2xl text-muted">{seasonPageDescription("december")}</p>
           <div className="mt-8">
             <CategoryFilters active="december" />
           </div>
