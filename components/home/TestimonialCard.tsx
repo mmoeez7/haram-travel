@@ -27,7 +27,7 @@ export function TestimonialCard({ review }: { review: Testimonial }) {
           </span>
 
           <div className="min-w-0 flex-1">
-            <p className="text-[13px] font-bold text-[#111827] md:text-[14px]">
+            <p className="truncate text-[13px] font-bold text-[#111827] md:text-[14px]">
               {review.name}
             </p>
             <div className="mt-1 flex items-center gap-0.5 md:mt-1.5">
@@ -39,17 +39,26 @@ export function TestimonialCard({ review }: { review: Testimonial }) {
               ))}
             </div>
           </div>
-
-          <span className="ml-auto inline-flex shrink-0 items-center rounded-md bg-black px-1.5 py-1">
-            <Image
-              src="/images/trustpilot.png"
-              alt="Trustpilot"
-              width={88}
-              height={22}
-              className="h-4 w-auto object-contain md:h-[18px]"
-            />
-          </span>
         </div>
+
+        <a
+          href="https://www.trustpilot.com/review/haramtravel.uk"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="group mt-3.5 flex w-full items-center justify-between gap-3 rounded-xl bg-[#191919] px-3.5 py-2.5 transition hover:bg-black hover:shadow-[0_8px_20px_rgba(0,182,122,0.22)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#00b67a]"
+          aria-label="Leave a review on Trustpilot"
+        >
+          <span className="text-[11px] font-semibold tracking-wide text-white/75 transition group-hover:text-white md:text-xs">
+            Review us
+          </span>
+          <Image
+            src="/images/trustpilot.png"
+            alt="Trustpilot"
+            width={100}
+            height={24}
+            className="h-4 w-auto object-contain transition group-hover:scale-[1.03] md:h-[18px]"
+          />
+        </a>
       </div>
     </article>
   );
