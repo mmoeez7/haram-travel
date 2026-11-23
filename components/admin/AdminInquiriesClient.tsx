@@ -20,9 +20,12 @@ import {
   AdminPageHeader,
   AdminTableSkeleton,
   adminDangerButtonClass,
-  adminPageClass,
+  adminListCardClass,
+  adminListPageClass,
   adminStatusDraftClass,
   adminStatusPublishedClass,
+  adminTableHeadClass,
+  adminTableScrollClass,
 } from "@/components/admin/admin-ui";
 import { AdminAsyncButton } from "@/components/admin/AdminAsyncButton";
 import { AdminPagination } from "@/components/admin/AdminPagination";
@@ -138,14 +141,15 @@ export function AdminInquiriesClient() {
   }
 
   return (
-    <div className={adminPageClass}>
+    <div className={adminListPageClass}>
       <AdminPageHeader
+        className="shrink-0"
         title="Inquiries"
         description="Leads from the home package matcher and Contact Us form."
       />
 
       <form
-        className="admin-enter admin-enter-delay-1 mb-4 flex flex-wrap items-center gap-2"
+        className="admin-enter admin-enter-delay-1 mb-4 flex shrink-0 flex-wrap items-center gap-2"
         onSubmit={(event) => {
           event.preventDefault();
           setPage(1);
@@ -203,7 +207,7 @@ export function AdminInquiriesClient() {
         </button>
       </form>
 
-      <AdminCard className="admin-enter admin-enter-delay-2">
+      <AdminCard className={`admin-enter admin-enter-delay-2 ${adminListCardClass}`}>
         {loading ? (
           <AdminTableSkeleton rows={6} cols={9} />
         ) : inquiries.length === 0 ? (
@@ -212,9 +216,9 @@ export function AdminInquiriesClient() {
           </p>
         ) : (
           <>
-            <div className="overflow-x-auto">
+            <div className={adminTableScrollClass}>
               <table className="min-w-full text-left text-sm">
-                <thead className="border-b border-border text-[10px] uppercase tracking-wide text-muted">
+                <thead className={adminTableHeadClass}>
                   <tr>
                     <th className="px-2 py-2">Date</th>
                     <th className="px-2 py-2">Source</th>
@@ -297,14 +301,16 @@ export function AdminInquiriesClient() {
                 </tbody>
               </table>
             </div>
-            <AdminPagination
-              meta={pagination}
-              disabled={loading}
-              onPageChange={(nextPage) => {
-                setPage(nextPage);
-                void load(q, status, source, nextPage);
-              }}
-            />
+            <div className="shrink-0">
+              <AdminPagination
+                meta={pagination}
+                disabled={loading}
+                onPageChange={(nextPage) => {
+                  setPage(nextPage);
+                  void load(q, status, source, nextPage);
+                }}
+              />
+            </div>
           </>
         )}
       </AdminCard>

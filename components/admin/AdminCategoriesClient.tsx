@@ -21,10 +21,13 @@ import {
   adminDangerButtonClass,
   adminDuplicateButtonClass,
   adminEditLinkClass,
-  adminPageClass,
+  adminListCardClass,
+  adminListPageClass,
   adminSelectClass,
   adminStatusDraftClass,
   adminStatusPublishedClass,
+  adminTableHeadClass,
+  adminTableScrollClass,
   adminTitleLinkClass,
 } from "@/components/admin/admin-ui";
 import { AdminLoadingLink } from "@/components/admin/AdminLoadingLink";
@@ -145,14 +148,15 @@ export function AdminCategoriesClient() {
   }
 
   return (
-    <div className={adminPageClass}>
+    <div className={adminListPageClass}>
       <AdminPageHeader
+        className="shrink-0"
         title="Categories"
         description="Subcategories under Umrah Packages and Umrah Deals."
       />
 
       <form
-        className="admin-enter admin-enter-delay-1 mb-3 flex flex-wrap items-center gap-2"
+        className="admin-enter admin-enter-delay-1 mb-3 flex shrink-0 flex-wrap items-center gap-2"
         onSubmit={(event) => {
           event.preventDefault();
           setPage(1);
@@ -193,14 +197,14 @@ export function AdminCategoriesClient() {
         </div>
       </form>
 
-      <AdminCard className="admin-enter admin-enter-delay-2">
+      <AdminCard className={`admin-enter admin-enter-delay-2 ${adminListCardClass}`}>
         {loading ? (
           <AdminTableSkeleton rows={6} cols={5} />
         ) : !activeRoot ? (
           <p className="text-sm text-muted">Selected root group not found.</p>
         ) : (
-          <div>
-            <div className="mb-3 flex flex-wrap items-center justify-between gap-2 border-b border-border pb-2">
+          <div className="flex min-h-0 flex-1 flex-col">
+            <div className="mb-3 flex shrink-0 flex-wrap items-center justify-between gap-2 border-b border-border pb-2">
               <div>
                 <h2 className="text-sm font-semibold text-charcoal">
                   <Link
@@ -227,9 +231,9 @@ export function AdminCategoriesClient() {
               <p className="text-sm text-muted">No subcategories yet.</p>
             ) : (
               <>
-                <div className="overflow-x-auto">
+                <div className={adminTableScrollClass}>
                   <table className="min-w-full text-left text-sm">
-                    <thead className="border-b border-border text-[10px] uppercase tracking-wide text-muted">
+                    <thead className={adminTableHeadClass}>
                       <tr>
                         <th className="px-2 py-2">Name</th>
                         <th className="px-2 py-2">Slug</th>
@@ -298,14 +302,16 @@ export function AdminCategoriesClient() {
                     </tbody>
                   </table>
                 </div>
-                <AdminPagination
-                  meta={pagination}
-                  disabled={loading}
-                  onPageChange={(nextPage) => {
-                    setPage(nextPage);
-                    void loadChildren(groupFilter, nextPage, q);
-                  }}
-                />
+                <div className="shrink-0">
+                  <AdminPagination
+                    meta={pagination}
+                    disabled={loading}
+                    onPageChange={(nextPage) => {
+                      setPage(nextPage);
+                      void loadChildren(groupFilter, nextPage, q);
+                    }}
+                  />
+                </div>
               </>
             )}
           </div>

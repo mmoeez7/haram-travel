@@ -1,10 +1,11 @@
 import Image from "next/image";
+import { Reveal } from "@/components/ui/Reveal";
 
 export function FoundingStory() {
   return (
     <section className="bg-cream py-16">
       <div className="mx-auto grid max-w-7xl items-center gap-10 px-5 sm:px-6 lg:grid-cols-2 lg:px-8">
-        <div>
+        <Reveal variant="left">
           <span className="mb-3 inline-block rounded-full bg-gold-soft/60 px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-gold-dark">
             Our Founding Story
           </span>
@@ -29,24 +30,26 @@ export function FoundingStory() {
               Serving British Muslims in London, Birmingham, Manchester, and Scotland.
             </p>
           </div>
-        </div>
-        <div className="relative overflow-hidden rounded-2xl">
-          <div className="relative aspect-[4/3]">
-            <Image
-              src="https://images.unsplash.com/photo-1591604129939-f1efa4d9f7fa?w=1200&q=80"
-              alt="Masjid an-Nabawi at sunset"
-              fill
-              className="object-cover"
-              sizes="(max-width: 1024px) 100vw, 50vw"
-            />
-            <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-charcoal/80 to-transparent p-5">
-              <p className="text-sm font-semibold text-gold-soft">
-                The 0m Courtyard Promise: Direct pedestrian access to King Fahd & Bab Al Salam
-                gates.
-              </p>
+        </Reveal>
+        <Reveal variant="right" delay={120}>
+          <div className="relative overflow-hidden rounded-2xl">
+            <div className="relative aspect-[4/3]">
+              <Image
+                src="https://images.unsplash.com/photo-1591604129939-f1efa4d9f7fa?w=1200&q=80"
+                alt="Masjid an-Nabawi at sunset"
+                fill
+                className="object-cover"
+                sizes="(max-width: 1024px) 100vw, 50vw"
+              />
+              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-charcoal/80 to-transparent p-5">
+                <p className="text-sm font-semibold text-gold-soft">
+                  The 0m Courtyard Promise: Direct pedestrian access to King Fahd & Bab Al Salam
+                  gates.
+                </p>
+              </div>
             </div>
           </div>
-        </div>
+        </Reveal>
       </div>
     </section>
   );

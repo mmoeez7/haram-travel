@@ -4,8 +4,23 @@ import { AdminBackButton } from "@/components/admin/AdminBackButton";
 export const adminPageClass =
   "relative z-10 flex flex-1 flex-col px-4 pb-8 pt-4 text-sm lg:px-6";
 
+/** List screens: fill shell height; only the table card scrolls. */
+export const adminListPageClass =
+  "relative z-10 flex h-full min-h-0 flex-1 flex-col overflow-hidden px-4 pb-4 pt-4 text-sm lg:px-6";
+
+/** Scroll region inside AdminCard for list tables. */
+export const adminTableScrollClass = "min-h-0 flex-1 overflow-auto";
+
+/** Sticky table header for inner-scroll lists. */
+export const adminTableHeadClass =
+  "sticky top-0 z-10 border-b border-border bg-ivory text-[10px] uppercase tracking-wide text-muted";
+
 export const adminPanelClass =
   "relative overflow-hidden rounded-2xl border border-border bg-ivory text-ink shadow-sm";
+
+/** AdminCard that fills remaining list-page height. */
+export const adminListCardClass =
+  "flex min-h-0 flex-1 flex-col overflow-hidden";
 
 export function AdminPageHeader({
   title,

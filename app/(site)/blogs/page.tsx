@@ -4,6 +4,7 @@ import { ArrowRight } from "lucide-react";
 import { createMetadata } from "@/lib/seo";
 import { getPublishedPosts } from "@/lib/blogs";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
+import { Reveal } from "@/components/ui/Reveal";
 
 export const metadata = createMetadata({
   title: "Blogs & Pilgrim Guides",
@@ -28,65 +29,72 @@ export default async function BlogsPage() {
     <>
       <section className="bg-cream pt-12 pb-4">
         <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
-          <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Blogs" }]} />
-          <h1 className="break-words font-display text-xl font-semibold uppercase leading-snug tracking-wide text-charcoal sm:text-3xl md:text-4xl lg:text-5xl">
-            Blogs &amp; Pilgrim Guides
-          </h1>
-          <p className="mt-4 max-w-2xl text-muted">
-            Clear, verified guidance for British pilgrims — from packing lists to
-            spiritual preparation for Umrah.
-          </p>
+          <Reveal>
+            <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Blogs" }]} />
+            <h1 className="break-words font-display text-xl font-semibold uppercase leading-snug tracking-wide text-charcoal sm:text-3xl md:text-4xl lg:text-5xl">
+              Blogs &amp; Pilgrim Guides
+            </h1>
+            <p className="mt-4 max-w-2xl text-muted">
+              Clear, verified guidance for British pilgrims — from packing lists to
+              spiritual preparation for Umrah.
+            </p>
+          </Reveal>
         </div>
       </section>
 
       <section className="bg-cream pb-16 pt-6 md:pb-20">
         <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
           {posts.length === 0 ? (
-            <p className="text-muted">
-              No published articles yet. Please check back soon.
-            </p>
+            <Reveal>
+              <p className="text-muted">
+                No published articles yet. Please check back soon.
+              </p>
+            </Reveal>
           ) : (
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {posts.map((post) => {
+              {posts.map((post, index) => {
                 const dateLabel = formatDate(post.publishedAt);
                 return (
-                  <article
+                  <Reveal
                     key={post.id}
-                    className="card-lift overflow-hidden rounded-xl border border-border bg-white hover:border-gold/50 md:rounded-2xl"
+                    delay={Math.min(index * 90, 360)}
+                    variant="up"
                   >
-                    <Link href={`/blogs/${post.slug}`} className="block">
-                      <div className="relative h-40 overflow-hidden bg-ivory sm:h-44 md:h-48">
-                        {post.coverImageUrl ? (
-                          <Image
-                            src={post.coverImageUrl}
-                            alt={post.coverImageAlt || post.title}
-                            fill
-                            className="object-cover"
-                            sizes="(max-width: 768px) 100vw, 33vw"
-                          />
-                        ) : null}
-                      </div>
-                      <div className="p-4 md:p-6">
-                        {dateLabel ? (
-                          <p className="text-xs font-medium uppercase tracking-wide text-gold-dark">
-                            {dateLabel}
-                          </p>
-                        ) : null}
-                        <h2 className="mt-2 font-display text-lg font-semibold text-charcoal md:text-xl">
-                          {post.title}
-                        </h2>
-                        {post.excerpt ? (
-                          <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-muted">
-                            {post.excerpt}
-                          </p>
-                        ) : null}
-                        <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-gold-dark">
-                          Read more
-                          <ArrowRight className="h-4 w-4" aria-hidden />
-                        </span>
-                      </div>
-                    </Link>
-                  </article>
+                    <article className="card-lift h-full overflow-hidden rounded-xl border border-border bg-white hover:border-gold/50 md:rounded-2xl">
+                      <Link href={`/blogs/${post.slug}`} className="block h-full">
+                        <div className="relative h-40 overflow-hidden bg-ivory sm:h-44 md:h-48">
+                          {post.coverImageUrl ? (
+                            <Image
+                              src={post.coverImageUrl}
+                              alt={post.coverImageAlt || post.title}
+                              fill
+                              className="object-cover"
+                              sizes="(max-width: 768px) 100vw, 33vw"
+                            />
+                          ) : null}
+                        </div>
+                        <div className="p-4 md:p-6">
+                          {dateLabel ? (
+                            <p className="text-xs font-medium uppercase tracking-wide text-gold-dark">
+                              {dateLabel}
+                            </p>
+                          ) : null}
+                          <h2 className="mt-2 font-display text-lg font-semibold text-charcoal md:text-xl">
+                            {post.title}
+                          </h2>
+                          {post.excerpt ? (
+                            <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-muted">
+                              {post.excerpt}
+                            </p>
+                          ) : null}
+                          <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-gold-dark">
+                            Read more
+                            <ArrowRight className="h-4 w-4" aria-hidden />
+                          </span>
+                        </div>
+                      </Link>
+                    </article>
+                  </Reveal>
                 );
               })}
             </div>

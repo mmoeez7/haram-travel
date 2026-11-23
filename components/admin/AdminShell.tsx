@@ -111,14 +111,14 @@ export function AdminShell({ user, children }: AdminShellProps) {
   );
 
   return (
-    <div className="min-h-screen bg-cream text-ink">
-      <div className="relative flex min-h-screen">
+    <div className="h-dvh overflow-hidden bg-cream text-ink">
+      <div className="relative flex h-full overflow-hidden">
         <div className="pointer-events-none absolute inset-0 overflow-hidden">
           <div className="absolute -left-24 top-0 h-80 w-80 rounded-full bg-gold/10 blur-3xl" />
           <div className="absolute right-0 top-20 h-96 w-96 rounded-full bg-forest/5 blur-3xl" />
         </div>
 
-        <aside className="admin-slide-in sticky top-0 z-20 hidden h-screen w-64 shrink-0 flex-col border-r border-border bg-ivory/95 px-4 py-6 backdrop-blur lg:flex">
+        <aside className="admin-slide-in relative z-20 hidden h-full w-64 shrink-0 flex-col border-r border-border bg-ivory/95 px-4 py-6 backdrop-blur lg:flex">
           <div className="admin-enter shrink-0">
             <Link href="/admin" className="block">
               <Image
@@ -141,8 +141,8 @@ export function AdminShell({ user, children }: AdminShellProps) {
           <div className="mt-4 shrink-0">{logoutCard}</div>
         </aside>
 
-        <div className="relative z-10 flex min-w-0 flex-1 flex-col">
-          <header className="flex items-center justify-between border-b border-border bg-ivory/90 px-4 py-3 backdrop-blur lg:hidden">
+        <div className="relative z-10 flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden">
+          <header className="flex shrink-0 items-center justify-between border-b border-border bg-ivory/90 px-4 py-3 backdrop-blur lg:hidden">
             <Link href="/admin" className="block">
               <Image
                 src="/images/haram-travel-logo.png"
@@ -164,13 +164,15 @@ export function AdminShell({ user, children }: AdminShellProps) {
           </header>
 
           {mobileOpen ? (
-            <div className="border-b border-border bg-ivory px-4 py-4 lg:hidden">
+            <div className="shrink-0 border-b border-border bg-ivory px-4 py-4 lg:hidden">
               <nav className="flex flex-col gap-1.5">{navLinks}</nav>
               <div className="mt-4">{logoutCard}</div>
             </div>
           ) : null}
 
-          <div className="flex-1">{children}</div>
+          <div className="flex min-h-0 flex-1 flex-col overflow-y-auto">
+            {children}
+          </div>
         </div>
       </div>
     </div>

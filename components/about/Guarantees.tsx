@@ -1,4 +1,5 @@
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import { CardRail } from "@/components/ui/CardRail";
 
 const guarantees = [
   {
@@ -28,9 +29,12 @@ export function Guarantees() {
           title="The 4 Sacred Guarantees"
           description="Every itinerary we prepare is anchored in four uncompromising commitments to your family's comfort, dignity, and spiritual focus."
         />
-        <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+        <CardRail cols="md:grid-cols-2 xl:grid-cols-4">
           {guarantees.map((item, i) => (
-            <article key={item.title} className="rounded-2xl border border-border bg-white p-6">
+            <article
+              key={item.title}
+              className="h-full rounded-2xl border border-border bg-white p-6"
+            >
               <span className="font-display text-3xl font-semibold text-gold-soft">
                 {String(i + 1).padStart(2, "0")}
               </span>
@@ -40,7 +44,7 @@ export function Guarantees() {
               <p className="mt-3 text-sm leading-relaxed text-muted">{item.text}</p>
             </article>
           ))}
-        </div>
+        </CardRail>
       </div>
     </section>
   );

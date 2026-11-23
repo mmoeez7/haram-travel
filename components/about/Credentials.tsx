@@ -4,6 +4,7 @@ import { SITE, telUrl, whatsappUrl } from "@/lib/constants";
 import { Button } from "@/components/ui/Button";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { CardRail } from "@/components/ui/CardRail";
+import { Reveal } from "@/components/ui/Reveal";
 
 const cards = [
   {
@@ -32,7 +33,7 @@ export function Credentials() {
   return (
     <section className="bg-charcoal py-12 text-white md:py-16">
       <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-3xl text-center">
+        <Reveal className="mx-auto max-w-3xl text-center">
           <h2 className="font-display text-2xl font-semibold uppercase tracking-wide md:text-4xl">
             Perform Umrah with Total Peace of Mind
           </h2>
@@ -54,7 +55,7 @@ export function Credentials() {
               Chat on WhatsApp
             </Button>
           </div>
-        </div>
+        </Reveal>
 
         <div className="mt-10 md:mt-14">
           <SectionHeading

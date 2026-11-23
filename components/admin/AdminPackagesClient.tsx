@@ -16,9 +16,12 @@ import {
   adminDangerButtonClass,
   adminDuplicateButtonClass,
   adminEditLinkClass,
-  adminPageClass,
+  adminListCardClass,
+  adminListPageClass,
   adminStatusDraftClass,
   adminStatusPublishedClass,
+  adminTableHeadClass,
+  adminTableScrollClass,
   adminTitleLinkClass,
 } from "@/components/admin/admin-ui";
 import { AdminLoadingLink } from "@/components/admin/AdminLoadingLink";
@@ -123,14 +126,15 @@ export function AdminPackagesClient() {
   }
 
   return (
-    <div className={adminPageClass}>
+    <div className={adminListPageClass}>
       <AdminPageHeader
+        className="shrink-0"
         title="Packages"
         description="Create and publish Umrah and Hajj packages."
       />
 
       <form
-        className="admin-enter admin-enter-delay-1 mb-4 flex flex-wrap items-center gap-2"
+        className="admin-enter admin-enter-delay-1 mb-4 flex shrink-0 flex-wrap items-center gap-2"
         onSubmit={(event) => {
           event.preventDefault();
           setPage(1);
@@ -171,14 +175,14 @@ export function AdminPackagesClient() {
         </div>
       </form>
 
-      <AdminCard className="admin-enter admin-enter-delay-2">
+      <AdminCard className={`admin-enter admin-enter-delay-2 ${adminListCardClass}`}>
         {loading ? (
           <AdminTableSkeleton rows={7} cols={7} />
         ) : (
           <>
-            <div className="overflow-x-auto">
+            <div className={adminTableScrollClass}>
               <table className="min-w-full text-left text-sm">
-                <thead className="border-b border-border text-[10px] uppercase tracking-wide text-muted">
+                <thead className={adminTableHeadClass}>
                   <tr>
                     <th className="px-2 py-2">Subtitle</th>
                     <th className="px-2 py-2">Category</th>
@@ -251,14 +255,16 @@ export function AdminPackagesClient() {
                 </tbody>
               </table>
             </div>
-            <AdminPagination
-              meta={pagination}
-              disabled={loading}
-              onPageChange={(nextPage) => {
-                setPage(nextPage);
-                void load(q, status, nextPage);
-              }}
-            />
+            <div className="shrink-0">
+              <AdminPagination
+                meta={pagination}
+                disabled={loading}
+                onPageChange={(nextPage) => {
+                  setPage(nextPage);
+                  void load(q, status, nextPage);
+                }}
+              />
+            </div>
           </>
         )}
       </AdminCard>

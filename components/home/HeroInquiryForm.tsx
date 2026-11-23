@@ -14,7 +14,7 @@ const emptyForm = {
 const passengerOptions = Array.from({ length: 20 }, (_, index) => String(index + 1));
 
 const inputClass =
-  "brand-hero-input h-8 w-full rounded-md border border-[#E0D7C8] bg-[#FAF8F5] px-2.5 text-[11px] font-medium text-charcoal outline-none transition placeholder:text-slate-400 focus:border-gold focus:bg-white focus:shadow-[0_0_0_3px_rgba(197,160,56,0.2)] sm:h-[52px] sm:rounded-xl sm:border-[1.5px] sm:px-4 sm:text-[15px]";
+  "brand-hero-input w-full rounded-xl border-[1.5px] border-[#E0D7C8] bg-[#FAF8F5] px-3.5 py-2.5 text-xs font-medium text-charcoal outline-none transition placeholder:text-slate-400 focus:border-gold focus:bg-white focus:shadow-[0_0_0_3px_rgba(197,160,56,0.2)] sm:text-[13px]";
 
 export function HeroInquiryForm() {
   const [form, setForm] = useState(emptyForm);
@@ -75,16 +75,19 @@ export function HeroInquiryForm() {
   return (
     <div
       id="enquiry-form"
-      className="mx-auto max-w-6xl scroll-mt-24 rounded-xl border border-[#EAE3D6] bg-white p-2 shadow-[0_10px_28px_rgba(26,26,26,0.07)] sm:rounded-3xl sm:p-8 sm:shadow-[0_14px_45px_rgba(26,26,26,0.07)] md:p-9"
+      className="scroll-mt-24 rounded-2xl border border-[#EAE3D6] bg-white p-5 shadow-[0_14px_45px_rgba(26,26,26,0.07)] sm:rounded-3xl sm:p-7"
     >
+      <h2 className="-mx-5 -mt-5 mb-4 rounded-t-2xl bg-gold/15 px-5 py-3.5 text-center font-display text-xl font-bold tracking-wide text-gold-dark sm:-mx-7 sm:-mt-7 sm:mb-5 sm:rounded-t-3xl sm:px-7 sm:py-4 sm:text-2xl">
+        Plan Your Best Journey
+      </h2>
       <form
         onSubmit={onSubmit}
-        className="grid grid-cols-1 items-end gap-1.5 sm:grid-cols-2 sm:gap-5 lg:grid-cols-5"
+        className="grid grid-cols-1 items-end gap-3.5 sm:grid-cols-2 lg:grid-cols-5"
       >
         <div>
           <label
             htmlFor="hero-inquiry-name"
-            className="mb-0.5 block text-[9px] font-bold text-charcoal sm:mb-2 sm:text-sm"
+            className="mb-1.5 block text-xs font-bold text-charcoal"
           >
             Full Name
           </label>
@@ -94,7 +97,7 @@ export function HeroInquiryForm() {
             name="name"
             autoComplete="name"
             className={inputClass}
-            placeholder="Name"
+            placeholder="Enter Your Name"
             value={form.name}
             onChange={(event) => update("name", event.target.value)}
           />
@@ -103,7 +106,7 @@ export function HeroInquiryForm() {
         <div>
           <label
             htmlFor="hero-inquiry-email"
-            className="mb-0.5 block text-[9px] font-bold text-charcoal sm:mb-2 sm:text-sm"
+            className="mb-1.5 block text-xs font-bold text-charcoal"
           >
             Email
           </label>
@@ -115,7 +118,7 @@ export function HeroInquiryForm() {
             autoComplete="email"
             inputMode="email"
             className={inputClass}
-            placeholder="Email"
+            placeholder="Enter Your Email"
             value={form.email}
             onChange={(event) => update("email", event.target.value)}
           />
@@ -124,7 +127,7 @@ export function HeroInquiryForm() {
         <div>
           <label
             htmlFor="hero-inquiry-phone"
-            className="mb-0.5 block text-[9px] font-bold text-charcoal sm:mb-2 sm:text-sm"
+            className="mb-1.5 block text-xs font-bold text-charcoal"
           >
             Phone Number
           </label>
@@ -136,7 +139,7 @@ export function HeroInquiryForm() {
             autoComplete="tel"
             inputMode="tel"
             className={inputClass}
-            placeholder="Phone"
+            placeholder="Enter Your Phone Number"
             value={form.phone}
             onChange={(event) => update("phone", event.target.value)}
           />
@@ -145,7 +148,7 @@ export function HeroInquiryForm() {
         <div>
           <label
             htmlFor="hero-inquiry-passengers"
-            className="mb-0.5 block text-[9px] font-bold text-charcoal sm:mb-2 sm:text-sm"
+            className="mb-1.5 block text-xs font-bold text-charcoal"
           >
             No of Passengers
           </label>
@@ -169,13 +172,13 @@ export function HeroInquiryForm() {
           <button
             type="submit"
             disabled={submitting}
-            className="flex h-8 w-full items-center justify-center gap-1 rounded-md bg-gold px-2.5 text-[10px] font-bold uppercase tracking-wide text-white shadow-sm transition hover:bg-gold-dark disabled:cursor-not-allowed disabled:opacity-60 sm:h-[52px] sm:gap-2 sm:rounded-xl sm:px-4 sm:text-sm sm:tracking-wider"
+            className="flex h-[42px] w-full items-center justify-center gap-1.5 rounded-xl bg-gold px-3.5 text-xs font-bold uppercase tracking-wider text-white shadow-sm transition hover:bg-gold-dark disabled:cursor-not-allowed disabled:opacity-60"
           >
             <span className="whitespace-nowrap">
               {submitting ? "Sending…" : "Request a Quote"}
             </span>
             {!submitting ? (
-              <ArrowRight className="h-3 w-3 sm:h-4 sm:w-4" aria-hidden />
+              <ArrowRight className="h-3.5 w-3.5" aria-hidden />
             ) : null}
           </button>
         </div>

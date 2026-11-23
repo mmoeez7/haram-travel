@@ -1,61 +1,60 @@
 import Image from "next/image";
+import Link from "next/link";
 import { ArrowRight, Play } from "lucide-react";
 import { SITE } from "@/lib/constants";
-import { Button } from "@/components/ui/Button";
 import { HeroInquiryForm } from "@/components/home/HeroInquiryForm";
 
 function HeroCopy() {
   return (
-    <div className="w-full max-w-xl text-left text-white md:max-w-2xl">
-      <p className="font-display text-xs font-semibold uppercase tracking-[0.14em] text-gold-soft sm:text-sm md:text-xl md:tracking-[0.18em]">
+    <div className="relative z-10 max-w-xl space-y-3 text-left text-white sm:space-y-4 md:max-w-2xl">
+      <p className="hero-enter font-display text-xs font-semibold uppercase tracking-[0.14em] text-gold-soft sm:text-sm md:text-base md:tracking-[0.18em]">
         {SITE.name}
       </p>
 
-      <h1 className="mt-1 font-display text-[1.35rem] font-semibold leading-snug tracking-wide sm:text-3xl md:mt-3 md:text-5xl md:leading-[1.15] lg:text-[3.25rem] lg:leading-[1.12]">
+      <h1 className="hero-enter hero-enter-delay-1 font-display text-3xl font-semibold leading-[1.14] tracking-tight sm:text-5xl lg:text-[54px] lg:leading-[1.12]">
         Your Sacred Journey,{" "}
         <span className="italic text-gold-soft">Handled With Royal Care.</span>
       </h1>
 
-      <div className="mt-2 flex flex-wrap items-center justify-start gap-3 sm:gap-6 md:mt-3.5 md:gap-8">
+      <div className="hero-enter hero-enter-delay-2 flex flex-wrap items-center gap-3 sm:gap-6 md:gap-8">
         <div>
-          <p className="font-display text-lg font-semibold text-gold-soft sm:text-2xl md:text-3xl">
+          <p className="font-display text-xl font-semibold text-gold-soft sm:text-2xl md:text-3xl">
             {SITE.trustpilotRating}/5
           </p>
-          <p className="mt-0.5 text-[10px] leading-tight text-white/80 sm:text-xs md:text-sm">
+          <p className="mt-0.5 text-[11px] leading-tight text-white/80 sm:text-xs md:text-sm">
             Trustpilot · {SITE.trustpilotReviews} reviews
           </p>
         </div>
-        <div className="h-7 w-px bg-white/25 sm:h-10" aria-hidden />
+        <div className="h-8 w-px bg-white/25 sm:h-10" aria-hidden />
         <div>
-          <p className="font-display text-lg font-semibold text-gold-soft sm:text-2xl md:text-3xl">
+          <p className="font-display text-xl font-semibold text-gold-soft sm:text-2xl md:text-3xl">
             +{SITE.pilgrimsGuided}
           </p>
-          <p className="mt-0.5 text-[10px] leading-tight text-white/80 sm:text-xs md:text-sm">
+          <p className="mt-0.5 text-[11px] leading-tight text-white/80 sm:text-xs md:text-sm">
             British Pilgrims Guided
           </p>
         </div>
       </div>
 
-      <p className="mt-2 max-w-lg text-xs leading-relaxed text-white/90 sm:text-sm md:mt-3.5 md:text-base">
+      <p className="hero-enter hero-enter-delay-3 max-w-xl text-xs leading-relaxed text-slate-200 sm:text-sm md:text-base">
         All-inclusive UK Umrah packages from £745pp — flights, walking-distance
         Haram hotels, visas & private transfers.
       </p>
 
-      <div className="mt-3 mb-2 flex w-full flex-row items-stretch gap-2 sm:mt-4 sm:mb-0 sm:gap-3 md:justify-start">
-        <Button
+      <div className="hero-enter hero-enter-delay-4 relative z-30 flex flex-wrap items-center gap-2.5 pt-1 sm:gap-3">
+        <Link
           href="/umrah-packages"
-          variant="swipe"
-          className="h-9 min-w-0 flex-1 !rounded-full !px-2.5 !text-[11px] !leading-none whitespace-nowrap sm:h-12 sm:max-w-[200px] sm:flex-none sm:!px-6 sm:!text-sm"
+          className="inline-flex h-11 items-center justify-center gap-2 rounded-full bg-gold px-5 text-xs font-bold uppercase tracking-wider text-charcoal transition duration-200 hover:bg-gold-dark hover:text-white sm:h-12 sm:px-7 sm:text-sm"
         >
           Explore Packages
-          <ArrowRight className="h-3 w-3 sm:h-4 sm:w-4" aria-hidden />
-        </Button>
+          <ArrowRight className="h-3.5 w-3.5 sm:h-4 sm:w-4" aria-hidden />
+        </Link>
         <a
           href="#video-reviews"
-          className="inline-flex h-9 min-w-0 flex-1 items-center justify-center gap-1 rounded-full border border-white/30 bg-charcoal/25 px-2.5 text-[11px] font-semibold leading-none whitespace-nowrap text-white backdrop-blur-sm transition hover:border-gold/50 hover:bg-charcoal/40 sm:h-12 sm:max-w-[200px] sm:flex-none sm:gap-2 sm:px-6 sm:text-sm"
+          className="inline-flex h-11 items-center justify-center gap-2 rounded-full border border-white/40 bg-white/20 px-5 text-xs font-bold uppercase tracking-wider text-white backdrop-blur-md sm:h-12 sm:px-6 sm:text-sm"
         >
-          <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full border border-white/45 sm:h-7 sm:w-7">
-            <Play className="h-2 w-2 fill-white sm:h-3 sm:w-3" aria-hidden />
+          <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-white/45 sm:h-6 sm:w-6">
+            <Play className="h-2.5 w-2.5 fill-current sm:h-3 sm:w-3" aria-hidden />
           </span>
           Watch Reviews
         </a>
@@ -68,11 +67,11 @@ function HeroOverlays() {
   return (
     <>
       <div
-        className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/55 to-black/20"
+        className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/65 to-black/25 sm:to-transparent"
         aria-hidden
       />
       <div
-        className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-black/25"
+        className="absolute inset-0 bg-gradient-to-t from-black/85 via-transparent to-black/40"
         aria-hidden
       />
     </>
@@ -81,10 +80,10 @@ function HeroOverlays() {
 
 export function Hero() {
   return (
-    <section className="bg-cream pb-[4.75rem] md:pb-0">
-      {/* Mobile: natural height. Desktop: fit under header in one view. */}
-      <div className="mx-auto flex max-w-7xl flex-col px-3 pt-3 pb-4 sm:px-6 sm:pt-4 md:h-[calc(100dvh-4.5rem)] md:px-6 md:pb-5 md:pt-5 lg:px-8">
-        <div className="relative min-h-[42dvh] overflow-hidden rounded-2xl sm:min-h-[48dvh] md:min-h-0 md:flex-1 md:rounded-3xl">
+    <section className="relative w-full bg-cream pt-4 pb-[5.5rem] sm:pt-6 sm:pb-14 md:pt-8 md:pb-14">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        {/* Inset cinematic banner — taller on large screens; extra bottom pad so CTAs stay clear of form */}
+        <div className="relative flex min-h-[460px] items-start overflow-hidden rounded-2xl border border-[#EAE3D6] p-5 pb-16 shadow-xl sm:min-h-[500px] sm:items-center sm:rounded-3xl sm:p-12 sm:pb-14 lg:min-h-[540px] lg:p-14 lg:pb-16 xl:min-h-[560px]">
           <div className="absolute inset-0 md:hidden">
             <Image
               src="/images/hero-mobile.jpg"
@@ -93,7 +92,7 @@ export function Hero() {
               priority
               unoptimized
               sizes="100vw"
-              className="object-cover object-[center_35%]"
+              className="object-cover object-[center_right] sm:object-center"
             />
           </div>
 
@@ -105,18 +104,16 @@ export function Hero() {
               priority
               unoptimized
               sizes="(min-width: 1280px) 1280px, 100vw"
-              className="object-cover object-[center_42%]"
+              className="object-cover object-center"
             />
           </div>
 
           <HeroOverlays />
-
-          <div className="absolute inset-0 z-10 flex items-start px-4 py-5 pb-16 sm:items-center sm:px-6 sm:py-8 sm:pb-24 md:pb-28 lg:px-8">
-            <HeroCopy />
-          </div>
+          <HeroCopy />
         </div>
 
-        <div className="relative z-20 mx-auto w-full shrink-0 -mt-6 px-0.5 sm:-mt-12 sm:px-2">
+        {/* Overlapping enquiry bar */}
+        <div className="hero-enter hero-enter-delay-5 relative z-20 mx-auto -mt-10 max-w-6xl px-0 sm:-mt-12 sm:px-2 lg:-mt-14">
           <HeroInquiryForm />
         </div>
       </div>
