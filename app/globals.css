@@ -290,10 +290,98 @@ h3,
   animation-delay: 0.48s;
 }
 
+@keyframes admin-bar-grow {
+  from {
+    transform: scaleY(0);
+    opacity: 0.35;
+  }
+  to {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+}
+
+.admin-bar-grow {
+  transform-origin: bottom center;
+  animation: admin-bar-grow 0.85s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
 @keyframes admin-shimmer {
   100% {
     transform: translateX(100%);
   }
+}
+
+/* Package matcher step transitions */
+@keyframes matcher-step-next {
+  from {
+    opacity: 0;
+    transform: translateX(22px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes matcher-step-back {
+  from {
+    opacity: 0;
+    transform: translateX(-22px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes matcher-chip-in {
+  from {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.matcher-step-next {
+  animation: matcher-step-next 0.42s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.matcher-step-back {
+  animation: matcher-step-back 0.42s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.matcher-step-next .matcher-chip,
+.matcher-step-back .matcher-chip {
+  animation: matcher-chip-in 0.38s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.matcher-step-next .matcher-chip:nth-child(1),
+.matcher-step-back .matcher-chip:nth-child(1) {
+  animation-delay: 0.04s;
+}
+.matcher-step-next .matcher-chip:nth-child(2),
+.matcher-step-back .matcher-chip:nth-child(2) {
+  animation-delay: 0.08s;
+}
+.matcher-step-next .matcher-chip:nth-child(3),
+.matcher-step-back .matcher-chip:nth-child(3) {
+  animation-delay: 0.12s;
+}
+.matcher-step-next .matcher-chip:nth-child(4),
+.matcher-step-back .matcher-chip:nth-child(4) {
+  animation-delay: 0.16s;
+}
+.matcher-step-next .matcher-chip:nth-child(5),
+.matcher-step-back .matcher-chip:nth-child(5) {
+  animation-delay: 0.2s;
+}
+.matcher-step-next .matcher-chip:nth-child(6),
+.matcher-step-back .matcher-chip:nth-child(6) {
+  animation-delay: 0.24s;
 }
 
 /* Native select with padded chevron (Tailwind bg-[url] is unreliable for data URIs) */
@@ -411,6 +499,11 @@ h3,
   .login-fade-up,
   .admin-enter,
   .admin-slide-in,
+  .admin-bar-grow,
+  .matcher-step-next,
+  .matcher-step-back,
+  .matcher-step-next .matcher-chip,
+  .matcher-step-back .matcher-chip,
   .site-loader-logo,
   .site-loader-bar::after {
     animation: none;

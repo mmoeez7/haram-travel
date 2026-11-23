@@ -20,24 +20,22 @@ export function TestimonialCard({ review }: { review: Testimonial }) {
         {review.text}
       </p>
 
-      <div className="mt-auto border-t border-[#ece7dc] pt-3.5 md:pt-4">
-        <div className="flex items-center gap-3">
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#efe6d4] font-serif text-base font-bold text-[#1f2937] md:h-11 md:w-11 md:text-lg">
-            {review.initial}
-          </span>
+      <div className="mt-auto flex items-center gap-2.5 border-t border-[#ece7dc] pt-3.5 md:gap-3 md:pt-4">
+        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#efe6d4] font-serif text-base font-bold text-[#1f2937] md:h-11 md:w-11 md:text-lg">
+          {review.initial}
+        </span>
 
-          <div className="min-w-0 flex-1">
-            <p className="truncate text-[13px] font-bold text-[#111827] md:text-[14px]">
-              {review.name}
-            </p>
-            <div className="mt-1 flex items-center gap-0.5 md:mt-1.5">
-              {Array.from({ length: 5 }).map((_, i) => (
-                <Star
-                  key={i}
-                  className="h-3 w-3 fill-[#e0b83a] text-[#e0b83a] md:h-3.5 md:w-3.5"
-                />
-              ))}
-            </div>
+        <div className="min-w-0 flex-1">
+          <p className="truncate text-[13px] font-bold text-[#111827] md:text-[14px]">
+            {review.name}
+          </p>
+          <div className="mt-1 flex items-center gap-0.5 md:mt-1.5">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <Star
+                key={i}
+                className="h-3 w-3 fill-[#e0b83a] text-[#e0b83a] md:h-3.5 md:w-3.5"
+              />
+            ))}
           </div>
         </div>
 
@@ -45,18 +43,15 @@ export function TestimonialCard({ review }: { review: Testimonial }) {
           href="https://www.trustpilot.com/review/haramtravel.uk"
           target="_blank"
           rel="noopener noreferrer"
-          className="group mt-3.5 flex w-full items-center justify-between gap-3 rounded-xl bg-[#191919] px-3.5 py-2.5 transition hover:bg-black hover:shadow-[0_8px_20px_rgba(0,182,122,0.22)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#00b67a]"
+          className="group inline-flex shrink-0 items-center rounded-lg bg-[#191919] px-2.5 py-1.5 transition hover:bg-black hover:shadow-[0_6px_16px_rgba(0,182,122,0.2)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#00b67a] md:px-3 md:py-2"
           aria-label="Leave a review on Trustpilot"
         >
-          <span className="text-[11px] font-semibold tracking-wide text-white/75 transition group-hover:text-white md:text-xs">
-            Review us
-          </span>
           <Image
             src="/images/trustpilot.png"
             alt="Trustpilot"
             width={100}
             height={24}
-            className="h-4 w-auto object-contain transition group-hover:scale-[1.03] md:h-[18px]"
+            className="h-3.5 w-auto object-contain transition group-hover:scale-[1.03] md:h-4"
           />
         </a>
       </div>

@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
@@ -119,9 +120,16 @@ export function AdminShell({ user, children }: AdminShellProps) {
 
         <aside className="admin-slide-in sticky top-0 z-20 hidden h-screen w-64 shrink-0 flex-col border-r border-border bg-ivory/95 px-4 py-6 backdrop-blur lg:flex">
           <div className="admin-enter shrink-0">
-            <p className="font-display text-lg font-semibold uppercase tracking-wide text-charcoal">
-              Haram Travel
-            </p>
+            <Link href="/admin" className="block">
+              <Image
+                src="/images/haram-travel-logo.png"
+                alt="Haram Travel"
+                width={200}
+                height={58}
+                className="h-11 w-auto object-contain"
+                priority
+              />
+            </Link>
             <div className="mt-3 inline-flex items-center gap-2 rounded-full border border-gold/30 bg-gold/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-gold-dark">
               <ShieldCheck className="h-3.5 w-3.5" />
               Admin Workspace
@@ -135,9 +143,16 @@ export function AdminShell({ user, children }: AdminShellProps) {
 
         <div className="relative z-10 flex min-w-0 flex-1 flex-col">
           <header className="flex items-center justify-between border-b border-border bg-ivory/90 px-4 py-3 backdrop-blur lg:hidden">
-            <p className="font-display font-semibold uppercase tracking-wide text-charcoal">
-              Admin
-            </p>
+            <Link href="/admin" className="block">
+              <Image
+                src="/images/haram-travel-logo.png"
+                alt="Haram Travel"
+                width={160}
+                height={46}
+                className="h-8 w-auto object-contain"
+                priority
+              />
+            </Link>
             <button
               type="button"
               onClick={() => setMobileOpen((v) => !v)}

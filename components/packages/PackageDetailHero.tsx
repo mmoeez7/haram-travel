@@ -1,9 +1,9 @@
 import Image from "next/image";
+import { Star } from "lucide-react";
 import type { PackageDetail } from "@/lib/packages";
 import { packageDetailDisplayTitle } from "@/lib/package-card-title";
 import { categoryListingHref } from "@/lib/package-paths";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
-import { PackageDetailSidebar } from "@/components/packages/PackageDetailSidebar";
 
 export function PackageDetailHero({ pkg }: { pkg: PackageDetail }) {
   const displayTitle = packageDetailDisplayTitle(pkg);
@@ -23,34 +23,42 @@ export function PackageDetailHero({ pkg }: { pkg: PackageDetail }) {
         ]}
       />
 
-      {/* Cover keeps original size; booking card stretches to match */}
-      <div className="grid gap-4 sm:gap-5 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-stretch lg:gap-6">
-        <div className="relative min-h-[200px] overflow-hidden rounded-xl border border-border bg-white shadow-sm sm:min-h-[280px] sm:rounded-2xl md:min-h-[380px]">
-          {pkg.image ? (
-            <Image
-              src={pkg.image}
-              alt={pkg.coverImageAlt || displayTitle}
-              fill
-              className="object-cover"
-              sizes="(max-width: 1024px) 100vw, 66vw"
-              priority
-            />
-          ) : (
-            <div className="absolute inset-0 bg-cream" />
-          )}
-          {pkg.badge ? (
-            <span className="absolute left-3 top-3 rounded-md bg-gold px-2.5 py-1 text-xs font-semibold text-charcoal md:left-4 md:top-4">
-              {pkg.badge}
-            </span>
-          ) : null}
-        </div>
-
-        <PackageDetailSidebar pkg={pkg} matchCover />
+      <div className="relative min-h-[200px] overflow-hidden rounded-xl border border-border bg-white shadow-sm sm:min-h-[280px] sm:rounded-2xl md:min-h-[380px]">
+        {pkg.image ? (
+          <Image
+            src={pkg.image}
+            alt={pkg.coverImageAlt || displayTitle}
+            fill
+            className="object-cover"
+            sizes="(max-width: 1024px) 100vw, 66vw"
+            priority
+          />
+        ) : (
+          <div className="absolute inset-0 bg-cream" />
+        )}
+        {pkg.badge ? (
+          <span className="absolute left-3 top-3 rounded-md bg-gold px-2.5 py-1 text-xs font-semibold text-charcoal md:left-4 md:top-4">
+            {pkg.badge}
+          </span>
+        ) : null}
       </div>
 
       <div className="min-w-0">
-        <p className="text-xs font-semibold uppercase tracking-[0.16em] text-gold-dark">
-          {pkg.stars}★ · {pkg.nights} nights
+        <p className="flex flex-wrap items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-gold-dark">
+          <span
+            className="inline-flex items-center gap-0.5"
+            aria-label={`${pkg.stars} star`}
+          >
+            {Array.from({ length: pkg.stars }, (_, i) => (
+              <Star
+                key={i}
+                className="h-3.5 w-3.5 fill-gold text-gold"
+                aria-hidden
+              />
+            ))}
+          </span>
+          <span aria-hidden>·</span>
+          <span>{pkg.nights} nights</span>
         </p>
         <h1 className="mt-1.5 break-words font-display text-xl font-semibold uppercase leading-snug tracking-wide text-charcoal sm:mt-2 sm:text-2xl md:text-3xl">
           {displayTitle}

@@ -27,8 +27,18 @@ export function HeroInquiryForm() {
   async function onSubmit(event: React.FormEvent) {
     event.preventDefault();
     const passengers = Number(form.passengers);
-    if (!form.name.trim() || !form.email.trim() || !form.phone.trim()) {
-      toast.error("Please enter your name, email and mobile number.");
+    const missing: string[] = [];
+    if (!form.name.trim()) missing.push("name");
+    if (!form.email.trim()) missing.push("email");
+    if (!form.phone.trim()) missing.push("mobile number");
+    if (missing.length) {
+      const list =
+        missing.length === 1
+          ? missing[0]
+          : missing.length === 2
+            ? `${missing[0]} and ${missing[1]}`
+            : `${missing[0]}, ${missing[1]} and ${missing[2]}`;
+      toast.error(`Please enter your ${list}.`);
       return;
     }
     if (!Number.isInteger(passengers) || passengers < 1 || passengers > 20) {

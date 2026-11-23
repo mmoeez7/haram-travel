@@ -5,6 +5,7 @@ import { packageDetailDisplayTitle } from "@/lib/package-card-title";
 import { packageHref } from "@/lib/package-paths";
 import { PackageDetailHero } from "@/components/packages/PackageDetailHero";
 import { PackageDetailBody } from "@/components/packages/PackageDetailBody";
+import { PackageDetailSidebar } from "@/components/packages/PackageDetailSidebar";
 import { PackageHotelDetails } from "@/components/packages/PackageHotelDetails";
 import { PackageTrustStrip } from "@/components/packages/PackageTrustStrip";
 import { CustomQuote } from "@/components/home/CustomQuote";
@@ -45,9 +46,16 @@ export default async function PackageDetailPage({ params }: PageProps) {
     <>
       <section className="bg-cream pt-8 pb-12 sm:pt-10 md:pt-12 md:pb-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="min-w-0 space-y-8 md:space-y-12">
-            <PackageDetailHero pkg={pkg} />
-            <PackageDetailBody pkg={pkg} />
+          {/* Desktop: content left + sticky booking right. Mobile: package content first, then booking. */}
+          <div className="grid gap-6 sm:gap-8 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-start lg:gap-10">
+            <div className="order-1 min-w-0 space-y-8 md:space-y-12">
+              <PackageDetailHero pkg={pkg} />
+              <PackageDetailBody pkg={pkg} />
+            </div>
+
+            <div className="order-2 min-w-0 lg:pt-10">
+              <PackageDetailSidebar pkg={pkg} />
+            </div>
           </div>
 
           <div className="mt-8 md:mt-12">
