@@ -10,9 +10,9 @@ import { FAQ } from "@/components/home/FAQ";
 import { BlogGuides } from "@/components/home/BlogGuides";
 
 export const metadata = createMetadata({
-  title: "Hajj and Umrah Packages UK | Haram Travel",
+  title: "Cheap Umrah Packages UK 2027 | Affordable Umrah Packages from UK",
   description:
-    "All-inclusive bespoke UK Umrah packages from £745pp. Direct flights, walking-distance Haram hotels, visas & private transfers. ATOL protected.",
+    "Find cheap Umrah Packages and Cheap Umrah Packages UK 2027. Book your Affordable Umrah Package UK and Affordable Umrah Packages from UK for a budget-friendly pilgrimage.",
   path: "/",
 });
 

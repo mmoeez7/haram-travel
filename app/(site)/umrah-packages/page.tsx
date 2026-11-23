@@ -11,10 +11,11 @@ import { SeoContent } from "@/components/content/SeoContent";
 import { starPageDescription } from "@/lib/package-page-copy";
 
 export const metadata = createMetadata({
-  title: "Umrah Packages from UK",
+  title: "Umrah Packages from UK | Umrah Packages 2027 UK",
   description:
-    "3, 4 and 5-star Umrah packages from the UK with flights included, walking-distance hotels, visas and transfers. From £745pp.",
+    "Book Umrah Packages from UK and Umrah Packages 2027 UK for a smooth and spiritual journey. Choose trusted travel plans for a comfortable pilgrimage experience.",
   path: "/umrah-packages",
+  absolute: true,
 });
 
 export default async function UmrahPackagesPage() {

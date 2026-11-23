@@ -5,14 +5,22 @@ type PageSeo = {
   title: string;
   description: string;
   path: string;
+  /** Use the title exactly as provided (no `| Haram Travel` suffix). */
+  absolute?: boolean;
 };
 
-export function createMetadata({ title, description, path }: PageSeo): Metadata {
+export function createMetadata({
+  title,
+  description,
+  path,
+  absolute = false,
+}: PageSeo): Metadata {
   const url = `${SITE.url}${path === "/" ? "" : path}`;
-  const fullTitle = path === "/" ? title : `${title} | ${SITE.name}`;
+  const fullTitle =
+    absolute || path === "/" ? title : `${title} | ${SITE.name}`;
 
   return {
-    title: fullTitle,
+    title: absolute ? { absolute: fullTitle } : fullTitle,
     description,
     alternates: { canonical: url },
     openGraph: {
