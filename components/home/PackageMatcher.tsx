@@ -80,7 +80,7 @@ const STEP_COPY: Record<number, { title: string; helper: string }> = {
     helper: "Select the trip length that suits your schedule.",
   },
   4: {
-    title: "Hotel preference & party size",
+    title: "Hotel preferences & No. of Pax",
     helper: "Choose your hotel style and how many pilgrims are travelling.",
   },
   5: {
@@ -201,7 +201,6 @@ export function PackageMatcher() {
   const [successName, setSuccessName] = useState("");
 
   const copy = STEP_COPY[step]!;
-  const canContinueHotelParty = Boolean(form.hotelTier && form.passengers);
   const stepAnimClass =
     stepDir === "next" ? "matcher-step-next" : "matcher-step-back";
 
@@ -222,11 +221,6 @@ export function PackageMatcher() {
     const next = Math.min(TOTAL_STEPS, Math.max(1, target));
     setStepDir(next >= step ? "next" : "back");
     setStep(next);
-  }
-
-  function goNext() {
-    setStepDir("next");
-    setStep((current) => Math.min(TOTAL_STEPS, current + 1));
   }
 
   function goBack() {
@@ -411,7 +405,10 @@ export function PackageMatcher() {
                         key={option.value}
                         active={form.hotelTier === option.value}
                         onClick={() =>
-                          selectAndAdvance({ hotelTier: option.value }, false)
+                          selectAndAdvance(
+                            { hotelTier: option.value },
+                            Boolean(form.passengers),
+                          )
                         }
                         iconSrc={HOTEL_ICONS[option.value]}
                         iconAlt={option.label}
@@ -426,7 +423,10 @@ export function PackageMatcher() {
                         key={option.value}
                         active={form.passengers === option.value}
                         onClick={() =>
-                          selectAndAdvance({ passengers: option.value }, false)
+                          selectAndAdvance(
+                            { passengers: option.value },
+                            Boolean(form.hotelTier),
+                          )
                         }
                         centered
                       >
@@ -434,16 +434,6 @@ export function PackageMatcher() {
                       </ChipButton>
                     ))}
                   </div>
-                  <Button
-                    type="button"
-                    variant="swipe"
-                    className="mt-0.5 w-full !rounded-full py-3 sm:mt-1 sm:py-3.5"
-                    disabled={!canContinueHotelParty}
-                    onClick={goNext}
-                  >
-                    Continue
-                    <ArrowRight className="h-4 w-4" aria-hidden />
-                  </Button>
                 </div>
               ) : null}
 

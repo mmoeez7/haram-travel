@@ -1,14 +1,14 @@
 export const SITE = {
   name: "Haram Travel",
-  legalName: "Bukhari Travel T/A Haram Travel",
-  url: "https://haramtravel.co.uk",
-  email: "info@haramtravel.co.uk",
-  phone: "020 8123 7860",
-  phoneTel: "+442081237860",
-  whatsapp: "+447752456789",
-  whatsappDisplay: "+44 7752 456789",
-  address: "142 Whitechapel Road, London E1 1JE",
-  addressShort: "London E1 1JE",
+  legalName: "Haram Travel",
+  url: "https://haramtravel.uk",
+  email: "info@haramtravel.uk",
+  phone: "01616609992",
+  phoneTel: "+441616609992",
+  whatsapp: "+441616609992",
+  whatsappDisplay: "+441616609992",
+  address: "618A Stockport Rd, Longsight, Manchester M13 0RX, United Kingdom",
+  addressShort: "Manchester M13 0RX",
   trustpilotRating: "4.8",
   trustpilotReviews: "8,200+",
   pilgrimsGuided: "25,800+",
@@ -22,7 +22,7 @@ export const SOCIAL_LINKS = [
   },
   {
     label: "WhatsApp",
-    href: "https://api.whatsapp.com/send/?phone=441619491387&text=Salam%2C+I%27m+looking+for+Umrah+Package&type=phone_number&app_absent=0",
+    href: "https://api.whatsapp.com/send/?phone=441616609992&text=Salam%2C+I%27m+looking+for+Umrah+Package&type=phone_number&app_absent=0",
   },
   {
     label: "Instagram",
@@ -54,12 +54,12 @@ export const NAV_ITEMS: NavItem[] = [
 export const NAV_LINKS = NAV_ITEMS.map(({ href, label }) => ({ href, label }));
 
 export const FOOTER_PACKAGES = [
-  { href: "/umrah-packages", label: "3-Star Economy Umrah" },
-  { href: "/umrah-packages", label: "4-Star Executive Packages" },
-  { href: "/umrah-packages", label: "5-Star VIP Clock Tower" },
-  { href: "/ramadan-umrah-packages", label: "Ramadan 2027 Packages" },
-  { href: "/umrah-packages", label: "Family & Group Umrah" },
-  { href: "/#guides", label: "Pilgrim Guides & Articles" },
+  { href: "/3-star-umrah-packages/", label: "3-Star Economy Umrah" },
+  { href: "/4-star-umrah-packages/", label: "4-Star Executive Packages" },
+  { href: "/5-star-umrah-packages/", label: "5-Star VIP Clock Tower" },
+  { href: "/ramadan-umrah-package/", label: "Ramadan 2027 Packages" },
+  { href: "/umrah-packages/", label: "Family & Group Umrah" },
+  { href: "/blogs/", label: "Pilgrim Guides & Articles" },
 ] as const;
 
 export function whatsappUrl(message?: string) {

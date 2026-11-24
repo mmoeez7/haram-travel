@@ -47,10 +47,10 @@ export function PackageCard({ pkg, titleOverride }: PackageCardProps) {
         </p>
 
         <div className="mt-2 grid grid-cols-2 gap-1.5 md:mt-2.5 md:gap-2">
-          <div className="rounded-lg bg-cream px-2 py-1.5 text-center text-[10px] font-medium leading-snug text-ink md:px-2.5 md:py-1.5 md:text-xs">
+          <div className="rounded-lg bg-cream px-2 py-1.5 text-center text-xs font-bold leading-snug text-ink md:px-2.5 md:py-1.5 md:text-sm">
             {String(pkg.makkahNights).padStart(2, "0")} Nights in Makkah
           </div>
-          <div className="rounded-lg bg-cream px-2 py-1.5 text-center text-[10px] font-medium leading-snug text-ink md:px-2.5 md:py-1.5 md:text-xs">
+          <div className="rounded-lg bg-cream px-2 py-1.5 text-center text-xs font-bold leading-snug text-ink md:px-2.5 md:py-1.5 md:text-sm">
             {String(pkg.madinahNights).padStart(2, "0")} Nights in Madinah
           </div>
         </div>
@@ -75,7 +75,7 @@ export function PackageCard({ pkg, titleOverride }: PackageCardProps) {
                 <span className="text-sm font-sans font-medium text-muted md:text-base"> /pp</span>
               </p>
             </div>
-            <span className="rounded-full bg-forest/10 px-2 py-0.5 text-[10px] font-semibold text-forest md:px-3 md:py-1 md:text-xs">
+            <span className="rounded-full bg-forest/10 px-2.5 py-1 text-xs font-semibold text-forest md:px-3 md:py-1.5 md:text-sm">
               Deposit: £{pkg.deposit}pp
             </span>
           </div>

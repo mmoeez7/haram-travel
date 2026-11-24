@@ -1,3 +1,6 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import { Phone, Ticket } from "lucide-react";
 import { FaWhatsapp } from "react-icons/fa";
 import { SITE, telUrl, whatsappUrl } from "@/lib/constants";
@@ -10,10 +13,30 @@ const floatBtn =
   "group flex h-10 max-w-10 items-center overflow-hidden rounded-full shadow-lg transition-all duration-700 ease-in-out hover:max-w-[260px] focus-visible:max-w-[260px] md:h-11 md:max-w-11";
 
 export function FloatingWidgets() {
+  const [footerVisible, setFooterVisible] = useState(false);
+
+  useEffect(() => {
+    const footer = document.getElementById("site-footer");
+    if (!footer) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => setFooterVisible(Boolean(entry?.isIntersecting)),
+      { root: null, threshold: 0.05, rootMargin: "0px 0px -48px 0px" },
+    );
+    observer.observe(footer);
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <>
-      {/* Mobile: sticky bottom action bar */}
-      <div className="float-in fixed inset-x-0 bottom-0 z-40 border-t border-border/80 bg-cream/95 px-2.5 pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-2 backdrop-blur-sm md:hidden">
+      {/* Mobile: sticky bottom action bar — hide when footer is on screen so links stay clickable */}
+      <div
+        className={`float-in fixed inset-x-0 bottom-0 z-40 border-t border-border/80 bg-cream/95 px-2.5 pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-2 backdrop-blur-sm transition duration-200 md:hidden ${
+          footerVisible
+            ? "pointer-events-none translate-y-full opacity-0"
+            : "translate-y-0 opacity-100"
+        }`}
+      >
         <div className="mx-auto grid max-w-lg grid-cols-3 gap-2">
           <a
             href={telUrl()}
@@ -47,7 +70,13 @@ export function FloatingWidgets() {
       </div>
 
       {/* Desktop / tablet: floating expand-on-hover buttons */}
-      <div className="float-in fixed right-5 bottom-4 z-40 hidden flex-col items-end gap-2.5 md:flex">
+      <div
+        className={`float-in fixed right-5 bottom-4 z-40 hidden flex-col items-end gap-2.5 transition duration-200 md:flex ${
+          footerVisible
+            ? "pointer-events-none translate-y-3 opacity-0"
+            : "translate-y-0 opacity-100"
+        }`}
+      >
         <a
           href={voucherHref}
           target="_blank"

@@ -2,10 +2,10 @@ import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { Reveal } from "@/components/ui/Reveal";
 
 const stats = [
-  { value: "18,500+", label: "British Pilgrims Guided" },
+  { value: "8000+", label: "British Pilgrims Guided" },
   { value: "100%", label: "ATOL Protected" },
   { value: "5-Star", label: "Courtyard Walking Guarantee" },
-  { value: "4.9/5", label: "Trustpilot Rating" },
+  { value: "4.8/5", label: "Trustpilot Rating" },
 ];
 
 export function AboutHero() {

@@ -145,7 +145,7 @@ export const privacySections: PrivacySection[] = [
         { label: "UK Helpline", value: SITE.phone },
         {
           label: "Office Address",
-          value: `${SITE.address}, United Kingdom`,
+          value: SITE.address,
         },
       ],
     },

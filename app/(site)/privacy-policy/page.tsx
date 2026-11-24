@@ -6,7 +6,7 @@ import { PrivacyContent, privacySections } from "@/components/privacy/PrivacyCon
 export const metadata = createMetadata({
   title: "Privacy & Customer Data Policy",
   description:
-    "Privacy policy for Bukhari Travel T/A Haram Travel — how we collect, use, and protect pilgrim data.",
+    "Privacy policy for Haram Travel — how we collect, use, and protect pilgrim data.",
   path: "/privacy-policy",
 });
 

@@ -7,7 +7,7 @@ import { OfficeHours } from "@/components/contact/OfficeHours";
 export const metadata = createMetadata({
   title: "Contact Us | Haram Travel UK – Umrah & Hajj Experts",
   description:
-    "Speak directly to a British Umrah specialist. WhatsApp concierge, UK helpline, and London office for tailored Hajj & Umrah inquiries.",
+    "Speak directly to an Umrah specialist. WhatsApp concierge, UK helpline, and Manchester office for tailored Hajj & Umrah inquiries.",
   path: "/contact-us",
 });
 

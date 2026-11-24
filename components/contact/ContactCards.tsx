@@ -58,17 +58,18 @@ const cards = [
   {
     badge: {
       icon: Building2,
-      label: "London Walk-In Office",
+      label: "UK Walk-In Office",
       className: "bg-[#f3ebd8] text-[#8a7340]",
     },
     icon: MapPin,
     iconBox: "bg-[#fee2e2] text-[#dc2626] border-[#fecaca]",
-    title: "London Head Office",
-    text: "Visit our Whitechapel consultation rooms for private family appointments. Located 3 minutes from East London Mosque.",
-    detail: "142 Whitechapel Rd, London E1 1JE",
-    detailHref: "https://maps.google.com/?q=142+Whitechapel+Road+London+E1+1JE",
+    title: "Our UK Presence",
+    text: "Visit our Manchester office for in-person travel consultations, personalised Umrah guidance and assistance with your booking. Our team is here to help you plan your sacred journey with confidence.",
+    detail: SITE.address,
+    detailHref:
+      "https://maps.google.com/?q=618A+Stockport+Rd,+Longsight,+Manchester+M13+0RX",
     cta: {
-      href: "https://maps.google.com/?q=142+Whitechapel+Road+London+E1+1JE",
+      href: "https://maps.google.com/?q=618A+Stockport+Rd,+Longsight,+Manchester+M13+0RX",
       label: "Get Google Maps Directions",
       icon: MapPin,
       iconClass: "text-[#dc2626]",

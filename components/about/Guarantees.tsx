@@ -3,12 +3,12 @@ import { CardRail } from "@/components/ui/CardRail";
 
 const guarantees = [
   {
-    title: "0–250m Courtyard Promise",
-    text: "Hotels in Makkah and Madinah selected for pedestrian access to courtyard gates — seamless for elderly parents and toddlers.",
+    title: "Expert Umrah Guidance",
+    text: "With experienced travel advisors and dedicated support, we help you make the right choices for a smooth, well-organised and stress-free Umrah journey.",
   },
   {
     title: "100% ATOL Protected",
-    text: "All flight-inclusive bookings are financially protected under ATOL through Bukhari Travel T/A Haram Travel.",
+    text: "All flight-inclusive bookings are financially protected under ATOL through Haram Travel.",
   },
   {
     title: "£99 Deposit & Price Lock",

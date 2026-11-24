@@ -6,7 +6,7 @@ export function getRamadanSeasonYear(now = new Date()) {
 
 export const INQUIRY_SEASONS = [
   { value: "winter", label: "Winter (Nov - Feb)" },
-  { value: "ramadan", label: () => `Ramadan ${getRamadanSeasonYear()} VIP` },
+  { value: "ramadan", label: () => `Ramadan ${getRamadanSeasonYear()}` },
   { value: "spring", label: "Spring / Easter" },
   { value: "flexible", label: "Flexible Annual" },
 ] as const;
@@ -15,6 +15,7 @@ export const INQUIRY_DEPARTURES = [
   { value: "london", label: "London Airports" },
   { value: "manchester", label: "Manchester" },
   { value: "birmingham", label: "Birmingham" },
+  { value: "scotland", label: "Scotland" },
 ] as const;
 
 export const INQUIRY_NIGHTS = [7, 10, 12, 14] as const;

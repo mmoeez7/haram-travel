@@ -80,7 +80,7 @@ function HeroOverlays() {
 
 export function Hero() {
   return (
-    <section className="relative w-full bg-cream pt-4 pb-[5.5rem] sm:pt-6 sm:pb-14 md:pt-8 md:pb-14">
+    <section className="relative w-full bg-cream pt-4 pb-6 sm:pt-6 sm:pb-8 md:pt-8 md:pb-10">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Inset cinematic banner — taller on large screens; extra bottom pad so CTAs stay clear of form */}
         <div className="relative flex min-h-[460px] items-start overflow-hidden rounded-2xl border border-[#EAE3D6] p-5 pb-16 shadow-xl sm:min-h-[500px] sm:items-center sm:rounded-3xl sm:p-12 sm:pb-14 lg:min-h-[540px] lg:p-14 lg:pb-16 xl:min-h-[560px]">

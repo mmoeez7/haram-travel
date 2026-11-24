@@ -64,7 +64,7 @@ export function CustomerReviewsGrid({
               What Customers Say About Us!
             </h2>
             <p className="mt-3 text-sm leading-relaxed text-muted md:mt-4 md:text-base">
-              Trusted by 18,500+ UK pilgrims across London, Manchester, and
+              Trusted by 8000+ UK pilgrims across London, Manchester, and
               Birmingham. Read real verified experiences from British Muslim
               families.
             </p>

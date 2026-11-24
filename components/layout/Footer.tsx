@@ -1,113 +1,146 @@
 import Link from "next/link";
 import { Mail, MapPin, Phone } from "lucide-react";
 import { FaWhatsapp } from "react-icons/fa";
-import { FOOTER_PACKAGES, SITE, telUrl, whatsappUrl } from "@/lib/constants";
+import { SITE, telUrl, whatsappUrl } from "@/lib/constants";
 import { Logo } from "@/components/layout/Logo";
+
+/** Hardcoded public routes — native anchors so navigation always works. */
+const FOOTER_PACKAGES = [
+  { href: "/3-star-umrah-packages/", label: "3-Star Economy Umrah" },
+  { href: "/4-star-umrah-packages/", label: "4-Star Executive Packages" },
+  { href: "/5-star-umrah-packages/", label: "5-Star VIP Clock Tower" },
+  { href: "/ramadan-umrah-package/", label: "Ramadan 2027 Packages" },
+  { href: "/umrah-packages/", label: "Family & Group Umrah" },
+  { href: "/blogs/", label: "Pilgrim Guides & Articles" },
+] as const;
+
+const LEGAL_LINKS = [
+  { href: "/about-us/", label: "About Us" },
+  { href: "/contact-us/", label: "Contact Us" },
+  { href: "/privacy-policy/", label: "Privacy Policy" },
+  // { href: "/privacy-policy/", label: "Terms & Conditions" },
+] as const;
 
 export function Footer() {
   return (
-    <footer className="border-t border-border bg-[#faf6ef] pb-24 md:pb-0">
-      <div className="mx-auto flex max-w-7xl flex-col gap-8 px-5 py-10 sm:px-6 md:gap-10 md:py-12 lg:flex-row lg:items-start lg:justify-between lg:gap-16 lg:px-8">
-        <div className="w-full max-w-md lg:max-w-sm lg:shrink-0">
-          <div className="mb-3 md:mb-4">
-            <Logo />
+    <footer
+      id="site-footer"
+      className="relative z-20 border-t border-border bg-[#faf6ef] pb-[calc(6.5rem+env(safe-area-inset-bottom))] md:pb-0"
+    >
+      <div className="mx-auto max-w-7xl px-5 py-10 sm:px-6 md:py-12 lg:px-8">
+        <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-12 lg:gap-x-10 lg:gap-y-0">
+          {/* Brand */}
+          <div className="sm:col-span-2 lg:col-span-5">
+            <div className="mb-4">
+              <Logo />
+            </div>
+            <p className="max-w-md text-sm leading-relaxed text-muted">
+              Haram Travel is a premier UK travel agency specializing in tailored Umrah and Islamic
+              pilgrimage packages. Guided by our motto &apos;Trusted Umrah, Seamless Journey&apos;, we
+              ensure every detail is handled with reverence and precision.
+            </p>
+            <p className="mt-4 text-sm font-semibold text-gold-dark">
+              ATOL Holder &amp; Ministry of Hajj &amp; Umrah Authorized
+            </p>
           </div>
-          <p className="text-sm leading-relaxed text-muted">
-            Haram Travel is a premier UK travel agency specializing in tailored Umrah and Islamic
-            pilgrimage packages. Guided by our motto &apos;Trusted Umrah, Seamless Journey&apos;, we
-            ensure every detail is handled with reverence and precision.
-          </p>
-          <p className="mt-3 text-sm font-semibold text-gold-dark md:mt-4">
-            ATOL Holder &amp; Ministry of Hajj &amp; Umrah Authorized
-          </p>
-        </div>
 
-        <div className="grid w-full grid-cols-1 gap-8 sm:grid-cols-2 sm:gap-10 lg:w-auto lg:min-w-0 lg:flex-none lg:gap-16">
-          <div>
-            <h3 className="mb-3 text-sm font-bold uppercase tracking-wider text-charcoal md:mb-4">
+          {/* Packages */}
+          <div className="lg:col-span-3">
+            <h3 className="mb-4 text-xs font-bold uppercase tracking-[0.14em] text-charcoal">
               Umrah Packages
             </h3>
-            <ul className="space-y-2 md:space-y-2.5">
+            <ul className="space-y-2.5">
               {FOOTER_PACKAGES.map((item) => (
                 <li key={item.label}>
-                  <Link href={item.href} className="text-sm text-muted hover:text-gold-dark">
+                  <a
+                    href={item.href}
+                    className="text-sm text-muted transition hover:text-gold-dark"
+                  >
                     {item.label}
-                  </Link>
+                  </a>
                 </li>
               ))}
             </ul>
           </div>
 
-          <div className="min-w-0">
-            <h3 className="mb-3 text-sm font-bold uppercase tracking-wider text-charcoal md:mb-4">
+          {/* Contact */}
+          <div className="lg:col-span-4">
+            <h3 className="mb-4 text-xs font-bold uppercase tracking-[0.14em] text-charcoal">
               Contact &amp; Support
             </h3>
-            <ul className="space-y-2.5 text-sm text-muted md:space-y-3">
-              <li className="flex items-start gap-2.5">
-                <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-[#e11d48]" />
-                <span className="min-w-0 break-words">
-                  <span className="font-semibold text-charcoal">UK Office:</span> {SITE.address}
-                </span>
+            <ul className="space-y-3.5 text-sm text-muted">
+              <li className="flex items-start gap-3">
+                <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-[#e11d48]" aria-hidden />
+                <div className="min-w-0 leading-relaxed">
+                  <p className="font-semibold text-charcoal">UK Office</p>
+                  <p className="mt-0.5">{SITE.address}</p>
+                </div>
               </li>
-              <li className="flex items-start gap-2.5">
-                <Phone className="mt-0.5 h-4 w-4 shrink-0 text-[#e11d48]" />
-                <a href={telUrl()} className="min-w-0 break-words hover:text-gold-dark">
-                  <span className="font-semibold text-charcoal">Telephone:</span> {SITE.phone}
-                </a>
+              <li className="flex items-start gap-3">
+                <Phone className="mt-0.5 h-4 w-4 shrink-0 text-[#e11d48]" aria-hidden />
+                <div className="min-w-0">
+                  <p className="font-semibold text-charcoal">Telephone</p>
+                  <a href={telUrl()} className="mt-0.5 inline-block hover:text-gold-dark">
+                    {SITE.phone}
+                  </a>
+                </div>
               </li>
-              <li className="flex items-start gap-2.5">
-                <FaWhatsapp className="mt-0.5 h-4 w-4 shrink-0 text-[#25d366]" />
-                <a
-                  href={whatsappUrl()}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="min-w-0 break-words hover:text-gold-dark"
-                >
-                  <span className="font-semibold text-charcoal">WhatsApp:</span>{" "}
-                  {SITE.whatsappDisplay}
-                </a>
+              <li className="flex items-start gap-3">
+                <FaWhatsapp className="mt-0.5 h-4 w-4 shrink-0 text-[#25d366]" aria-hidden />
+                <div className="min-w-0">
+                  <p className="font-semibold text-charcoal">WhatsApp</p>
+                  <a
+                    href={whatsappUrl()}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-0.5 inline-block hover:text-gold-dark"
+                  >
+                    {SITE.whatsappDisplay}
+                  </a>
+                </div>
               </li>
-              <li className="flex items-start gap-2.5">
-                <Mail className="mt-0.5 h-4 w-4 shrink-0 text-[#e11d48]" />
-                <a
-                  href={`mailto:${SITE.email}`}
-                  className="min-w-0 break-all hover:text-gold-dark sm:break-words"
-                >
-                  <span className="font-semibold text-charcoal">Email:</span> {SITE.email}
-                </a>
+              <li className="flex items-start gap-3">
+                <Mail className="mt-0.5 h-4 w-4 shrink-0 text-[#e11d48]" aria-hidden />
+                <div className="min-w-0">
+                  <p className="font-semibold text-charcoal">Email</p>
+                  <a
+                    href={`mailto:${SITE.email}`}
+                    className="mt-0.5 inline-block break-all hover:text-gold-dark"
+                  >
+                    {SITE.email}
+                  </a>
+                </div>
               </li>
             </ul>
           </div>
         </div>
       </div>
 
-      <div className="border-t border-border">
-        <div className="mx-auto flex max-w-7xl flex-col gap-4 px-5 py-5 sm:px-6 md:py-6 lg:flex-row lg:items-start lg:justify-between lg:px-8">
-          <div className="max-w-3xl space-y-2 text-xs leading-relaxed text-muted">
-            <p>
+      <div className="border-t border-border/80">
+        <div className="mx-auto max-w-7xl space-y-4 px-5 py-5 sm:px-6 md:py-6 lg:px-8">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-8">
+            <p className="text-xs leading-relaxed text-muted">
               © {new Date().getFullYear()} Haram Travel. All Rights Reserved. Company Registered
               in England &amp; Wales.
             </p>
-            <p>
-              All the flight-inclusive holidays on this website are financially protected by the ATOL
-              scheme. When you pay you will be supplied with an ATOL Certificate. Please ask for it
-              and check to ensure that everything you booked is listed on it.
-            </p>
+            <nav
+              aria-label="Legal"
+              className="flex shrink-0 flex-wrap gap-x-5 gap-y-2 text-xs font-medium text-muted sm:justify-end"
+            >
+              {LEGAL_LINKS.map((item) => (
+                <Link key={item.label} href={item.href} className="hover:text-gold-dark">
+                  {item.label}
+                </Link>
+              ))}
+            </nav>
           </div>
-          <div className="flex flex-wrap gap-x-4 gap-y-2 text-xs font-medium text-muted lg:justify-end lg:pt-0.5">
-            <Link href="/about-us" className="hover:text-gold-dark">
-              About Us
-            </Link>
-            <Link href="/contact-us" className="hover:text-gold-dark">
-              Contact Us
-            </Link>
-            <Link href="/privacy-policy" className="hover:text-gold-dark">
-              Privacy Policy
-            </Link>
-            <Link href="/privacy-policy" className="hover:text-gold-dark">
-              Terms &amp; Conditions
-            </Link>
-          </div>
+
+          <p className="w-full text-xs leading-relaxed text-muted">
+            Some flights and flight-inclusive holidays offered by Haram Travel are financially
+            protected under the ATOL scheme. ATOL protection does not cover all travel services, and
+            protection varies depending on your booking. Please confirm the applicable protection
+            before booking. For further information, visit the CAA&apos;s ATOL guidance.
+          </p>
         </div>
       </div>
     </footer>

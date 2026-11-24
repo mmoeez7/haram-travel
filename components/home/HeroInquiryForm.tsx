@@ -78,7 +78,7 @@ export function HeroInquiryForm() {
       className="scroll-mt-24 rounded-2xl border border-[#EAE3D6] bg-white p-5 shadow-[0_14px_45px_rgba(26,26,26,0.07)] sm:rounded-3xl sm:p-7"
     >
       <h2 className="-mx-5 -mt-5 mb-4 rounded-t-2xl bg-gold/15 px-5 py-3.5 text-center font-display text-xl font-bold tracking-wide text-gold-dark sm:-mx-7 sm:-mt-7 sm:mb-5 sm:rounded-t-3xl sm:px-7 sm:py-4 sm:text-2xl">
-        Plan Your Best Journey
+        Plan Your Blessed Journey
       </h2>
       <form
         onSubmit={onSubmit}

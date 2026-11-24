@@ -35,14 +35,13 @@ export function ContactHero() {
         </span>
 
         <h1 className="break-words font-display text-xl font-semibold uppercase leading-snug tracking-wide text-[#001a26] sm:text-3xl md:text-4xl lg:text-5xl">
-          Speak Directly to a
-          <br className="hidden sm:block" /> British Umrah Specialist
+          Speak Directly to an
+          <br className="hidden sm:block" /> Umrah Specialist
         </h1>
 
         <p className="mx-auto mt-5 max-w-2xl text-sm leading-relaxed text-[#555555] md:mt-6 md:text-base">
           Whether you are planning your first Umrah, organizing a family half-term trip with elderly
-          parents, or looking for 5-star Clock Tower suites — our London-based team is ready to
-          guide you.
+          parents, or looking for 5-star Clock Tower suites — our UK team is ready to guide you.
         </p>
       </div>
     </section>
