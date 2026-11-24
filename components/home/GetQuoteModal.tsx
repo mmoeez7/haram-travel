@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useId, useState } from "react";
-import { usePathname } from "next/navigation";
 import { ArrowRight, Mail, Phone, User, Users, X } from "lucide-react";
 import toast from "react-hot-toast";
 
@@ -20,26 +19,18 @@ const fieldShell =
 const inputClass =
   "min-w-0 flex-1 border-0 bg-transparent text-sm text-charcoal outline-none placeholder:text-muted";
 
-function isHomePath(pathname: string | null) {
-  if (!pathname) return false;
-  return pathname === "/" || pathname === "";
-}
+const SHOW_DELAY_MS = 6000;
 
 export function GetQuoteModal() {
-  const pathname = usePathname();
   const titleId = useId();
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState(emptyForm);
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
-    if (!isHomePath(pathname)) {
-      setOpen(false);
-      return;
-    }
-    const timer = window.setTimeout(() => setOpen(true), 2000);
+    const timer = window.setTimeout(() => setOpen(true), SHOW_DELAY_MS);
     return () => window.clearTimeout(timer);
-  }, [pathname]);
+  }, []);
 
   useEffect(() => {
     if (!open) return;

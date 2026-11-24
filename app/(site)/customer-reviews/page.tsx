@@ -2,6 +2,7 @@ import { createMetadata } from "@/lib/seo";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { CustomerReviewsGrid } from "@/components/home/CustomerReviewsGrid";
 import { CustomQuote } from "@/components/home/CustomQuote";
+import { TrustpilotBanner } from "@/components/reviews/TrustpilotBanner";
 import {
   getTestimonialsPage,
   TESTIMONIALS_PAGE_SIZE,
@@ -22,7 +23,7 @@ export default async function CustomerReviewsPage() {
 
   return (
     <>
-      <section className="bg-cream pt-12 pb-4">
+      <section className="bg-cream pt-12 pb-6 md:pb-8">
         <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
           <Breadcrumbs
             items={[{ label: "Home", href: "/" }, { label: "Customer Reviews" }]}
@@ -34,6 +35,7 @@ export default async function CustomerReviewsPage() {
             Verified written stories from British Muslim families who trusted Haram Travel
             for their Umrah journey.
           </p>
+          <TrustpilotBanner />
         </div>
       </section>
       <CustomerReviewsGrid initialReviews={reviews} total={total} />

@@ -7,27 +7,21 @@ export function FoundingStory() {
       <div className="mx-auto grid max-w-7xl items-center gap-10 px-5 sm:px-6 lg:grid-cols-2 lg:px-8">
         <Reveal variant="left">
           <span className="mb-3 inline-block rounded-full bg-gold-soft/60 px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-gold-dark">
-            Our Founding Story
+          OUR COMMITMENT TO YOUR JOURNEY
           </span>
           <h2 className="break-words font-display text-xl font-semibold uppercase leading-snug tracking-wide text-charcoal sm:text-2xl md:text-3xl lg:text-4xl">
-            A Sacred Journey Deserves Complete Honesty.
+            Your Umrah Deserves Care, Comfort &amp; Trust.
           </h2>
           <div className="mt-5 space-y-4 text-sm leading-relaxed text-muted md:text-base">
             <p>
-              The UK Umrah market was once dominated by middle-tier brokers making deceptive claims
-              about hotel distances. Families discovered too late that &quot;near the Haram&quot;
-              meant a 25-minute shuttle in 40°C heat with elderly parents.
+              At Haram Travel, we believe your Umrah journey should be about devotion, not the
+              stress of planning. We bring together carefully selected hotels, reliable travel
+              arrangements and dedicated customer support to make every step easier.
             </p>
             <p>
-              We founded Haram Travel to treat every pilgrim not as a customer, but as a Guest of
-              Allah (Dhuyuf al-Rahman) — with verified walking-distance hotels, legal ATOL
-              protection, and bilingual ground care from London to the Mataf.
-            </p>
-            <p className="font-medium text-charcoal">
-              — Managing Director & Founding Team, Haram Travel UK
-            </p>
-            <p>
-              Serving British Muslims in London, Birmingham, Manchester, and Scotland.
+              From your first enquiry to your return home, our team is committed to providing a
+              seamless, transparent and well-organised experience — so you can focus on what truly
+              matters.
             </p>
           </div>
         </Reveal>
@@ -43,8 +37,7 @@ export function FoundingStory() {
               />
               <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-charcoal/80 to-transparent p-5">
                 <p className="text-sm font-semibold text-gold-soft">
-                  The 0m Courtyard Promise: Direct pedestrian access to King Fahd & Bab Al Salam
-                  gates.
+                  Travel with confidence. Worship with peace.
                 </p>
               </div>
             </div>

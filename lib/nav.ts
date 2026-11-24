@@ -38,7 +38,14 @@ export async function getSiteNavItems(): Promise<NavItem[]> {
   }
 
   items.push(
-    { href: "/reviews", label: "Reviews" },
+    {
+      href: "/reviews",
+      label: "Reviews",
+      children: [
+        { href: "/customer-video-reviews/", label: "Video Reviews" },
+        { href: "/customer-reviews/", label: "Trustpilot Reviews" },
+      ],
+    },
     { href: "/blogs", label: "Blogs" },
     { href: "/about-us", label: "About Us" }
   );

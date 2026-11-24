@@ -45,7 +45,14 @@ export type NavItem = {
 export const NAV_ITEMS: NavItem[] = [
   { href: "/", label: "Home" },
   { href: "/umrah-packages", label: "Umrah Packages" },
-  { href: "/reviews", label: "Reviews" },
+  {
+    href: "/reviews",
+    label: "Reviews",
+    children: [
+      { href: "/customer-video-reviews/", label: "Video Reviews" },
+      { href: "/customer-reviews/", label: "Trustpilot Reviews" },
+    ],
+  },
   { href: "/blogs", label: "Blogs" },
   { href: "/about-us", label: "About Us" },
 ];
