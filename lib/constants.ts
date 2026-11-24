@@ -11,7 +11,7 @@ export const SITE = {
   addressShort: "Manchester M13 0RX",
   trustpilotRating: "4.8",
   trustpilotReviews: "8,200+",
-  pilgrimsGuided: "25,800+",
+  pilgrimsGuided: "8000+",
   depositFrom: 99,
 } as const;
 

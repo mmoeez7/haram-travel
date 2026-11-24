@@ -22,13 +22,13 @@ function HeroCopy() {
             {SITE.trustpilotRating}/5
           </p>
           <p className="mt-0.5 text-[11px] leading-tight text-white/80 sm:text-xs md:text-sm">
-            Trustpilot · {SITE.trustpilotReviews} reviews
+            Trustpilot review
           </p>
         </div>
         <div className="h-8 w-px bg-white/25 sm:h-10" aria-hidden />
         <div>
           <p className="font-display text-xl font-semibold text-gold-soft sm:text-2xl md:text-3xl">
-            +{SITE.pilgrimsGuided}
+            {SITE.pilgrimsGuided}
           </p>
           <p className="mt-0.5 text-[11px] leading-tight text-white/80 sm:text-xs md:text-sm">
             British Pilgrims Guided
@@ -36,7 +36,7 @@ function HeroCopy() {
         </div>
       </div>
 
-      <p className="hero-enter hero-enter-delay-3 max-w-xl text-xs leading-relaxed text-slate-200 sm:text-sm md:text-base">
+      <p className="hero-enter hero-enter-delay-3 hidden max-w-xl text-xs leading-relaxed text-slate-200 sm:block sm:text-sm md:text-base">
         All-inclusive UK Umrah packages from £745pp — flights, walking-distance
         Haram hotels, visas & private transfers.
       </p>
@@ -83,7 +83,7 @@ export function Hero() {
     <section className="relative w-full bg-cream pt-4 pb-6 sm:pt-6 sm:pb-8 md:pt-8 md:pb-10">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Inset cinematic banner — taller on large screens; extra bottom pad so CTAs stay clear of form */}
-        <div className="relative flex min-h-[460px] items-start overflow-hidden rounded-2xl border border-[#EAE3D6] p-5 pb-16 shadow-xl sm:min-h-[500px] sm:items-center sm:rounded-3xl sm:p-12 sm:pb-14 lg:min-h-[540px] lg:p-14 lg:pb-16 xl:min-h-[560px]">
+        <div className="relative flex min-h-[460px] items-center overflow-hidden rounded-2xl border border-[#EAE3D6] p-5 pb-16 shadow-xl sm:min-h-[500px] sm:rounded-3xl sm:p-12 sm:pb-14 lg:min-h-[540px] lg:p-14 lg:pb-16 xl:min-h-[560px]">
           <div className="absolute inset-0 md:hidden">
             <Image
               src="/images/hero-mobile.jpg"
