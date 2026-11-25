@@ -1,8 +1,9 @@
+import { SITE } from "@/lib/constants";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { Reveal } from "@/components/ui/Reveal";
 
 const stats = [
-  { value: "8000+", label: "British Pilgrims Guided" },
+  { value: SITE.pilgrimsGuided, label: "British Pilgrims Guided" },
   { value: "100%", label: "ATOL Protected" },
   { value: "5-Star", label: "Courtyard Walking Guarantee" },
   { value: "4.8/5", label: "Trustpilot Rating" },

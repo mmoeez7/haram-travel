@@ -22,6 +22,8 @@ type ButtonProps = {
   className?: string;
   type?: "button" | "submit";
   onClick?: () => void;
+  onPointerEnter?: () => void;
+  onFocus?: () => void;
   target?: string;
   rel?: string;
   disabled?: boolean;
@@ -34,6 +36,8 @@ export function Button({
   className = "",
   type = "button",
   onClick,
+  onPointerEnter,
+  onFocus,
   target,
   rel,
   disabled = false,
@@ -60,7 +64,14 @@ export function Button({
   }
 
   return (
-    <button type={type} className={classes} onClick={onClick} disabled={disabled}>
+    <button
+      type={type}
+      className={classes}
+      onClick={onClick}
+      onPointerEnter={onPointerEnter}
+      onFocus={onFocus}
+      disabled={disabled}
+    >
       {content}
     </button>
   );

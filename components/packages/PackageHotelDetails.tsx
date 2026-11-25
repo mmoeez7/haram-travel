@@ -1,16 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useMemo, useState } from "react";
-import { ChevronLeft, ChevronRight, Loader2, MapPin, Star } from "lucide-react";
-import type { PackageHotelRef } from "@/lib/packages";
-import type { PublicHotel } from "@/lib/public-hotel";
+import { useState } from "react";
+import { ChevronLeft, ChevronRight, MapPin, Star } from "lucide-react";
+import type { PackageHotelCard, PublicHotel } from "@/lib/public-hotel";
 import { makkahFirstRank } from "@/lib/hotel-rank";
-
-type HotelCardData = PublicHotel & {
-  nights: number | null;
-  notes: string | null;
-};
 
 function distanceLabel(hotel: PublicHotel) {
   if (hotel.walkingMinutes != null) {
@@ -25,9 +19,11 @@ function distanceLabel(hotel: PublicHotel) {
 function HotelCard({
   roleLabel,
   hotel,
+  priority = false,
 }: {
   roleLabel: string;
-  hotel: HotelCardData;
+  hotel: PackageHotelCard;
+  priority?: boolean;
 }) {
   const [activeIndex, setActiveIndex] = useState(0);
   const images = hotel.images.length
@@ -58,6 +54,7 @@ function HotelCard({
             src={active.url}
             alt={active.alt || hotel.name}
             fill
+            priority={priority && activeIndex === 0}
             className="object-cover"
             sizes="(max-width: 768px) 100vw, 33vw"
           />
@@ -137,93 +134,14 @@ function HotelCard({
   );
 }
 
-function HotelCardSkeleton({ roleLabel }: { roleLabel: string }) {
-  return (
-    <div className="overflow-hidden rounded-2xl border border-border bg-white shadow-sm">
-      <div className="flex h-44 items-center justify-center bg-cream sm:h-52">
-        <Loader2 className="h-5 w-5 animate-spin text-gold-dark" aria-hidden />
-      </div>
-      <div className="space-y-2 p-4 md:p-5">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-gold-dark">
-          {roleLabel}
-        </p>
-        <div className="h-5 w-2/3 rounded bg-cream" />
-        <div className="h-3 w-full rounded bg-cream" />
-        <div className="h-3 w-5/6 rounded bg-cream" />
-      </div>
-    </div>
-  );
-}
-
-async function fetchHotel(ref: PackageHotelRef): Promise<HotelCardData | null> {
-  const res = await fetch(`/api/hotels/${ref.hotelId}`, { cache: "no-store" });
-  if (!res.ok) return null;
-  const data = (await res.json()) as { hotel: PublicHotel };
-  return {
-    ...data.hotel,
-    nights: ref.nights,
-    notes: ref.notes,
-  };
-}
-
-function hotelRoleLabel(role: PackageHotelRef["role"]) {
+function hotelRoleLabel(role: PackageHotelCard["role"] | PublicHotel["city"]) {
   return role === "MADINAH" ? "Madinah Hotel" : "Makkah Hotel";
 }
 
-function makkahHotelsFirst<T extends { role: PackageHotelRef["role"]; city?: PublicHotel["city"] }>(
-  hotels: T[]
-) {
-  return [...hotels].sort(
-    (a, b) => makkahFirstRank(a.city ?? a.role) - makkahFirstRank(b.city ?? b.role)
+export function PackageHotelDetails({ hotels }: { hotels: PackageHotelCard[] }) {
+  const orderedHotels = [...hotels].sort(
+    (a, b) => makkahFirstRank(a.city) - makkahFirstRank(b.city)
   );
-}
-
-export function PackageHotelDetails({ hotels }: { hotels: PackageHotelRef[] }) {
-  const orderedHotels = useMemo(() => makkahHotelsFirst(hotels), [hotels]);
-  const [cards, setCards] = useState<Array<HotelCardData & { role: PackageHotelRef["role"] }> | null>(
-    null
-  );
-  const [loading, setLoading] = useState(orderedHotels.length > 0);
-  const hotelKey = orderedHotels
-    .map((hotel) => `${hotel.role}:${hotel.hotelId}:${hotel.nights ?? ""}`)
-    .join("|");
-
-  useEffect(() => {
-    let cancelled = false;
-
-    async function load() {
-      if (!orderedHotels.length) {
-        setCards([]);
-        setLoading(false);
-        return;
-      }
-      setLoading(true);
-      try {
-        const loaded = await Promise.all(
-          orderedHotels.map(async (hotel) => {
-            const detail = await fetchHotel(hotel);
-            return detail ? { ...detail, role: hotel.role } : null;
-          })
-        );
-        if (cancelled) return;
-        setCards(
-          makkahHotelsFirst(
-            loaded.filter(
-              (hotel): hotel is HotelCardData & { role: PackageHotelRef["role"] } =>
-                hotel !== null
-            )
-          )
-        );
-      } finally {
-        if (!cancelled) setLoading(false);
-      }
-    }
-
-    void load();
-    return () => {
-      cancelled = true;
-    };
-  }, [hotelKey, orderedHotels]);
 
   if (!orderedHotels.length) return null;
 
@@ -236,20 +154,14 @@ export function PackageHotelDetails({ hotels }: { hotels: PackageHotelRef[] }) {
         Verified stays selected for comfort and practical access to the Haram.
       </p>
       <div className="mt-6 grid grid-cols-1 gap-5 md:grid-cols-3">
-        {loading && !cards
-          ? orderedHotels.map((hotel) => (
-              <HotelCardSkeleton
-                key={`${hotel.role}-${hotel.hotelId}`}
-                roleLabel={hotelRoleLabel(hotel.role)}
-              />
-            ))
-          : makkahHotelsFirst(cards ?? []).map((hotel) => (
-              <HotelCard
-                key={`${hotel.city}-${hotel.id}`}
-                roleLabel={hotelRoleLabel(hotel.city)}
-                hotel={hotel}
-              />
-            ))}
+        {orderedHotels.map((hotel, index) => (
+          <HotelCard
+            key={`${hotel.city}-${hotel.id}`}
+            roleLabel={hotelRoleLabel(hotel.city)}
+            hotel={hotel}
+            priority={index === 0}
+          />
+        ))}
       </div>
     </section>
   );

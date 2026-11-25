@@ -22,3 +22,9 @@ export type PublicHotel = {
   amenities: string[];
   images: PublicHotelImage[];
 };
+
+export type PackageHotelCard = PublicHotel & {
+  nights: number | null;
+  notes: string | null;
+  role: "MAKKAH" | "MADINAH";
+};

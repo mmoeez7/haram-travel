@@ -1,16 +1,27 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Phone, Ticket } from "lucide-react";
+import { Phone, Search } from "lucide-react";
 import { FaWhatsapp } from "react-icons/fa";
 import { SITE, telUrl, whatsappUrl } from "@/lib/constants";
 
-const voucherHref = whatsappUrl(
-  "Assalamu Alaikum, I'd like to claim the £50pp voucher."
-);
+const findPackageHref = "/#package-matcher";
+
+function onFindPackageClick(event: React.MouseEvent<HTMLAnchorElement>) {
+  const path = window.location.pathname;
+  if (path !== "/" && path !== "") return;
+  const target = document.getElementById("package-matcher");
+  if (!target) return;
+  event.preventDefault();
+  target.scrollIntoView({ behavior: "smooth", block: "start" });
+}
 
 const floatBtn =
-  "group flex h-10 max-w-10 items-center overflow-hidden rounded-full shadow-lg transition-all duration-700 ease-in-out hover:max-w-[260px] focus-visible:max-w-[260px] md:h-11 md:max-w-11";
+  "group flex items-center overflow-hidden rounded-full shadow-lg transition-all duration-700 ease-in-out";
+const floatBtnMd =
+  "h-11 max-w-11 hover:max-w-[260px] focus-visible:max-w-[260px]";
+const floatBtnLg =
+  "h-14 max-w-14 hover:max-w-[280px] focus-visible:max-w-[280px]";
 
 export function FloatingWidgets() {
   const [footerVisible, setFooterVisible] = useState(false);
@@ -47,14 +58,13 @@ export function FloatingWidgets() {
             Call
           </a>
           <a
-            href={voucherHref}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex h-10 items-center justify-center gap-1 rounded-lg bg-gradient-to-l from-gold to-gold-dark text-xs font-semibold text-charcoal"
-            aria-label="Claim £50pp Voucher"
+            href={findPackageHref}
+            onClick={onFindPackageClick}
+            className="inline-flex h-10 items-center justify-center gap-1 rounded-lg bg-gradient-to-l from-gold to-gold-dark px-1 text-[11px] font-semibold leading-tight text-charcoal"
+            aria-label="Find Package"
           >
-            <Ticket className="h-3.5 w-3.5 shrink-0" aria-hidden />
-            Voucher
+            <Search className="h-3.5 w-3.5 shrink-0" aria-hidden />
+            Find Package
           </a>
           <a
             href={whatsappUrl()}
@@ -69,6 +79,28 @@ export function FloatingWidgets() {
         </div>
       </div>
 
+      {/* Desktop: call sits on the left, same size as WhatsApp */}
+      <div
+        className={`float-in fixed bottom-4 left-5 z-40 hidden transition duration-200 md:block ${
+          footerVisible
+            ? "pointer-events-none translate-y-3 opacity-0"
+            : "translate-y-0 opacity-100"
+        }`}
+      >
+        <a
+          href={telUrl()}
+          className={`${floatBtn} ${floatBtnLg} border border-call-border bg-call text-call-border hover:border-call-hover hover:bg-call-hover hover:text-white [&_svg]:text-call-border hover:[&_svg]:text-white`}
+          aria-label={`Call ${SITE.phone}`}
+        >
+          <span className="flex h-14 w-14 shrink-0 items-center justify-center">
+            <Phone className="h-6 w-6" />
+          </span>
+          <span className="whitespace-nowrap pr-4 text-sm font-semibold opacity-0 transition-opacity duration-700 delay-100 group-hover:opacity-100 group-focus-visible:opacity-100">
+            Call {SITE.phone}
+          </span>
+        </a>
+      </div>
+
       {/* Desktop / tablet: floating expand-on-hover buttons */}
       <div
         className={`float-in fixed right-5 bottom-4 z-40 hidden flex-col items-end gap-2.5 transition duration-200 md:flex ${
@@ -78,30 +110,16 @@ export function FloatingWidgets() {
         }`}
       >
         <a
-          href={voucherHref}
-          target="_blank"
-          rel="noopener noreferrer"
-          className={`${floatBtn} bg-gradient-to-l from-gold to-gold-dark text-charcoal`}
-          aria-label="Claim £50pp Voucher"
+          href={findPackageHref}
+          onClick={onFindPackageClick}
+          className={`${floatBtn} ${floatBtnMd} bg-gradient-to-l from-gold to-gold-dark text-charcoal`}
+          aria-label="Find Package"
         >
           <span className="flex h-11 w-11 shrink-0 items-center justify-center">
-            <Ticket className="h-4 w-4" />
+            <Search className="h-4 w-4" />
           </span>
           <span className="whitespace-nowrap pr-4 text-xs font-semibold opacity-0 transition-opacity duration-700 delay-100 group-hover:opacity-100 group-focus-visible:opacity-100">
-            Claim £50pp Voucher
-          </span>
-        </a>
-
-        <a
-          href={telUrl()}
-          className={`${floatBtn} border border-call-border bg-call text-call-border hover:border-call-hover hover:bg-call-hover hover:text-white [&_svg]:text-call-border hover:[&_svg]:text-white`}
-          aria-label={`Call ${SITE.phone}`}
-        >
-          <span className="flex h-11 w-11 shrink-0 items-center justify-center">
-            <Phone className="h-4 w-4" />
-          </span>
-          <span className="whitespace-nowrap pr-4 text-xs font-semibold opacity-0 transition-opacity duration-700 delay-100 group-hover:opacity-100 group-focus-visible:opacity-100">
-            Call {SITE.phone}
+            Find Package
           </span>
         </a>
 
@@ -109,13 +127,13 @@ export function FloatingWidgets() {
           href={whatsappUrl()}
           target="_blank"
           rel="noopener noreferrer"
-          className={`${floatBtn} bg-whatsapp text-white hover:bg-whatsapp-dark`}
+          className={`${floatBtn} ${floatBtnLg} bg-whatsapp text-white hover:bg-whatsapp-dark`}
           aria-label="Chat on WhatsApp"
         >
-          <span className="flex h-11 w-11 shrink-0 items-center justify-center">
-            <FaWhatsapp className="h-4 w-4" />
+          <span className="flex h-14 w-14 shrink-0 items-center justify-center">
+            <FaWhatsapp className="h-7 w-7" />
           </span>
-          <span className="whitespace-nowrap pr-4 text-xs font-semibold opacity-0 transition-opacity duration-700 delay-100 group-hover:opacity-100 group-focus-visible:opacity-100">
+          <span className="whitespace-nowrap pr-4 text-sm font-semibold opacity-0 transition-opacity duration-700 delay-100 group-hover:opacity-100 group-focus-visible:opacity-100">
             Chat on WhatsApp
           </span>
         </a>

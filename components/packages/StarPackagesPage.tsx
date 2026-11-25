@@ -19,6 +19,24 @@ const STAR_SLUG: Record<3 | 4 | 5, string> = {
   5: "5-star",
 };
 
+const STAR_SECTION: Record<3 | 4 | 5, { title: string; description: string }> = {
+  3: {
+    title: "Explore 3 Star Packages",
+    description:
+      "Choose from affordable Umrah packages with comfortable hotels in Makkah and Madinah. Select your preferred trip duration.",
+  },
+  4: {
+    title: "Explore 4 Star Packages",
+    description:
+      "Discover quality hotels in Makkah and Madinah, with comfortable accommodation and convenient travel arrangements.",
+  },
+  5: {
+    title: "Explore 5 Star Packages",
+    description:
+      "Discover premium hotels in Makkah and Madinah, offering luxury, exceptional hospitality and superior comfort.",
+  },
+};
+
 export async function StarPackagesPage({
   stars,
   title,
@@ -50,8 +68,8 @@ export async function StarPackagesPage({
         </div>
       </section>
       <PackageSection
-        title={title}
-        description={description}
+        title={STAR_SECTION[stars].title}
+        description={STAR_SECTION[stars].description}
         packages={packages}
         titleOverride={starListingCardTitle(stars)}
       />

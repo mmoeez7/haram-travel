@@ -60,7 +60,7 @@ function DesktopNavItem({ item, pathname }: { item: NavItem; pathname: string })
       <Link
         href={item.href}
         aria-current={active ? "page" : undefined}
-        className={`text-sm font-medium ${active ? navLinkActive : navLinkIdle}`}
+        className={`text-base font-medium ${active ? navLinkActive : navLinkIdle}`}
       >
         {item.label}
       </Link>
@@ -79,7 +79,7 @@ function DesktopNavItem({ item, pathname }: { item: NavItem; pathname: string })
         aria-expanded={open}
         aria-haspopup="menu"
         aria-current={active ? "page" : undefined}
-        className={`inline-flex items-center gap-1 text-sm font-medium ${
+        className={`inline-flex items-center gap-1 text-base font-medium ${
           active ? navLinkActive : navLinkIdle
         }`}
       >
@@ -128,7 +128,7 @@ export function Header({ navItems }: { navItems: NavItem[] }) {
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-3 sm:px-6 lg:px-8">
         <Logo priority />
 
-        <nav className="hidden items-center gap-5 xl:flex">
+        <nav className="hidden items-center gap-4 xl:flex">
           {navItems.map((item) => (
             <DesktopNavItem key={item.label} item={item} pathname={pathname} />
           ))}
@@ -186,31 +186,26 @@ export function Header({ navItems }: { navItems: NavItem[] }) {
 
               return (
                 <div key={item.label} className="border-b border-border">
-                  <div className="flex items-center gap-1 py-3">
-                    <Link
-                      href={item.href}
-                      aria-current={active ? "page" : undefined}
+                  <button
+                    type="button"
+                    className="flex w-full items-center gap-2 py-3 text-left"
+                    onClick={() => setMobileExpanded(expanded ? null : item.label)}
+                    aria-expanded={expanded}
+                    aria-label={`${expanded ? "Collapse" : "Expand"} ${item.label}`}
+                  >
+                    <span
                       className={`min-w-0 flex-1 text-sm font-medium ${
                         active ? "font-semibold text-gold-dark" : "text-ink"
                       }`}
-                      onClick={() => setOpen(false)}
                     >
                       {item.label}
-                    </Link>
-                    <button
-                      type="button"
-                      className="inline-flex shrink-0 items-center justify-center rounded-md p-1.5 text-gold-dark"
-                      onClick={() =>
-                        setMobileExpanded(expanded ? null : item.label)
-                      }
-                      aria-expanded={expanded}
-                      aria-label={`${expanded ? "Collapse" : "Expand"} ${item.label} submenu`}
-                    >
-                      <ChevronDown
-                        className={`h-4 w-4 transition ${expanded ? "rotate-180" : ""}`}
-                      />
-                    </button>
-                  </div>
+                    </span>
+                    <ChevronDown
+                      className={`h-4 w-4 shrink-0 text-gold-dark transition ${
+                        expanded ? "rotate-180" : ""
+                      }`}
+                    />
+                  </button>
                   {expanded ? (
                     <div className="mb-3 max-h-72 overflow-y-auto rounded-md border border-border bg-white">
                       {item.children!.map((child, index) => {

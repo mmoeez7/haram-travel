@@ -1,9 +1,57 @@
 import "server-only";
 
 import { prisma } from "@/lib/db";
-import type { PublicHotel } from "@/lib/public-hotel";
+import type { PublicHotel, PublicHotelImage } from "@/lib/public-hotel";
 
 export type { PublicHotel, PublicHotelImage } from "@/lib/public-hotel";
+
+type HotelRecord = {
+  id: string;
+  name: string;
+  slug: string;
+  city: PublicHotel["city"];
+  stars: number;
+  walkingMinutes: number | null;
+  distanceToHaramM: number | null;
+  shortDescription: string | null;
+  description: string | null;
+  coverImageUrl: string | null;
+  coverImageAlt: string | null;
+  amenities: string[];
+  images: PublicHotelImage[];
+};
+
+export function toPublicHotel(hotel: HotelRecord): PublicHotel {
+  const images =
+    hotel.images.length > 0
+      ? hotel.images
+      : hotel.coverImageUrl
+        ? [
+            {
+              id: "legacy-cover",
+              url: hotel.coverImageUrl,
+              alt: hotel.coverImageAlt,
+              sortOrder: 0,
+            },
+          ]
+        : [];
+
+  return {
+    id: hotel.id,
+    name: hotel.name,
+    slug: hotel.slug,
+    city: hotel.city,
+    stars: hotel.stars,
+    walkingMinutes: hotel.walkingMinutes,
+    distanceToHaramM: hotel.distanceToHaramM,
+    shortDescription: hotel.shortDescription,
+    description: hotel.description,
+    coverImageUrl: images[0]?.url ?? hotel.coverImageUrl,
+    coverImageAlt: images[0]?.alt ?? hotel.coverImageAlt,
+    amenities: hotel.amenities,
+    images,
+  };
+}
 
 export async function getPublishedHotelById(
   id: string
@@ -35,25 +83,5 @@ export async function getPublishedHotelById(
   });
 
   if (!hotel) return null;
-
-  const images =
-    hotel.images.length > 0
-      ? hotel.images
-      : hotel.coverImageUrl
-        ? [
-            {
-              id: "legacy-cover",
-              url: hotel.coverImageUrl,
-              alt: hotel.coverImageAlt,
-              sortOrder: 0,
-            },
-          ]
-        : [];
-
-  return {
-    ...hotel,
-    coverImageUrl: images[0]?.url ?? hotel.coverImageUrl,
-    coverImageAlt: images[0]?.alt ?? hotel.coverImageAlt,
-    images,
-  };
+  return toPublicHotel(hotel);
 }

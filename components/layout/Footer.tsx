@@ -46,7 +46,7 @@ export function Footer() {
 
           {/* Packages */}
           <div className="lg:col-span-3">
-            <h3 className="mb-4 text-xs font-bold uppercase tracking-[0.14em] text-charcoal">
+            <h3 className="mb-4 text-sm font-bold uppercase tracking-[0.12em] text-charcoal md:text-base">
               Umrah Packages
             </h3>
             <ul className="space-y-2.5">
@@ -65,7 +65,7 @@ export function Footer() {
 
           {/* Contact */}
           <div className="lg:col-span-4">
-            <h3 className="mb-4 text-xs font-bold uppercase tracking-[0.14em] text-charcoal">
+            <h3 className="mb-4 text-sm font-bold uppercase tracking-[0.12em] text-charcoal md:text-base">
               Contact &amp; Support
             </h3>
             <ul className="space-y-3.5 text-sm text-muted">

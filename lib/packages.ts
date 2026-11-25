@@ -1,8 +1,11 @@
 import "server-only";
 
+import { cache } from "react";
 import type { Package as DbPackage, SeasonType } from "@prisma/client";
 import { prisma } from "@/lib/db";
 import { makkahFirstRank } from "@/lib/hotel-rank";
+import { toPublicHotel } from "@/lib/hotels";
+import type { PackageHotelCard } from "@/lib/public-hotel";
 
 export type PackageItem = {
   id: string;
@@ -170,10 +173,11 @@ export type PackageDetail = PackageItem & {
   makkahHotelRef: PackageHotelRef | null;
   madinahHotelRef: PackageHotelRef | null;
   hotelRefs: PackageHotelRef[];
+  hotels: PackageHotelCard[];
   linkedCategory: PackageDetailCategory | null;
 };
 
-export async function getPackageDetailBySlug(
+export const getPackageDetailBySlug = cache(async function getPackageDetailBySlug(
   slug: string
 ): Promise<PackageDetail | null> {
   const pkg = await prisma.package.findFirst({
@@ -183,12 +187,15 @@ export async function getPackageDetailBySlug(
     },
     include: {
       hotels: {
-        orderBy: { role: "asc" },
-        select: {
-          role: true,
-          hotelId: true,
-          nights: true,
-          notes: true,
+        where: {
+          hotel: { deletedAt: null, published: true },
+        },
+        include: {
+          hotel: {
+            include: {
+              images: { orderBy: { sortOrder: "asc" } },
+            },
+          },
         },
       },
       categories: {
@@ -211,9 +218,16 @@ export async function getPackageDetailBySlug(
     notes: link.notes,
     role: link.role,
   });
-  const hotelRefs = [...pkg.hotels]
-    .sort((a, b) => makkahFirstRank(a.role) - makkahFirstRank(b.role))
-    .map(toHotelRef);
+  const orderedLinks = [...pkg.hotels].sort(
+    (a, b) => makkahFirstRank(a.role) - makkahFirstRank(b.role)
+  );
+  const hotelRefs = orderedLinks.map(toHotelRef);
+  const hotels: PackageHotelCard[] = orderedLinks.map((link) => ({
+    ...toPublicHotel(link.hotel),
+    nights: link.nights,
+    notes: link.notes,
+    role: link.role,
+  }));
 
   const linkedCategory = pkg.categories
     .map((c) => c.category)
@@ -228,6 +242,7 @@ export async function getPackageDetailBySlug(
     makkahHotelRef: hotelRefs.find((hotel) => hotel.role === "MAKKAH") ?? null,
     madinahHotelRef: hotelRefs.find((hotel) => hotel.role === "MADINAH") ?? null,
     hotelRefs,
+    hotels,
     linkedCategory: linkedCategory
       ? {
           name: linkedCategory.name,
@@ -241,7 +256,7 @@ export async function getPackageDetailBySlug(
         }
       : null,
   };
-}
+});
 
 /** @deprecated Prefer getHajjPackages() */
 export const hajjPackages: PackageItem[] = [];

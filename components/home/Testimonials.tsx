@@ -3,6 +3,7 @@ import { ArrowRight } from "lucide-react";
 import { Reveal } from "@/components/ui/Reveal";
 import { CardRail } from "@/components/ui/CardRail";
 import { TestimonialCard } from "@/components/home/TestimonialCard";
+import { SITE } from "@/lib/constants";
 import { getTestimonials } from "@/lib/testimonials";
 
 type TestimonialsProps = {
@@ -31,7 +32,7 @@ export async function Testimonials({
               What Customers Say About Us!
             </h2>
             <p className="mt-3 text-sm leading-relaxed text-muted md:mt-4 md:text-base">
-              Trusted by 8000+ UK pilgrims across London, Manchester, and Birmingham.
+              Trusted by {SITE.pilgrimsGuided} UK pilgrims across London, Manchester, and Birmingham.
               Read real verified experiences from British Muslim families.
             </p>
           </div>

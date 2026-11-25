@@ -29,7 +29,7 @@ export default function ReviewsPage() {
         </div>
       </section>
       <Testimonials limit={3} showSeeMore />
-      <VideoReviews limit={3} showSeeMore />
+      <VideoReviews limit={4} showSeeMore />
       <CustomQuote />
     </>
   );

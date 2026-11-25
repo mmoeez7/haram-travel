@@ -8,10 +8,12 @@ const emptyForm = {
   name: "",
   email: "",
   phone: "",
-  passengers: "1",
+  passengers: "",
 };
 
-const passengerOptions = Array.from({ length: 20 }, (_, index) => String(index + 1));
+function digitsOnly(value: string) {
+  return value.replace(/\D/g, "").slice(0, 2);
+}
 
 const inputClass =
   "brand-hero-input w-full rounded-xl border-[1.5px] border-[#E0D7C8] bg-[#FAF8F5] px-3.5 py-2.5 text-xs font-medium text-charcoal outline-none transition placeholder:text-slate-400 focus:border-gold focus:bg-white focus:shadow-[0_0_0_3px_rgba(197,160,56,0.2)] sm:text-[13px]";
@@ -152,20 +154,19 @@ export function HeroInquiryForm() {
           >
             No of Passengers
           </label>
-          <select
+          <input
             id="hero-inquiry-passengers"
             required
+            type="tel"
+            inputMode="tel"
+            pattern="[0-9]*"
+            autoComplete="off"
             name="passengers"
             className={inputClass}
+            placeholder="e.g. 2"
             value={form.passengers}
-            onChange={(event) => update("passengers", event.target.value)}
-          >
-            {passengerOptions.map((count) => (
-              <option key={count} value={count}>
-                {count === "1" ? "1 Passenger" : `${count} Passengers`}
-              </option>
-            ))}
-          </select>
+            onChange={(event) => update("passengers", digitsOnly(event.target.value))}
+          />
         </div>
 
         <div>

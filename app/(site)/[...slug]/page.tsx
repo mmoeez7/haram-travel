@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import { createMetadata } from "@/lib/seo";
 import { getPackageDetailBySlug } from "@/lib/packages";
@@ -59,7 +60,7 @@ export default async function PackageDetailPage({ params }: PageProps) {
           </div>
 
           <div className="mt-8 md:mt-12">
-            <PackageHotelDetails hotels={pkg.hotelRefs} />
+            <PackageHotelDetails hotels={pkg.hotels} />
           </div>
 
           <div className="mt-8 md:mt-12">
@@ -69,7 +70,9 @@ export default async function PackageDetailPage({ params }: PageProps) {
       </section>
 
       <CustomQuote />
-      <Testimonials limit={3} showSeeMore />
+      <Suspense fallback={null}>
+        <Testimonials limit={3} showSeeMore />
+      </Suspense>
     </>
   );
 }

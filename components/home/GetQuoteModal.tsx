@@ -8,10 +8,12 @@ const emptyForm = {
   name: "",
   phone: "",
   email: "",
-  passengers: "1",
+  passengers: "",
 };
 
-const passengerOptions = Array.from({ length: 20 }, (_, index) => String(index + 1));
+function digitsOnly(value: string) {
+  return value.replace(/\D/g, "").slice(0, 2);
+}
 
 const fieldShell =
   "flex items-center gap-3 rounded-xl border border-[#E5E0D6] bg-white px-3.5 py-3 transition focus-within:border-gold focus-within:shadow-[0_0_0_3px_rgba(197,160,56,0.18)]";
@@ -184,22 +186,19 @@ export function GetQuoteModal() {
 
           <div className={`quote-field ${fieldShell}`}>
             <Users className="h-4 w-4 shrink-0 text-gold-dark" aria-hidden />
-            <select
+            <input
               required
+              type="tel"
+              inputMode="tel"
+              pattern="[0-9]*"
+              autoComplete="off"
               name="passengers"
-              className={`${inputClass} appearance-none pr-1`}
-              value={form.passengers}
-              onChange={(event) => update("passengers", event.target.value)}
+              className={inputClass}
+              placeholder="No. Of Passengers *"
               aria-label="Number of passengers"
-            >
-              {passengerOptions.map((count) => (
-                <option key={count} value={count}>
-                  {count === "1"
-                    ? "No. Of Passengers * — 1"
-                    : `No. Of Passengers * — ${count}`}
-                </option>
-              ))}
-            </select>
+              value={form.passengers}
+              onChange={(event) => update("passengers", digitsOnly(event.target.value))}
+            />
           </div>
 
           <div className="quote-field pt-1">

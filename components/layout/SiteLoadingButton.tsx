@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { type ReactNode } from "react";
+import { useEffect, type ReactNode } from "react";
 import { Button } from "@/components/ui/Button";
 import { showSiteLoader } from "@/components/layout/SiteLoader";
 
@@ -21,11 +21,17 @@ export function SiteLoadingButton({
 }: SiteLoadingButtonProps) {
   const router = useRouter();
 
+  useEffect(() => {
+    router.prefetch(href);
+  }, [href, router]);
+
   return (
     <Button
       type="button"
       variant={variant}
       className={className}
+      onPointerEnter={() => router.prefetch(href)}
+      onFocus={() => router.prefetch(href)}
       onClick={() => {
         showSiteLoader();
         router.push(href);
