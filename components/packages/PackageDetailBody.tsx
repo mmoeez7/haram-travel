@@ -1,11 +1,22 @@
 import { Check } from "lucide-react";
 import type { PackageDetail } from "@/lib/packages";
 
+const DETAIL_SUMMARY_EXTRAS = [
+  "Complimentary eSIM",
+  "Complimentary Lunch (1 Day)",
+] as const;
+
 export function PackageDetailBody({ pkg }: { pkg: PackageDetail }) {
   const overview =
     pkg.description?.trim() ||
     pkg.shortDescription?.trim() ||
     `${pkg.subtitle}. A carefully arranged ${pkg.nights}-night journey with ${pkg.makkahNights} nights in Makkah and ${pkg.madinahNights} nights in Madinah.`;
+
+  const existing = new Set(pkg.features.map((feature) => feature.trim().toLowerCase()));
+  const summaryFeatures = [
+    ...pkg.features,
+    ...DETAIL_SUMMARY_EXTRAS.filter((extra) => !existing.has(extra.toLowerCase())),
+  ];
 
   return (
     <div className="space-y-8 md:space-y-10">
@@ -32,9 +43,9 @@ export function PackageDetailBody({ pkg }: { pkg: PackageDetail }) {
           </div>
         </div>
 
-        {pkg.features.length ? (
+        {summaryFeatures.length ? (
           <ul className="mt-6 grid gap-3 sm:grid-cols-2">
-            {pkg.features.map((feature) => (
+            {summaryFeatures.map((feature) => (
               <li
                 key={feature}
                 className="flex items-start gap-2 rounded-xl border border-border/70 bg-white/70 px-3.5 py-3 text-sm text-ink"

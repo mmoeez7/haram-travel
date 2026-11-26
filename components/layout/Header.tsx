@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { ChevronDown, Menu, X } from "lucide-react";
 import { FaWhatsapp } from "react-icons/fa";
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { whatsappUrl, type NavItem } from "@/lib/constants";
 import { Button } from "@/components/ui/Button";
 import { Logo } from "@/components/layout/Logo";
@@ -122,6 +123,29 @@ export function Header({ navItems }: { navItems: NavItem[] }) {
   const pathname = usePathname() || "/";
   const [open, setOpen] = useState(false);
   const [mobileExpanded, setMobileExpanded] = useState<string | null>(null);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname]);
+
+  useEffect(() => {
+    if (!open) return;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    function onKey(event: KeyboardEvent) {
+      if (event.key === "Escape") setOpen(false);
+    }
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = previous;
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [open]);
 
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-cream/95 backdrop-blur-sm transition-shadow duration-300 supports-[backdrop-filter]:bg-cream/90">
@@ -153,20 +177,56 @@ export function Header({ navItems }: { navItems: NavItem[] }) {
         <button
           type="button"
           className="rounded-md border border-border p-2 xl:hidden"
-          onClick={() => setOpen((v) => !v)}
-          aria-label="Toggle menu"
+          onClick={() => setOpen(true)}
+          aria-label="Open menu"
+          aria-expanded={open}
         >
-          {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          <Menu className="h-5 w-5" />
         </button>
       </div>
 
-      {open ? (
-        <div className="border-t border-border bg-cream px-5 py-4 sm:px-6 xl:hidden">
-          <nav className="flex flex-col">
+      {mounted
+        ? createPortal(
+            <div
+        className={`fixed inset-0 z-[80] xl:hidden ${open ? "" : "pointer-events-none"}`}
+        role="dialog"
+        aria-modal={open}
+        aria-hidden={!open}
+        aria-label="Menu"
+      >
+        <button
+          type="button"
+          aria-label="Close menu"
+          className={`absolute inset-0 bg-charcoal/25 backdrop-blur-sm transition-opacity duration-300 ${
+            open ? "opacity-100" : "opacity-0"
+          }`}
+          onClick={() => setOpen(false)}
+        />
+        <div
+          className={`absolute inset-y-0 right-0 flex w-[82%] flex-col bg-white shadow-[-8px_0_30px_rgba(0,0,0,0.12)] transition-transform duration-300 ease-out ${
+            open ? "translate-x-0" : "translate-x-[130%]"
+          }`}
+        >
+        <div className="flex h-full flex-col">
+          <div className="flex justify-end px-5 pt-4">
+            <button
+              type="button"
+              onClick={() => setOpen(false)}
+              aria-label="Close menu"
+              className="flex h-10 w-10 items-center justify-center rounded-lg border border-neutral-200 text-charcoal"
+            >
+              <X className="h-5 w-5" />
+            </button>
+          </div>
+
+          <nav className="flex-1 overflow-y-auto px-6 pb-10 pt-8">
             {navItems.map((item) => {
               const hasChildren = Boolean(item.children?.length);
               const expanded = mobileExpanded === item.label;
               const active = isNavItemActive(pathname, item);
+              const itemClass = active
+                ? "font-medium text-nav-gold"
+                : "font-medium text-charcoal";
 
               if (!hasChildren) {
                 return (
@@ -174,9 +234,7 @@ export function Header({ navItems }: { navItems: NavItem[] }) {
                     key={item.label}
                     href={item.href}
                     aria-current={active ? "page" : undefined}
-                    className={`border-b border-border py-3 text-sm font-medium ${
-                      active ? "font-semibold text-gold-dark" : "text-ink"
-                    }`}
+                    className={`block py-3.5 text-lg ${itemClass}`}
                     onClick={() => setOpen(false)}
                   >
                     {item.label}
@@ -185,42 +243,34 @@ export function Header({ navItems }: { navItems: NavItem[] }) {
               }
 
               return (
-                <div key={item.label} className="border-b border-border">
+                <div key={item.label}>
                   <button
                     type="button"
-                    className="flex w-full items-center gap-2 py-3 text-left"
+                    className="flex w-full items-center gap-4 py-3.5 text-left"
                     onClick={() => setMobileExpanded(expanded ? null : item.label)}
                     aria-expanded={expanded}
                     aria-label={`${expanded ? "Collapse" : "Expand"} ${item.label}`}
                   >
-                    <span
-                      className={`min-w-0 flex-1 text-sm font-medium ${
-                        active ? "font-semibold text-gold-dark" : "text-ink"
-                      }`}
-                    >
+                    <span className={`min-w-0 flex-1 text-lg ${itemClass}`}>
                       {item.label}
                     </span>
-                    <ChevronDown
-                      className={`h-4 w-4 shrink-0 text-gold-dark transition ${
-                        expanded ? "rotate-180" : ""
-                      }`}
-                    />
+                    <span className="text-xl leading-none text-charcoal" aria-hidden>
+                      {expanded ? "−" : "+"}
+                    </span>
                   </button>
                   {expanded ? (
-                    <div className="mb-3 max-h-72 overflow-y-auto rounded-md border border-border bg-white">
-                      {item.children!.map((child, index) => {
+                    <div className="mb-2 max-h-72 overflow-y-auto pl-4">
+                      {item.children!.map((child) => {
                         const childActive = pathMatches(pathname, child.href);
                         return (
                           <Link
                             key={`${child.href}-${child.label}`}
                             href={child.href}
                             aria-current={childActive ? "page" : undefined}
-                            className={`block px-4 py-2.5 text-sm ${
-                              index > 0 ? "border-t border-border" : ""
-                            } ${
+                            className={`block py-2.5 text-base ${
                               childActive
-                                ? "bg-gold/10 font-semibold text-gold-dark"
-                                : "text-charcoal"
+                                ? "font-medium text-nav-gold"
+                                : "text-charcoal/80"
                             }`}
                             onClick={() => setOpen(false)}
                           >
@@ -234,24 +284,12 @@ export function Header({ navItems }: { navItems: NavItem[] }) {
               );
             })}
           </nav>
-
-          <div className="mt-4 flex flex-col gap-2">
-            <Button
-              href={whatsappUrl()}
-              variant="whatsapp"
-              className="!rounded-full"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <FaWhatsapp className="h-4 w-4" />
-              WhatsApp
-            </Button>
-            <Button href="/umrah-packages" variant="swipe" className="!rounded-full">
-              Find Package →
-            </Button>
-          </div>
         </div>
-      ) : null}
+      </div>
+      </div>,
+            document.body,
+          )
+        : null}
     </header>
   );
 }

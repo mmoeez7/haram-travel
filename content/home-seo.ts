@@ -1,0 +1,35 @@
+export const HOME_SEO_HTML = `
+<h1>Cheap and Affordable Umrah Packages 2027 from UK</h1>
+<p>Umrah is one of the most spiritually fulfilling performances among all the Muslims in the globe. It gives people the opportunity to purify their hearts, cleanse their souls and act closer to Allah. Yet, in the eyes of many, the price of the journey to Saudi Arabia and satisfaction of this religious journey, can be a very important issue. Luckily, Haram Travel has various Umrah packages that will enable the Muslims in the UK to easily attend to their religious requirements without digging deep in their pockets.</p>
+<h2>Why Choose Haram Travel for Your Umrah Journey?</h2>
+<p>Haram Travel is a top-rated travel agency specialising in offering quality Umrah packages at affordable prices. Their years of experience in providing pilgrimage services makes their area of specialisation the smooth and comfortable pilgrimage at an affordable price to their customers. Being a first-time traveler or a regular pilgrim, Haram Travel will make sure it provides the packages to meet the budgets and needs of the vast majority of travelers.</p>
+<p>Their value Umrah packages aim at addressing the spiritual needs of the Muslims and making the experience affordable but at the same time effective. Provided your Haram Travel, you should feel sure that you are getting the money and you will not sacrifice your comfort or the quality of services.</p>
+<h2>Cheap Umrah Packages: A Cost-Effective Way to Perform Your Pilgrimage</h2>
+<p>The issue of the quality of service worries many people when they look around to find a Cheap Umrah Packages. But affordability is not a factor that has been compromised by Haram Travel to give the customer a comfortable, stress-free pilgrimage. Their discounted Umrah packages are well designed to provide basic services that include air tickets, stay, transport, and visa among others; however, it remains to be affordable.</p>
+<p>Haram Travel appreciates that there are economically challenged families as well as individuals, especially in light of the increased cost of living. This is the reason why their offers in the form of cheap Umrah packages 2027 have been developed flexibly and practically. The relationships they have formed with reputable airlines and hotels have enabled them to transfer massive savings to their customers owing to the closeness they have with them.</p>
+<p>Besides the low rates of Cheap Umrah Packages From Uk, group booking is also offered by Haram Travel, saving more money on Umrah packages by those travelling together. This will save people some money but at the same time achieve a spiritual reward of making Umrah.</p>
+<h2>Benefits of Choosing Haram Travel’s Affordable Umrah Packages</h2>
+<ul>
+<li><strong>All-Inclusive Service:</strong> Haram Travel has low prices and their affordable packages cover everything you may require to have a successful Umrah. This will take care of flights, accommodation, visa requirements and transport making your journey to focus on your spiritual needs.</li>
+<li><strong>Quality Accommodation:</strong>Haram Travel makes sure that despite the affordable packages they offer, they will still guarantee you high quality accommodation. They establish collaboration with the certified hotels, which are strategically located in proximity to the Haram in Makkah and Madinah so that you will feel no problem with getting close to the holy places.</li>
+<li><strong>Experienced Guides:</strong> Guides are given a lot of importance in every pilgrimage. The Haram Travel also offers guides who are well experienced and versed with the religious rites and rituals in the Umrah and will thus guide you through those various religious rights and rituals easily.</li>
+<li><strong>Flexible Packages:</strong> Haram Travel has different packages that suit the needs of the visitor; short-term and long-term package. You may choose the package that suits your time so that you will have satisfying experience.</li>
+<li><strong>Customer Support:</strong> Haram Travel offers a high-quality customer support all over the journey. As soon as you make your reservation on package until the time you complete your pilgrimage, their team is at your disposal to guide you on any matter or question you want answered.</li>
+</ul>
+<h2>Affordable Umrah Package UK: Tailored for UK Muslims</h2>
+<p>To the Muslims in the UK, an Umrah trip may at times seem to be a daunting financial burden. Nevertheless, Haram Travel also has specialized, budget Affordable Umrah Package UK, which will be suitable to the UK-based pilgrims. The packages have also been structured to consider preferences and unique needs of UK travelers such as timing of flights, means of travelling and the quality of hotels among others.</p>
+<p>Haram Travel offers an affordable umrah package 2027 so that the UK Muslim does not have to burden themselves due to the costs of the Umrah program. The packages consist of cheap flights, decent accommodation in Makkah and Madinah and the transport between the two cities and local tours are also provided.</p>
+<h2>Choosing the Right Affordable Umrah Package</h2>
+<p>Choosing a low-cost pack Umrah, it is crucial to take into consideration factors:</p>
+<ul>
+<li><strong>Duration of Stay:</strong> We provide packages that range in time whether you want to take a tour to Umrah in a short time or a longer stay to rest your spiritual soul.</li>
+<li><strong>Accommodation Type:</strong> Haram Travel has various types of accommodations to suit all kinds of travellers: basic, luxurious etc.</li>
+<li><strong>Group or Individual Travel:</strong> You may wish to avail a group tour where you may get good discounts or get a specially packaged tour meeting your individual requirements.</li>
+<li><strong>Inclusions:</strong> Make sure the package you select has all of the services you require such as flights, lodgings and transportation in order to eliminate unexpected expenses or hidden expenses.</li>
+</ul>
+<p>Maintaining these in mind it is possible to get the most Affordable Umrah Packages from uk that suits your requirements which will be comfortable and spiritually satisfying.</p>
+<h2>Conclusion</h2>
+<p>The Umrah is an extremely spiritual journey that every Muslim wishes to make. Cheap Umrah packages offered by Haram Travel in addition to cheap Umrah packages in the UK will enable you to complete this religious duty without having to worry about the expense.</p>
+<p>Haram Travel has cheap but quality services which entails the fact that all facets of your travel are catered to. Haram Travel provides an outstanding price to performance ratio; its services are available in travelling and accommodation among other services. They offer affordable packages with quality services that make them among the best options when it comes to Muslims in need of cheap Umrah packages.</p>
+<p>Enjoying an affordable Umrah package UK has never been easier, especially when it comes to Haram Travel, over which you book your blessing now and start your journey to the Holy Land that is as spiritually enriching as it is unequivocally affordable.</p>
+`.trim();

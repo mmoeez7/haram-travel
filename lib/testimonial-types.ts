@@ -1,4 +1,4 @@
-export const TESTIMONIALS_PAGE_SIZE = 10;
+export const TESTIMONIALS_PAGE_SIZE = 9;
 
 export type Testimonial = {
   id: string;

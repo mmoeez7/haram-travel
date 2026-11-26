@@ -55,7 +55,7 @@ export function FeaturedPackages({
       <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
         <SectionHeading
           eyebrow="Handcrafted Itineraries"
-          title="Featured Umrah Packages 2026/27"
+          title="Featured Umrah Packages 2027"
           description="Every Package includes return UK flights, handpicked hotels, full Saudi Umrah visa handling, and private ground transport"
         />
         <Reveal delay={100}>

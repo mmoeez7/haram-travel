@@ -1,4 +1,4 @@
-export const VIDEO_REVIEWS_PAGE_SIZE = 10;
+export const VIDEO_REVIEWS_PAGE_SIZE = 9;
 
 export type PublicVideoReview = {
   id: string;

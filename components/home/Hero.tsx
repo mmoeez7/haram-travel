@@ -13,7 +13,7 @@ function HeroCopy() {
 
       <h1 className="hero-enter hero-enter-delay-1 font-display text-3xl font-semibold leading-[1.14] tracking-tight sm:text-5xl lg:text-[54px] lg:leading-[1.12]">
         Your Sacred Journey,{" "}
-        <span className="italic text-gold-soft">Handled With Royal Care.</span>
+        <span className="text-gold-soft">Handled With Royal Care.</span>
       </h1>
 
       <div className="hero-enter hero-enter-delay-2 flex flex-wrap items-center gap-3 sm:gap-6 md:gap-8">
