@@ -11,8 +11,9 @@ function HeroCopy() {
         {SITE.name}
       </p>
 
-      <h1 className="hero-enter hero-enter-delay-1 font-display text-3xl font-semibold leading-[1.14] tracking-tight sm:text-5xl lg:text-[54px] lg:leading-[1.12]">
+      <h1 className="hero-enter hero-enter-delay-1 font-display text-[25px] font-semibold leading-[1.14] tracking-tight sm:text-5xl lg:text-[54px] lg:leading-[1.12]">
         Your Sacred Journey,{" "}
+        <br className="sm:hidden" />
         <span className="text-gold-soft">Handled With Royal Care.</span>
       </h1>
 
